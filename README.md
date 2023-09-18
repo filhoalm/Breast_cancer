@@ -16,19 +16,7 @@ Institute NC. Surveillance, Epidemiology, and End Results (SEER 9,) Program Popu
 
 '8500/3: Infiltrating duct carcinoma, NOS','8523/3: Infiltrating duct mixed with other types of carcinoma' AND {Extent of Disease.ER Status Recode Breast Cancer (1990+)} = 'Positive','Negative','Borderline/Unknown','Recode not available'
 
-## Methods
-
-Institute NC. Surveillance, Epidemiology, and End Results (SEER 9,) Program Populations (1975-2018). (www.seer.cancer.gov/popdata), National Cancer Institute, DCCPS, Surveillance Research Program, released May 2023. February 2022S ed.: National Cancer Institute, 2022.
-
-### Morphology
-
-#### DCIS
-
-'8201/2: Cribriform carcinoma in situ','8500/2: Intraductal carcinoma, noninfiltrating, NOS','8501/2: Comedocarcinoma, noninfiltrating','8503/2: Noninfiltrating intraductal papillary adenocarcinoma','8507/2: Intraductal micropapillary carcinoma','8523/2: Intraductal with other types of carcinoma in situ' AND {Extent of Disease.ER Status Recode Breast Cancer (1990+)} = 'Positive','Negative','Borderline/Unknown','Recode not available'
-
-#### IDC
-
-'8500/3: Infiltrating duct carcinoma, NOS','8523/3: Infiltrating duct mixed with other types of carcinoma' AND {Extent of Disease.ER Status Recode Breast Cancer (1990+)} = 'Positive','Negative','Borderline/Unknown','Recode not available'
+### Results
 
 ```{r}
 
@@ -56,9 +44,9 @@ process_df <- function(file_path, index) {
 }
 
 # File paths
-file_paths <- c('file_path1' = 'https://raw.githubusercontent.com/filhoalm/Breast-cancer/main/dcis_er_30_49.csv',
-                'file_path2' = 'https://raw.githubusercontent.com/filhoalm/Breast-cancer/main/dcis_er_50_84.csv',
-                'file_path3' = 'https://raw.githubusercontent.com/filhoalm/Breast-cancer/main/dcis_er.csv'
+file_paths <- c('file_path1' = 'https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/data/dcis_er_30_49.csv',
+                'file_path2' = 'https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/data/dcis_er_50_84.csv',
+                'file_path3' = 'https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/data/dcis_er.csv'
 )
 
 # Indices
@@ -89,9 +77,9 @@ process_df <- function(file_path, index) {
 }
 
 # File paths
-file_paths <- c('file_path1' = 'https://raw.githubusercontent.com/filhoalm/Breast-cancer/main/idc_er_30_49.csv',
-                'file_path2' = 'https://raw.githubusercontent.com/filhoalm/Breast-cancer/main/idc_er_50_84.csv',
-                'file_path3' = 'https://raw.githubusercontent.com/filhoalm/Breast-cancer/main/idc_er.csv'
+file_paths <- c('file_path1' = 'https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/data/idc_er_30_49.csv',
+                'file_path2' = 'https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/data/idc_er_50_84.csv',
+                'file_path3' = 'https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/data/idc_er.csv'
 )
 
 # Indices
@@ -167,6 +155,49 @@ assign(paste0('plot', '50 - 84'), plot)
 grid.arrange(plot30_84, plot30_49, plot50_84,
              plotA30_84, plotA30_49, plotA50_84, ncol=3, nrow=2, top = grid::textGrob('Breast cancer in females by morphology and ER status', gp=grid::gpar(fontsize=8)))
 
-
+ojs_define(data = data)
 ```
+
 Figure 1 shows the trends in the incidence of Infiltrating Ductal Cancer (IDC) and Ductal Carcinoma In Situ (DCIS) breast cancers relative to 1990, when ER status started to be recorded. A) depicts overall trends; B) depicts trends in younger women; and C) depicts trends in older women. The dashed line corresponds to a value of 1.
+
+
+```{ojs}
+
+function fd(age,erLabel="ER+",theSite="DCIS"){
+
+  let filtered_data = data.index.reduce( (acc,value,index) => {
+    if (value==age && data.er_label[index]==erLabel && data.site[index]==theSite){
+      acc.x.push(data.year[index])
+      acc.y.push(data.rr[index])
+    }
+    return acc
+  },{x:[],y:[]})
+  
+  return filtered_data;
+}
+
+
+//data.site.reduce( (acc,pv)=> {if (!acc.includes(pv)){acc.push(pv)};return acc},[])
+
+data
+flt_data = fd(age,er_status,site)
+flt_data
+
+plt = require("https://cdn.plot.ly/plotly-latest.min.js")
+trace = ({
+    x:flt_data.x,
+    y:flt_data.y,
+    mode: 'markers',
+    type: 'scatter'
+  })
+viewof age = Inputs.select(['30_84', '30_49','50_84'], {value: "30_84", label: "age index"})
+viewof er_status = Inputs.select(['ER+','ER-','Borderline/Unk','Not available'], {value: "ER+", label: "ER status"})
+viewof site=Inputs.select(['DCIS','IDC'], {value: "30_49", label: "site"})
+plt.newPlot(div,[trace])
+
+
+div=DOM.element('div')
+```
+
+
+
