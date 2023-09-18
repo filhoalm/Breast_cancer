@@ -166,10 +166,12 @@ Figure 1 shows the trends in the incidence of Infiltrating Ductal Cancer (IDC) a
 
 ```{ojs}
 
-function fd(age,erLabel="ER+",theSite="DCIS"){
+//function fd(age,erLabel="ER+",theSite="DCIS"){
+function fd(age,theSite="DCIS"){
 
   let filtered_data = data.index.reduce( (acc,value,index) => {
-    if (value==age && data.er_label[index]==erLabel && data.site[index]==theSite){
+    //if (value==age && data.er_label[index]==erLabel && data.site[index]==theSite){
+       if (value==age && data.site[index]==theSite){
       acc.x.push(data.year[index])
       acc.y.push(data.rr[index])
     }
@@ -183,7 +185,8 @@ function fd(age,erLabel="ER+",theSite="DCIS"){
 //data.site.reduce( (acc,pv)=> {if (!acc.includes(pv)){acc.push(pv)};return acc},[])
 
 data
-flt_data = fd(age,er_status,site)
+//flt_data = fd(age,er_status,site)
+flt_data = fd(age,site)
 flt_data
 
 plt = require("https://cdn.plot.ly/plotly-latest.min.js")
@@ -194,7 +197,7 @@ trace = ({
     type: 'scatter'
   })
 viewof age = Inputs.select(['30_84', '30_49','50_84'], {value: "30_84", label: "age index"})
-viewof er_status = Inputs.select(['ER+','ER-','Borderline/Unk','Not available'], {value: "ER+", label: "ER status"})
+//viewof er_status = Inputs.select(['ER+','ER-','Borderline/Unk','Not available'], {value: "ER+", label: "ER status"})
 viewof site=Inputs.select(['DCIS','IDC'], {value: "30_49", label: "site"})
 plt.newPlot(div,[trace])
 

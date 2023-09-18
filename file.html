@@ -334,23 +334,24 @@ Attaching package: 'dplyr'</code></pre>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb13" data-startfrom="169" data-source-offset="-1"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 168;"><span id="cb13-169"><a href="#cb13-169" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">fd</span>(age<span class="op">,</span>erLabel<span class="op">=</span><span class="st">"ER+"</span><span class="op">,</span>theSite<span class="op">=</span><span class="st">"DCIS"</span>){</span>
-<span id="cb13-170"><a href="#cb13-170" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-171"><a href="#cb13-171" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> filtered_data <span class="op">=</span> data<span class="op">.</span><span class="at">index</span><span class="op">.</span><span class="fu">reduce</span>( (acc<span class="op">,</span>value<span class="op">,</span>index) <span class="kw">=&gt;</span> {</span>
-<span id="cb13-172"><a href="#cb13-172" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (value<span class="op">==</span>age <span class="op">&amp;&amp;</span> data<span class="op">.</span><span class="at">er_label</span>[index]<span class="op">==</span>erLabel <span class="op">&amp;&amp;</span> data<span class="op">.</span><span class="at">site</span>[index]<span class="op">==</span>theSite){</span>
-<span id="cb13-173"><a href="#cb13-173" aria-hidden="true" tabindex="-1"></a>      acc<span class="op">.</span><span class="at">x</span><span class="op">.</span><span class="fu">push</span>(data<span class="op">.</span><span class="at">year</span>[index])</span>
-<span id="cb13-174"><a href="#cb13-174" aria-hidden="true" tabindex="-1"></a>      acc<span class="op">.</span><span class="at">y</span><span class="op">.</span><span class="fu">push</span>(data<span class="op">.</span><span class="at">rr</span>[index])</span>
-<span id="cb13-175"><a href="#cb13-175" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb13-176"><a href="#cb13-176" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> acc</span>
-<span id="cb13-177"><a href="#cb13-177" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span>{<span class="dt">x</span><span class="op">:</span>[]<span class="op">,</span><span class="dt">y</span><span class="op">:</span>[]})</span>
-<span id="cb13-178"><a href="#cb13-178" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb13-179"><a href="#cb13-179" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> filtered_data<span class="op">;</span></span>
-<span id="cb13-180"><a href="#cb13-180" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb13-181"><a href="#cb13-181" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-182"><a href="#cb13-182" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-183"><a href="#cb13-183" aria-hidden="true" tabindex="-1"></a><span class="co">//data.site.reduce( (acc,pv)=&gt; {if (!acc.includes(pv)){acc.push(pv)};return acc},[])</span></span>
+<div class="sourceCode cell-code" id="cb13" data-startfrom="170" data-source-offset="-50"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 169;"><span id="cb13-170"><a href="#cb13-170" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">fd</span>(age<span class="op">,</span>theSite<span class="op">=</span><span class="st">"DCIS"</span>){</span>
+<span id="cb13-171"><a href="#cb13-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-172"><a href="#cb13-172" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> filtered_data <span class="op">=</span> data<span class="op">.</span><span class="at">index</span><span class="op">.</span><span class="fu">reduce</span>( (acc<span class="op">,</span>value<span class="op">,</span>index) <span class="kw">=&gt;</span> {</span>
+<span id="cb13-173"><a href="#cb13-173" aria-hidden="true" tabindex="-1"></a>    <span class="co">//if (value==age &amp;&amp; data.er_label[index]==erLabel &amp;&amp; data.site[index]==theSite){</span></span>
+<span id="cb13-174"><a href="#cb13-174" aria-hidden="true" tabindex="-1"></a>       <span class="cf">if</span> (value<span class="op">==</span>age <span class="op">&amp;&amp;</span> data<span class="op">.</span><span class="at">site</span>[index]<span class="op">==</span>theSite){</span>
+<span id="cb13-175"><a href="#cb13-175" aria-hidden="true" tabindex="-1"></a>      acc<span class="op">.</span><span class="at">x</span><span class="op">.</span><span class="fu">push</span>(data<span class="op">.</span><span class="at">year</span>[index])</span>
+<span id="cb13-176"><a href="#cb13-176" aria-hidden="true" tabindex="-1"></a>      acc<span class="op">.</span><span class="at">y</span><span class="op">.</span><span class="fu">push</span>(data<span class="op">.</span><span class="at">rr</span>[index])</span>
+<span id="cb13-177"><a href="#cb13-177" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb13-178"><a href="#cb13-178" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> acc</span>
+<span id="cb13-179"><a href="#cb13-179" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span>{<span class="dt">x</span><span class="op">:</span>[]<span class="op">,</span><span class="dt">y</span><span class="op">:</span>[]})</span>
+<span id="cb13-180"><a href="#cb13-180" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb13-181"><a href="#cb13-181" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> filtered_data<span class="op">;</span></span>
+<span id="cb13-182"><a href="#cb13-182" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-183"><a href="#cb13-183" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-184"><a href="#cb13-184" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-185"><a href="#cb13-185" aria-hidden="true" tabindex="-1"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-185"><a href="#cb13-185" aria-hidden="true" tabindex="-1"></a><span class="co">//data.site.reduce( (acc,pv)=&gt; {if (!acc.includes(pv)){acc.push(pv)};return acc},[])</span></span>
+<span id="cb13-186"><a href="#cb13-186" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-187"><a href="#cb13-187" aria-hidden="true" tabindex="-1"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -368,8 +369,8 @@ Attaching package: 'dplyr'</code></pre>
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14" data-startfrom="186" data-source-offset="-424"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 185;"><span id="cb14-186"><a href="#cb14-186" aria-hidden="true" tabindex="-1"></a>flt_data <span class="op">=</span> <span class="fu">fd</span>(age<span class="op">,</span>er_status<span class="op">,</span>site)</span>
-<span id="cb14-187"><a href="#cb14-187" aria-hidden="true" tabindex="-1"></a>flt_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14" data-startfrom="189" data-source-offset="-550"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 188;"><span id="cb14-189"><a href="#cb14-189" aria-hidden="true" tabindex="-1"></a>flt_data <span class="op">=</span> <span class="fu">fd</span>(age<span class="op">,</span>site)</span>
+<span id="cb14-190"><a href="#cb14-190" aria-hidden="true" tabindex="-1"></a>flt_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -387,17 +388,17 @@ Attaching package: 'dplyr'</code></pre>
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb15" data-startfrom="189" data-source-offset="-468"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 188;"><span id="cb15-189"><a href="#cb15-189" aria-hidden="true" tabindex="-1"></a>plt <span class="op">=</span> <span class="pp">require</span>(<span class="st">"https://cdn.plot.ly/plotly-latest.min.js"</span>)</span>
-<span id="cb15-190"><a href="#cb15-190" aria-hidden="true" tabindex="-1"></a>trace <span class="op">=</span> ({</span>
-<span id="cb15-191"><a href="#cb15-191" aria-hidden="true" tabindex="-1"></a>    <span class="dt">x</span><span class="op">:</span>flt_data<span class="op">.</span><span class="at">x</span><span class="op">,</span></span>
-<span id="cb15-192"><a href="#cb15-192" aria-hidden="true" tabindex="-1"></a>    <span class="dt">y</span><span class="op">:</span>flt_data<span class="op">.</span><span class="at">y</span><span class="op">,</span></span>
-<span id="cb15-193"><a href="#cb15-193" aria-hidden="true" tabindex="-1"></a>    <span class="dt">mode</span><span class="op">:</span> <span class="st">'markers'</span><span class="op">,</span></span>
-<span id="cb15-194"><a href="#cb15-194" aria-hidden="true" tabindex="-1"></a>    <span class="dt">type</span><span class="op">:</span> <span class="st">'scatter'</span></span>
-<span id="cb15-195"><a href="#cb15-195" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb15-196"><a href="#cb15-196" aria-hidden="true" tabindex="-1"></a>viewof age <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">select</span>([<span class="st">'30_84'</span><span class="op">,</span> <span class="st">'30_49'</span><span class="op">,</span><span class="st">'50_84'</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="st">"30_84"</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"age index"</span>})</span>
-<span id="cb15-197"><a href="#cb15-197" aria-hidden="true" tabindex="-1"></a>viewof er_status <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">select</span>([<span class="st">'ER+'</span><span class="op">,</span><span class="st">'ER-'</span><span class="op">,</span><span class="st">'Borderline/Unk'</span><span class="op">,</span><span class="st">'Not available'</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="st">"ER+"</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"ER status"</span>})</span>
-<span id="cb15-198"><a href="#cb15-198" aria-hidden="true" tabindex="-1"></a>viewof site<span class="op">=</span>Inputs<span class="op">.</span><span class="fu">select</span>([<span class="st">'DCIS'</span><span class="op">,</span><span class="st">'IDC'</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="st">"30_49"</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"site"</span>})</span>
-<span id="cb15-199"><a href="#cb15-199" aria-hidden="true" tabindex="-1"></a>plt<span class="op">.</span><span class="fu">newPlot</span>(div<span class="op">,</span>[trace])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15" data-startfrom="192" data-source-offset="-584"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 191;"><span id="cb15-192"><a href="#cb15-192" aria-hidden="true" tabindex="-1"></a>plt <span class="op">=</span> <span class="pp">require</span>(<span class="st">"https://cdn.plot.ly/plotly-latest.min.js"</span>)</span>
+<span id="cb15-193"><a href="#cb15-193" aria-hidden="true" tabindex="-1"></a>trace <span class="op">=</span> ({</span>
+<span id="cb15-194"><a href="#cb15-194" aria-hidden="true" tabindex="-1"></a>    <span class="dt">x</span><span class="op">:</span>flt_data<span class="op">.</span><span class="at">x</span><span class="op">,</span></span>
+<span id="cb15-195"><a href="#cb15-195" aria-hidden="true" tabindex="-1"></a>    <span class="dt">y</span><span class="op">:</span>flt_data<span class="op">.</span><span class="at">y</span><span class="op">,</span></span>
+<span id="cb15-196"><a href="#cb15-196" aria-hidden="true" tabindex="-1"></a>    <span class="dt">mode</span><span class="op">:</span> <span class="st">'markers'</span><span class="op">,</span></span>
+<span id="cb15-197"><a href="#cb15-197" aria-hidden="true" tabindex="-1"></a>    <span class="dt">type</span><span class="op">:</span> <span class="st">'scatter'</span></span>
+<span id="cb15-198"><a href="#cb15-198" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb15-199"><a href="#cb15-199" aria-hidden="true" tabindex="-1"></a>viewof age <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">select</span>([<span class="st">'30_84'</span><span class="op">,</span> <span class="st">'30_49'</span><span class="op">,</span><span class="st">'50_84'</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="st">"30_84"</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"age index"</span>})</span>
+<span id="cb15-200"><a href="#cb15-200" aria-hidden="true" tabindex="-1"></a><span class="co">//viewof er_status = Inputs.select(['ER+','ER-','Borderline/Unk','Not available'], {value: "ER+", label: "ER status"})</span></span>
+<span id="cb15-201"><a href="#cb15-201" aria-hidden="true" tabindex="-1"></a>viewof site<span class="op">=</span>Inputs<span class="op">.</span><span class="fu">select</span>([<span class="st">'DCIS'</span><span class="op">,</span><span class="st">'IDC'</span>]<span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="st">"30_49"</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"site"</span>})</span>
+<span id="cb15-202"><a href="#cb15-202" aria-hidden="true" tabindex="-1"></a>plt<span class="op">.</span><span class="fu">newPlot</span>(div<span class="op">,</span>[trace])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -429,25 +430,18 @@ Attaching package: 'dplyr'</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div>
-<div id="ojs-cell-1-9" data-nodetype="declaration">
-
-</div>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-1-10" data-nodetype="expression">
+<div id="ojs-cell-1-9" data-nodetype="expression">
 
 </div>
 </div>
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb16" data-startfrom="202" data-source-offset="-931"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 201;"><span id="cb16-202"><a href="#cb16-202" aria-hidden="true" tabindex="-1"></a>div<span class="op">=</span>DOM<span class="op">.</span><span class="fu">element</span>(<span class="st">'div'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16" data-startfrom="205" data-source-offset="-1049"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 204;"><span id="cb16-205"><a href="#cb16-205" aria-hidden="true" tabindex="-1"></a>div<span class="op">=</span>DOM<span class="op">.</span><span class="fu">element</span>(<span class="st">'div'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
-<div id="ojs-cell-1-11" data-nodetype="declaration">
+<div id="ojs-cell-1-10" data-nodetype="declaration">
 
 </div>
 </div>
@@ -460,7 +454,7 @@ Attaching package: 'dplyr'</code></pre>
 </main>
 <!-- /main column -->
 <script type="ojs-module-contents">
-{"contents":[{"methodName":"interpret","cellName":"ojs-cell-1","inline":false,"source":"\nfunction fd(age,erLabel=\"ER+\",theSite=\"DCIS\"){\n\n  let filtered_data = data.index.reduce( (acc,value,index) => {\n    if (value==age && data.er_label[index]==erLabel && data.site[index]==theSite){\n      acc.x.push(data.year[index])\n      acc.y.push(data.rr[index])\n    }\n    return acc\n  },{x:[],y:[]})\n  \n  return filtered_data;\n}\n\n\n//data.site.reduce( (acc,pv)=> {if (!acc.includes(pv)){acc.push(pv)};return acc},[])\n\ndata\nflt_data = fd(age,er_status,site)\nflt_data\n\nplt = require(\"https://cdn.plot.ly/plotly-latest.min.js\")\ntrace = ({\n    x:flt_data.x,\n    y:flt_data.y,\n    mode: 'markers',\n    type: 'scatter'\n  })\nviewof age = Inputs.select(['30_84', '30_49','50_84'], {value: \"30_84\", label: \"age index\"})\nviewof er_status = Inputs.select(['ER+','ER-','Borderline/Unk','Not available'], {value: \"ER+\", label: \"ER status\"})\nviewof site=Inputs.select(['DCIS','IDC'], {value: \"30_49\", label: \"site\"})\nplt.newPlot(div,[trace])\n\n\ndiv=DOM.element('div')\n"},{"methodName":"interpretQuiet","source":"shinyInput('age')"},{"methodName":"interpretQuiet","source":"shinyInput('er_status')"},{"methodName":"interpretQuiet","source":"shinyInput('site')"}]}
+{"contents":[{"methodName":"interpret","cellName":"ojs-cell-1","inline":false,"source":"\n//function fd(age,erLabel=\"ER+\",theSite=\"DCIS\"){\nfunction fd(age,theSite=\"DCIS\"){\n\n  let filtered_data = data.index.reduce( (acc,value,index) => {\n    //if (value==age && data.er_label[index]==erLabel && data.site[index]==theSite){\n       if (value==age && data.site[index]==theSite){\n      acc.x.push(data.year[index])\n      acc.y.push(data.rr[index])\n    }\n    return acc\n  },{x:[],y:[]})\n  \n  return filtered_data;\n}\n\n\n//data.site.reduce( (acc,pv)=> {if (!acc.includes(pv)){acc.push(pv)};return acc},[])\n\ndata\n//flt_data = fd(age,er_status,site)\nflt_data = fd(age,site)\nflt_data\n\nplt = require(\"https://cdn.plot.ly/plotly-latest.min.js\")\ntrace = ({\n    x:flt_data.x,\n    y:flt_data.y,\n    mode: 'markers',\n    type: 'scatter'\n  })\nviewof age = Inputs.select(['30_84', '30_49','50_84'], {value: \"30_84\", label: \"age index\"})\n//viewof er_status = Inputs.select(['ER+','ER-','Borderline/Unk','Not available'], {value: \"ER+\", label: \"ER status\"})\nviewof site=Inputs.select(['DCIS','IDC'], {value: \"30_49\", label: \"site\"})\nplt.newPlot(div,[trace])\n\n\ndiv=DOM.element('div')\n"},{"methodName":"interpretQuiet","source":"shinyInput('age')"},{"methodName":"interpretQuiet","source":"shinyInput('site')"}]}
 </script>
 <script type="module">
 window._ojs.paths.runtimeToDoc = "../../..";
