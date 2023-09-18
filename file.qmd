@@ -158,11 +158,49 @@ assign(paste0('plot', '50 - 84'), plot)
 grid.arrange(plot30_84, plot30_49, plot50_84,
              plotA30_84, plotA30_49, plotA50_84, ncol=3, nrow=2, top = grid::textGrob('Breast cancer in females by morphology and ER status', gp=grid::gpar(fontsize=8)))
 
-
-
-
-
+ojs_define(data = data)
 ```
 
 Figure 1 shows the trends in the incidence of Infiltrating Ductal Cancer (IDC) and Ductal Carcinoma In Situ (DCIS) breast cancers relative to 1990, when ER status started to be recorded. A) depicts overall trends; B) depicts trends in younger women; and C) depicts trends in older women. The dashed line corresponds to a value of 1.
+
+
+```{ojs}
+
+function fd(age,erLabel="ER+",theSite="DCIS"){
+
+  let filtered_data = data.index.reduce( (acc,value,index) => {
+    if (value==age && data.er_label[index]==erLabel && data.site[index]==theSite){
+      acc.x.push(data.year[index])
+      acc.y.push(data.rr[index])
+    }
+    return acc
+  },{x:[],y:[]})
+  
+  return filtered_data;
+}
+
+
+//data.site.reduce( (acc,pv)=> {if (!acc.includes(pv)){acc.push(pv)};return acc},[])
+
+data
+flt_data = fd(age,er_status,site)
+flt_data
+
+plt = require("https://cdn.plot.ly/plotly-latest.min.js")
+trace = ({
+    x:flt_data.x,
+    y:flt_data.y,
+    mode: 'markers',
+    type: 'scatter'
+  })
+viewof age = Inputs.select(['30_84', '30_49','50_84'], {value: "30_84", label: "age index"})
+viewof er_status = Inputs.select(['ER+','ER-','Borderline/Unk','Not available'], {value: "ER+", label: "ER status"})
+viewof site=Inputs.select(['DCIS','IDC'], {value: "30_49", label: "site"})
+plt.newPlot(div,[trace])
+
+
+div=DOM.element('div')
+```
+
+
 
