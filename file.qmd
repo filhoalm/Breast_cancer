@@ -1,0 +1,168 @@
+---
+author: "Ismail Jatoi; Adalberto Miranda-Filho; Gretchen Gierach; Philip S. Rosenberg"
+title: "Is Ductal Carcinoma in Situ a Precursor or Low-Risk Variant of Invasive Breast Cancer? A Population Perspective"
+project:
+  type: website
+  output-dir: docs
+code-fold: true
+---
+
+## Methods
+
+Institute NC. Surveillance, Epidemiology, and End Results (SEER 9,) Program Populations (1975-2018). (www.seer.cancer.gov/popdata), National Cancer Institute, DCCPS, Surveillance Research Program, released May 2023. February 2022S ed.: National Cancer Institute, 2022.
+
+### Morphology
+
+#### DCIS
+
+'8201/2: Cribriform carcinoma in situ','8500/2: Intraductal carcinoma, noninfiltrating, NOS','8501/2: Comedocarcinoma, noninfiltrating','8503/2: Noninfiltrating intraductal papillary adenocarcinoma','8507/2: Intraductal micropapillary carcinoma','8523/2: Intraductal with other types of carcinoma in situ' AND {Extent of Disease.ER Status Recode Breast Cancer (1990+)} = 'Positive','Negative','Borderline/Unknown','Recode not available'
+
+#### IDC
+
+'8500/3: Infiltrating duct carcinoma, NOS','8523/3: Infiltrating duct mixed with other types of carcinoma' AND {Extent of Disease.ER Status Recode Breast Cancer (1990+)} = 'Positive','Negative','Borderline/Unknown','Recode not available'
+
+```{r}
+
+library(ggplot2)
+library(gridExtra)
+library(dplyr)
+
+#MyPath <- "C:/Users/filhoam/Desktop/Breast/Round2/Figure/"
+
+
+# Function for reading and processing data
+process_df <- function(file_path, index) {
+  df = read.csv(file_path)
+  df$year <- df$Year.of.diagnosis + 1974
+  names(df) <- c("year_num", "er", "asr", "cases", "py", "year")
+  df$er_label <- factor(df$er, labels = c("ER+", "ER-", "Borderline/Unk", "Not available"))
+  refs <- df$asr[df$year == 1990]
+  df <- df %>% 
+    group_by(er) %>% 
+    mutate(rr = round((asr/refs[er + 1]), 2)) %>% 
+    ungroup()
+  df$index <- index
+  df$site <- "DCIS"
+  return(df)
+}
+
+# File paths
+file_paths <- c('file_path1' = 'https://raw.githubusercontent.com/filhoalm/Breast-cancer/main/dcis_er_30_49.csv',
+                'file_path2' = 'https://raw.githubusercontent.com/filhoalm/Breast-cancer/main/dcis_er_50_84.csv',
+                'file_path3' = 'https://raw.githubusercontent.com/filhoalm/Breast-cancer/main/dcis_er.csv'
+)
+
+# Indices
+indices <- c('30_49', '50_84', '30_84')
+
+# Process dataframes
+dfs <- mapply(process_df, file_path = file_paths, index = indices, SIMPLIFY = F)
+
+# Combine dataframes
+dcis <- do.call(rbind, dfs)
+
+# IDC
+
+# Function for reading and processing data
+process_df <- function(file_path, index) {
+  df = read.csv(file_path)
+  df$year <- df$Year.of.diagnosis + 1974
+  names(df) <- c("year_num", "er", "asr", "cases", "py", "year")
+  df$er_label <- factor(df$er, labels = c("ER+", "ER-", "Borderline/Unk", "Not available"))
+  refs <- df$asr[df$year == 1990]
+  df <- df %>% 
+    group_by(er) %>% 
+    mutate(rr = round((asr/refs[er + 1]), 2)) %>% 
+    ungroup()
+  df$index <- index
+  df$site <- "IDC"
+  return(df)
+}
+
+# File paths
+file_paths <- c('file_path1' = 'https://raw.githubusercontent.com/filhoalm/Breast-cancer/main/idc_er_30_49.csv',
+                'file_path2' = 'https://raw.githubusercontent.com/filhoalm/Breast-cancer/main/idc_er_50_84.csv',
+                'file_path3' = 'https://raw.githubusercontent.com/filhoalm/Breast-cancer/main/idc_er.csv'
+)
+
+# Indices
+indices <- c('30_49', '50_84', '30_84')
+
+# Process dataframes
+dfs <- mapply(process_df, file_path = file_paths, index = indices, SIMPLIFY = F)
+
+# Combine dataframes
+idc <- do.call(rbind, dfs)
+
+
+data <- rbind(dcis, idc)
+
+generate_plot <- function(data, title, ylim_val) {
+  title = paste0(title)
+  plot <- ggplot(data, aes(x=year, y= rr, group=er_label)) +
+    geom_point(aes(shape=er_label, color=er_label)) +
+    scale_color_manual(values=c('#374e55','#df8f44','darkgray'))+ 
+    ylim (0, ylim_val) +
+    labs(x="Year", y="Incidence relative to 1990") +
+    geom_hline(yintercept=1, linetype="dashed", size=0.3) +
+    theme_bw() +
+    theme(legend.position="none") +
+    ggtitle(title)+
+    theme(plot.title = element_text(size = 5),
+          axis.text.x = element_text(size = 5),
+          axis.text.y = element_text(size = 5),
+          axis.title.x = element_text(size = 5),
+          axis.title.y = element_text(size = 5))
+  return(plot)
+}
+
+# Define the subset of your data for each index
+indices <- list("30_84", "30_49", "50_84")
+
+#
+a <- subset(data, data$site=="IDC" & data$index=="30_84" &data$er_label!="Not available" & data$year >= 1990)
+b <- subset(data, data$site=="IDC" & data$index=="30_49" &data$er_label!="Not available" & data$year >= 1990)
+c <- subset(data, data$site=="IDC" & data$index=="50_84" &data$er_label!="Not available" & data$year >= 1990)
+
+a1 <- subset(data, data$site=="DCIS" & data$index=="30_84" &data$er_label!="Not available" & data$year >= 1990)
+b1 <- subset(data, data$site=="DCIS" & data$index=="30_49" &data$er_label!="Not available" & data$year >= 1990)
+c1 <- subset(data, data$site=="DCIS" & data$index=="50_84" &data$er_label!="Not available" & data$year >= 1990)
+
+
+plot30_84 <- generate_plot(a, '30 - 84', 5) + 
+  ggtitle(paste0('IDC, ', gsub('_', ' - ', '30 - 84')))
+assign(paste0('plot', '30 - 84'), plot)
+
+plot30_49 <- generate_plot(b, '30 - 49', 5) + 
+  ggtitle(paste0('IDC, ', gsub('_', ' - ', '30 - 49')))
+assign(paste0('plot', '30 - 49'), plot)
+
+plot50_84 <- generate_plot(c, '50 - 84', 5) + 
+  ggtitle(paste0('IDC, ', gsub('_', ' - ', '50 - 84')))
+assign(paste0('plot', '50 - 84'), plot)
+
+#
+
+plotA30_84 <- generate_plot(a1, '30 - 84', 20) + 
+  ggtitle(paste0('DCIS, ', gsub('_', ' - ', '30 - 84')))
+assign(paste0('plot', '30 - 84'), plot)
+
+plotA30_49 <- generate_plot(b1, '30 - 49', 20) + 
+  ggtitle(paste0('DCIS, ', gsub('_', ' - ', '30 - 49')))
+assign(paste0('plot', '30 - 49'), plot)
+
+plotA50_84 <- generate_plot(c1, '50 - 84', 20) + 
+  ggtitle(paste0('DCIS, ', gsub('_', ' - ', '50 - 84')))
+assign(paste0('plot', '50 - 84'), plot)
+
+grid.arrange(plot30_84, plot30_49, plot50_84,
+             plotA30_84, plotA30_49, plotA50_84, ncol=3, nrow=2, top = grid::textGrob('Breast cancer in females by morphology and ER status', gp=grid::gpar(fontsize=8)))
+
+
+
+
+
+```
+
+Figure 1 shows the trends in the incidence of Infiltrating Ductal Cancer (IDC) and Ductal Carcinoma In Situ (DCIS) breast cancers relative to 1990, when ER status started to be recorded. A) depicts overall trends; B) depicts trends in younger women; and C) depicts trends in older women. The dashed line corresponds to a value of 1.
+
