@@ -47,9 +47,9 @@ process_df <- function(file_path, index) {
 }
 
 # File paths
-file_paths <- c('file_path1' = 'https://raw.githubusercontent.com/filhoalm/Breast-cancer/main/dcis_er_30_49.csv',
-                'file_path2' = 'https://raw.githubusercontent.com/filhoalm/Breast-cancer/main/dcis_er_50_84.csv',
-                'file_path3' = 'https://raw.githubusercontent.com/filhoalm/Breast-cancer/main/dcis_er.csv'
+file_paths <- c('file_path1' = 'https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/data/dcis_er_30_49.csv',
+                'file_path2' = 'https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/data/dcis_er_50_84.csv',
+                'file_path3' = 'https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/data/dcis_er.csv'
 )
 
 # Indices
@@ -80,9 +80,9 @@ process_df <- function(file_path, index) {
 }
 
 # File paths
-file_paths <- c('file_path1' = 'https://raw.githubusercontent.com/filhoalm/Breast-cancer/main/idc_er_30_49.csv',
-                'file_path2' = 'https://raw.githubusercontent.com/filhoalm/Breast-cancer/main/idc_er_50_84.csv',
-                'file_path3' = 'https://raw.githubusercontent.com/filhoalm/Breast-cancer/main/idc_er.csv'
+file_paths <- c('file_path1' = 'https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/data/idc_er_30_49.csv',
+                'file_path2' = 'https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/data/idc_er_50_84.csv',
+                'file_path3' = 'https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/data/idc_er.csv'
 )
 
 # Indices
