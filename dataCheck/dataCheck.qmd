@@ -1,0 +1,58 @@
+---
+title: "Breast cancer, invasive vs in situ"
+author: "AMF"
+date: "Today's Date"
+output: pdf_document
+---
+
+### Check the data extracted from SEER 8.
+I have the code in good shape but somehow my ER+ in situ data looks too much like my ER+ invasive data.  
+
+Can you check the css files to be sure there isn't a snag there?
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readr)
+library(Rcan)
+library(ggplot2)
+```
+
+```{r load_data}
+df1 <- read_csv("C:/Users/filhoam/Desktop/Breast/Round3/data/dcis.csv")
+names(df1) <- c("year", "age", "er", "asr", "count", "py", "std")
+df1$cancer <- "DCIS"
+
+df2 <- read_csv("C:/Users/filhoam/Desktop/Breast/Round3/data/idc.csv")
+names(df2) <- c("year", "age", "er", "asr", "count", "py", "std")
+df2$cancer <- "IDC"
+
+df <- rbind(df1, df2)
+df$year <- df$year + 1974
+
+df <- subset(df, age >= 30 & age <= 84 & year >= 1975)
+
+df$er_label <- ifelse(df$er == 0, "positive",
+                      ifelse(df$er == 1, "negative",
+                             ifelse(df$er == 2, "bord/unkw", "not available")))
+
+df$age_group <- cut(df$age, breaks = seq(29, 85, 5), labels = paste(seq(30, 80, 5), "-", seq(34, 84, 5)))
+
+df$age_index <- as.integer(df$age_group) + 6
+
+df4 <- df[c(1, 5, 6, 8, 9, 11)]
+
+result <- csu_asr(df4, "age_index", "count", "py",
+                  group_by = c("cancer", "er_label", "year"),
+                  var_age_group = c("er_label", "year"))
+
+df5 <- subset(result, year >= 1992)
+```
+
+```{r create_plot}
+ggplot(df5, aes(x = year, y = asr, color = er_label, shape = cancer)) +
+  geom_point() +
+  geom_line() +
+  labs(x = "Year", y = "ASR", color = "ER Label", shape = "Cancer") +
+  theme_minimal()
+```
