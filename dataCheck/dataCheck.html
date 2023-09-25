@@ -8,7 +8,7 @@
 
 <meta name="author" content="AMF">
 
-<title>Breast cancer, invasive vs in situ</title>
+<title>SEER 8 - Breast cancer: invasive vs in situ</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -109,7 +109,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Breast cancer, invasive vs in situ</h1>
+<h1 class="title">SEER 8 - Breast cancer: invasive vs in situ</h1>
 </div>
 
 
@@ -141,7 +141,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>I have the code in good shape but somehow my ER+ in situ data looks too much like my ER+ invasive data.</p>
 <p>Can you check the css files to be sure there isn’t a snag there?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>df1 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"C:/Users/filhoam/Desktop/Breast/Round3/data/dcis.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>df1 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/dataCheck/dcis.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 16356 Columns: 7
 ── Column specification ────────────────────────────────────────────────────────
@@ -155,7 +155,7 @@ dbl (6): Year of diagnosis, Age recode with single ages and 85+, ER Status R...
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(df1) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"year"</span>, <span class="st">"age"</span>, <span class="st">"er"</span>, <span class="st">"asr"</span>, <span class="st">"count"</span>, <span class="st">"py"</span>, <span class="st">"std"</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df1<span class="sc">$</span>cancer <span class="ot">&lt;-</span> <span class="st">"DCIS"</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>df2 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"C:/Users/filhoam/Desktop/Breast/Round3/data/idc.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>df2 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/dataCheck/idc.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 16356 Columns: 7
 ── Column specification ────────────────────────────────────────────────────────
@@ -208,6 +208,9 @@ ASR have been computed for the age group 0-99+</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>df5 <span class="ot">&lt;-</span> <span class="fu">subset</span>(result, year <span class="sc">&gt;=</span> <span class="dv">1992</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+<section id="asr-have-been-computed-for-the-age-group-30-84" class="level2">
+<h2 class="anchored" data-anchor-id="asr-have-been-computed-for-the-age-group-30-84">ASR have been computed for the age group 30-84</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df5, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> asr, <span class="at">color =</span> er_label, <span class="at">shape =</span> cancer)) <span class="sc">+</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
