@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="AMF">
+<meta name="author" content="Notes from: IJ; AMF; GG; PR">
 
 <title>SEER 8 - Breast cancer: invasive vs in situ</title>
 <style>
@@ -119,7 +119,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <div>
     <div class="quarto-title-meta-heading">Author</div>
     <div class="quarto-title-meta-contents">
-             <p>AMF </p>
+             <p>Notes from: IJ; AMF; GG; PR </p>
           </div>
   </div>
     
@@ -136,57 +136,49 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<section id="check-the-data-extracted-from-seer-8." class="level3">
-<h3 class="anchored" data-anchor-id="check-the-data-extracted-from-seer-8.">Check the data extracted from SEER 8.</h3>
-<p>I have the code in good shape but somehow my ER+ in situ data looks too much like my ER+ invasive data.</p>
-<p>Can you check the css files to be sure there isn’t a snag there?</p>
+<section id="data-source" class="level2">
+<h2 class="anchored" data-anchor-id="data-source">Data source</h2>
+<p>Institute NC. Surveillance, Epidemiology, and End Results (SEER 9,) Program Populations (1975-2018). (www.seer.cancer.gov/popdata), National Cancer Institute, DCCPS, Surveillance Research Program, released May 2023. February 2022S ed.: National Cancer Institute, 2022.</p>
+<section id="morphology" class="level4">
+<h4 class="anchored" data-anchor-id="morphology">Morphology</h4>
+<section id="dcis" class="level6">
+<h6 class="anchored" data-anchor-id="dcis">DCIS</h6>
+<p>‘8201/2: Cribriform carcinoma in situ’,‘8500/2: Intraductal carcinoma, noninfiltrating, NOS’,‘8501/2: Comedocarcinoma, noninfiltrating’,‘8503/2: Noninfiltrating intraductal papillary adenocarcinoma’,‘8507/2: Intraductal micropapillary carcinoma’,‘8523/2: Intraductal with other types of carcinoma in situ’ AND {Extent of Disease.ER Status Recode Breast Cancer (1990+)} = ‘Positive’,‘Negative’,‘Borderline/Unknown’,‘Recode not available’</p>
+</section>
+<section id="idc" class="level6">
+<h6 class="anchored" data-anchor-id="idc">IDC</h6>
+<p>‘8500/3: Infiltrating duct carcinoma, NOS’,‘8523/3: Infiltrating duct mixed with other types of carcinoma’ AND {Extent of Disease.ER Status Recode Breast Cancer (1990+)} = ‘Positive’,‘Negative’,‘Borderline/Unknown’,‘Recode not available’</p>
+</section>
+<section id="check-the-data-extracted-from-seer-8." class="level5">
+<h5 class="anchored" data-anchor-id="check-the-data-extracted-from-seer-8.">Check the data extracted from SEER 8.</h5>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>df1 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/dataCheck/dcis.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Rows: 16356 Columns: 7
-── Column specification ────────────────────────────────────────────────────────
-Delimiter: ","
-chr (1): Age-Adjusted Rate
-dbl (6): Year of diagnosis, Age recode with single ages and 85+, ER Status R...
-
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>df1 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/dataCheck/dcis.csv"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(df1) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"year"</span>, <span class="st">"age"</span>, <span class="st">"er"</span>, <span class="st">"asr"</span>, <span class="st">"count"</span>, <span class="st">"py"</span>, <span class="st">"std"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>df1<span class="sc">$</span>cancer <span class="ot">&lt;-</span> <span class="st">"DCIS"</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>df2 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/dataCheck/idc.csv"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(df2) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"year"</span>, <span class="st">"age"</span>, <span class="st">"er"</span>, <span class="st">"asr"</span>, <span class="st">"count"</span>, <span class="st">"py"</span>, <span class="st">"std"</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>df2<span class="sc">$</span>cancer <span class="ot">&lt;-</span> <span class="st">"IDC"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(df1) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"year"</span>, <span class="st">"age"</span>, <span class="st">"er"</span>, <span class="st">"asr"</span>, <span class="st">"count"</span>, <span class="st">"py"</span>, <span class="st">"std"</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df1<span class="sc">$</span>cancer <span class="ot">&lt;-</span> <span class="st">"DCIS"</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>df2 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/dataCheck/idc.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Rows: 16356 Columns: 7
-── Column specification ────────────────────────────────────────────────────────
-Delimiter: ","
-chr (1): Age-Adjusted Rate
-dbl (6): Year of diagnosis, Age recode with single ages and 85+, ER Status R...
-
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(df2) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"year"</span>, <span class="st">"age"</span>, <span class="st">"er"</span>, <span class="st">"asr"</span>, <span class="st">"count"</span>, <span class="st">"py"</span>, <span class="st">"std"</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>df2<span class="sc">$</span>cancer <span class="ot">&lt;-</span> <span class="st">"IDC"</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">rbind</span>(df1, df2)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>year <span class="ot">&lt;-</span> df<span class="sc">$</span>year <span class="sc">+</span> <span class="dv">1974</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">subset</span>(df, age <span class="sc">&gt;=</span> <span class="dv">30</span> <span class="sc">&amp;</span> age <span class="sc">&lt;=</span> <span class="dv">84</span> <span class="sc">&amp;</span> year <span class="sc">&gt;=</span> <span class="dv">1975</span>)</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>er_label <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(df<span class="sc">$</span>er <span class="sc">==</span> <span class="dv">0</span>, <span class="st">"positive"</span>,</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">ifelse</span>(df<span class="sc">$</span>er <span class="sc">==</span> <span class="dv">1</span>, <span class="st">"negative"</span>,</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">ifelse</span>(df<span class="sc">$</span>er <span class="sc">==</span> <span class="dv">2</span>, <span class="st">"bord/unkw"</span>, <span class="st">"not available"</span>)))</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>age_group <span class="ot">&lt;-</span> <span class="fu">cut</span>(df<span class="sc">$</span>age, <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">29</span>, <span class="dv">85</span>, <span class="dv">5</span>), <span class="at">labels =</span> <span class="fu">paste</span>(<span class="fu">seq</span>(<span class="dv">30</span>, <span class="dv">80</span>, <span class="dv">5</span>), <span class="st">"-"</span>, <span class="fu">seq</span>(<span class="dv">34</span>, <span class="dv">84</span>, <span class="dv">5</span>)))</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>age_index <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(df<span class="sc">$</span>age_group) <span class="sc">+</span> <span class="dv">6</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>df4 <span class="ot">&lt;-</span> df[<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">11</span>)]</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">csu_asr</span>(df4, <span class="st">"age_index"</span>, <span class="st">"count"</span>, <span class="st">"py"</span>,</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>                  <span class="at">group_by =</span> <span class="fu">c</span>(<span class="st">"cancer"</span>, <span class="st">"er_label"</span>, <span class="st">"year"</span>),</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>                  <span class="at">var_age_group =</span> <span class="fu">c</span>(<span class="st">"er_label"</span>, <span class="st">"year"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">rbind</span>(df1, df2)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>year <span class="ot">&lt;-</span> df<span class="sc">$</span>year <span class="sc">+</span> <span class="dv">1974</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">subset</span>(df, age <span class="sc">&gt;=</span> <span class="dv">30</span> <span class="sc">&amp;</span> age <span class="sc">&lt;=</span> <span class="dv">84</span> <span class="sc">&amp;</span> year <span class="sc">&gt;=</span> <span class="dv">1975</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>er_label <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(df<span class="sc">$</span>er <span class="sc">==</span> <span class="dv">0</span>, <span class="st">"positive"</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">ifelse</span>(df<span class="sc">$</span>er <span class="sc">==</span> <span class="dv">1</span>, <span class="st">"negative"</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">ifelse</span>(df<span class="sc">$</span>er <span class="sc">==</span> <span class="dv">2</span>, <span class="st">"bord/unkw"</span>, <span class="st">"not available"</span>)))</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>age_group <span class="ot">&lt;-</span> <span class="fu">cut</span>(df<span class="sc">$</span>age, <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">29</span>, <span class="dv">85</span>, <span class="dv">5</span>), <span class="at">labels =</span> <span class="fu">paste</span>(<span class="fu">seq</span>(<span class="dv">30</span>, <span class="dv">80</span>, <span class="dv">5</span>), <span class="st">"-"</span>, <span class="fu">seq</span>(<span class="dv">34</span>, <span class="dv">84</span>, <span class="dv">5</span>)))</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>age_index <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(df<span class="sc">$</span>age_group) <span class="sc">+</span> <span class="dv">6</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>df4 <span class="ot">&lt;-</span> df[<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">11</span>)]</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">csu_asr</span>(df4, <span class="st">"age_index"</span>, <span class="st">"count"</span>, <span class="st">"py"</span>,</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>                  <span class="at">group_by =</span> <span class="fu">c</span>(<span class="st">"cancer"</span>, <span class="st">"er_label"</span>, <span class="st">"year"</span>),</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>                  <span class="at">var_age_group =</span> <span class="fu">c</span>(<span class="st">"er_label"</span>, <span class="st">"year"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Population with less than 18 age group:
@@ -206,19 +198,131 @@ Population with less than 18 age group:
 
 ASR have been computed for the age group 0-99+</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>df5 <span class="ot">&lt;-</span> <span class="fu">subset</span>(result, year <span class="sc">&gt;=</span> <span class="dv">1992</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df5 <span class="ot">&lt;-</span> <span class="fu">subset</span>(result, year <span class="sc">&gt;=</span> <span class="dv">1992</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+</section>
 </section>
 <section id="asr-have-been-computed-for-the-age-group-30-84" class="level2">
 <h2 class="anchored" data-anchor-id="asr-have-been-computed-for-the-age-group-30-84">ASR have been computed for the age group 30-84</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df5, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> asr, <span class="at">color =</span> er_label, <span class="at">shape =</span> cancer)) <span class="sc">+</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"ASR"</span>, <span class="at">color =</span> <span class="st">"ER Label"</span>, <span class="at">shape =</span> <span class="st">"Cancer"</span>) <span class="sc">+</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df5, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> asr, <span class="at">color =</span> er_label, <span class="at">shape =</span> cancer)) <span class="sc">+</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"ASR"</span>, <span class="at">color =</span> <span class="st">"ER Label"</span>, <span class="at">shape =</span> <span class="st">"Cancer"</span>) <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="dataCheck_files/figure-html/create_plot-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">rbind</span>(df1, df2)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>year <span class="ot">&lt;-</span> df<span class="sc">$</span>year <span class="sc">+</span> <span class="dv">1974</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">subset</span>(df, age <span class="sc">&gt;=</span> <span class="dv">30</span> <span class="sc">&amp;</span> age <span class="sc">&lt;=</span> <span class="dv">84</span> <span class="sc">&amp;</span> year <span class="sc">&gt;=</span> <span class="dv">1975</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>er_label <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(df<span class="sc">$</span>er <span class="sc">==</span> <span class="dv">0</span>, <span class="st">"positive"</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">ifelse</span>(df<span class="sc">$</span>er <span class="sc">==</span> <span class="dv">1</span>, <span class="st">"negative"</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">ifelse</span>(df<span class="sc">$</span>er <span class="sc">==</span> <span class="dv">2</span>, <span class="st">"bord/unkw"</span>, <span class="st">"not available"</span>)))</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>age_group <span class="ot">&lt;-</span> <span class="fu">cut</span>(df<span class="sc">$</span>age, <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">29</span>, <span class="dv">85</span>, <span class="dv">5</span>), <span class="at">labels =</span> <span class="fu">paste</span>(<span class="fu">seq</span>(<span class="dv">30</span>, <span class="dv">80</span>, <span class="dv">5</span>), <span class="st">"-"</span>, <span class="fu">seq</span>(<span class="dv">34</span>, <span class="dv">84</span>, <span class="dv">5</span>)))</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>age_index <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(df<span class="sc">$</span>age_group) <span class="sc">+</span> <span class="dv">6</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>dfa<span class="ot">&lt;-</span><span class="fu">subset</span>(df, df<span class="sc">$</span>age_index <span class="sc">&gt;=</span> <span class="dv">7</span> <span class="sc">&amp;</span> df<span class="sc">$</span>age_index <span class="sc">&lt;=</span><span class="dv">10</span>)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>df4 <span class="ot">&lt;-</span> dfa[<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">11</span>)]</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>result1 <span class="ot">&lt;-</span> <span class="fu">csu_asr</span>(df4, <span class="st">"age_index"</span>, <span class="st">"count"</span>, <span class="st">"py"</span>,</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>                  <span class="at">group_by =</span> <span class="fu">c</span>(<span class="st">"cancer"</span>, <span class="st">"er_label"</span>, <span class="st">"year"</span>),</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>                  <span class="at">var_age_group =</span> <span class="fu">c</span>(<span class="st">"er_label"</span>, <span class="st">"year"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Population with less than 18 age group:
+
+     er_label year nb_age_group
+    bord/unkw 1975            4
+    bord/unkw 1976            4
+    bord/unkw 1977            4
+    bord/unkw 1978            4
+    bord/unkw 1979            4
+---                            
+     positive 2016            4
+     positive 2017            4
+     positive 2018            4
+     positive 2019            4
+     positive 2020            4
+
+ASR have been computed for the age group 0-99+</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>df6 <span class="ot">&lt;-</span> <span class="fu">subset</span>(result1, year <span class="sc">&gt;=</span> <span class="dv">1992</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="asr-have-been-computed-for-the-age-group-30-49" class="level2">
+<h2 class="anchored" data-anchor-id="asr-have-been-computed-for-the-age-group-30-49">ASR have been computed for the age group 30-49</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df6, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> asr, <span class="at">color =</span> er_label, <span class="at">shape =</span> cancer)) <span class="sc">+</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"ASR"</span>, <span class="at">color =</span> <span class="st">"ER Label"</span>, <span class="at">shape =</span> <span class="st">"Cancer"</span>) <span class="sc">+</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="dataCheck_files/figure-html/create_plot2-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">rbind</span>(df1, df2)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>year <span class="ot">&lt;-</span> df<span class="sc">$</span>year <span class="sc">+</span> <span class="dv">1974</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">subset</span>(df, age <span class="sc">&gt;=</span> <span class="dv">30</span> <span class="sc">&amp;</span> age <span class="sc">&lt;=</span> <span class="dv">84</span> <span class="sc">&amp;</span> year <span class="sc">&gt;=</span> <span class="dv">1975</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>er_label <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(df<span class="sc">$</span>er <span class="sc">==</span> <span class="dv">0</span>, <span class="st">"positive"</span>,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">ifelse</span>(df<span class="sc">$</span>er <span class="sc">==</span> <span class="dv">1</span>, <span class="st">"negative"</span>,</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">ifelse</span>(df<span class="sc">$</span>er <span class="sc">==</span> <span class="dv">2</span>, <span class="st">"bord/unkw"</span>, <span class="st">"not available"</span>)))</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>age_group <span class="ot">&lt;-</span> <span class="fu">cut</span>(df<span class="sc">$</span>age, <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">29</span>, <span class="dv">85</span>, <span class="dv">5</span>), <span class="at">labels =</span> <span class="fu">paste</span>(<span class="fu">seq</span>(<span class="dv">30</span>, <span class="dv">80</span>, <span class="dv">5</span>), <span class="st">"-"</span>, <span class="fu">seq</span>(<span class="dv">34</span>, <span class="dv">84</span>, <span class="dv">5</span>)))</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>age_index <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(df<span class="sc">$</span>age_group) <span class="sc">+</span> <span class="dv">6</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>dfb<span class="ot">&lt;-</span><span class="fu">subset</span>(df, df<span class="sc">$</span>age_index <span class="sc">&gt;=</span> <span class="dv">11</span>)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>df4 <span class="ot">&lt;-</span> dfb[<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">11</span>)]</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>result2 <span class="ot">&lt;-</span> <span class="fu">csu_asr</span>(df4, <span class="st">"age_index"</span>, <span class="st">"count"</span>, <span class="st">"py"</span>,</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>                  <span class="at">group_by =</span> <span class="fu">c</span>(<span class="st">"cancer"</span>, <span class="st">"er_label"</span>, <span class="st">"year"</span>),</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>                  <span class="at">var_age_group =</span> <span class="fu">c</span>(<span class="st">"er_label"</span>, <span class="st">"year"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Population with less than 18 age group:
+
+     er_label year nb_age_group
+    bord/unkw 1975            7
+    bord/unkw 1976            7
+    bord/unkw 1977            7
+    bord/unkw 1978            7
+    bord/unkw 1979            7
+---                            
+     positive 2016            7
+     positive 2017            7
+     positive 2018            7
+     positive 2019            7
+     positive 2020            7
+
+ASR have been computed for the age group 0-99+</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>df7 <span class="ot">&lt;-</span> <span class="fu">subset</span>(result2, year <span class="sc">&gt;=</span> <span class="dv">1992</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="asr-have-been-computed-for-the-age-group-50-84" class="level2">
+<h2 class="anchored" data-anchor-id="asr-have-been-computed-for-the-age-group-50-84">ASR have been computed for the age group 50-84+</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df7, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> asr, <span class="at">color =</span> er_label, <span class="at">shape =</span> cancer)) <span class="sc">+</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"ASR"</span>, <span class="at">color =</span> <span class="st">"ER Label"</span>, <span class="at">shape =</span> <span class="st">"Cancer"</span>) <span class="sc">+</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="dataCheck_files/figure-html/create_plot3-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>

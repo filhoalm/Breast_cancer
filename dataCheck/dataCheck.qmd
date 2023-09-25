@@ -1,15 +1,27 @@
 ---
-title: "Breast cancer, invasive vs in situ"
-author: "AMF"
+author: "Notes from: IJ; AMF; GG; PR"
+title: "SEER 8 - Breast cancer: invasive vs in situ"
 date: "Today's Date"
 output: pdf_document
 ---
 
-### Check the data extracted from SEER 8.
-I have the code in good shape but somehow my ER+ in situ data looks too much like my ER+ invasive data.  
+## Data source
 
-Can you check the css files to be sure there isn't a snag there?
+Institute NC. Surveillance, Epidemiology, and End Results (SEER 9,) Program Populations (1975-2018). (www.seer.cancer.gov/popdata), National Cancer Institute, DCCPS, Surveillance Research Program, released May 2023. February 2022S ed.: National Cancer Institute, 2022.
 
+#### Morphology
+
+###### DCIS
+
+'8201/2: Cribriform carcinoma in situ','8500/2: Intraductal carcinoma, noninfiltrating, NOS','8501/2: Comedocarcinoma, noninfiltrating','8503/2: Noninfiltrating intraductal papillary adenocarcinoma','8507/2: Intraductal micropapillary carcinoma','8523/2: Intraductal with other types of carcinoma in situ' AND {Extent of Disease.ER Status Recode Breast Cancer (1990+)} = 'Positive','Negative','Borderline/Unknown','Recode not available'
+
+###### IDC
+
+'8500/3: Infiltrating duct carcinoma, NOS','8523/3: Infiltrating duct mixed with other types of carcinoma' AND {Extent of Disease.ER Status Recode Breast Cancer (1990+)} = 'Positive','Negative','Borderline/Unknown','Recode not available'
+
+
+
+##### Check the data extracted from SEER 8.
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -19,14 +31,18 @@ library(ggplot2)
 ```
 
 ```{r load_data}
-df1 <- read_csv("C:/Users/filhoam/Desktop/Breast/Round3/data/dcis.csv")
+df1 <- read.csv("https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/dataCheck/dcis.csv")
 names(df1) <- c("year", "age", "er", "asr", "count", "py", "std")
 df1$cancer <- "DCIS"
 
-df2 <- read_csv("C:/Users/filhoam/Desktop/Breast/Round3/data/idc.csv")
+df2 <- read.csv("https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/dataCheck/idc.csv")
 names(df2) <- c("year", "age", "er", "asr", "count", "py", "std")
 df2$cancer <- "IDC"
 
+```
+
+
+```{r load_data2}
 df <- rbind(df1, df2)
 df$year <- df$year + 1974
 
@@ -46,8 +62,12 @@ result <- csu_asr(df4, "age_index", "count", "py",
                   group_by = c("cancer", "er_label", "year"),
                   var_age_group = c("er_label", "year"))
 
-df5 <- subset(result, year >= 1992)
+df5 <- subset(result, year >= 1992 )
+
 ```
+
+
+## ASR have been computed for the age group 30-84
 
 ```{r create_plot}
 ggplot(df5, aes(x = year, y = asr, color = er_label, shape = cancer)) +
@@ -55,4 +75,76 @@ ggplot(df5, aes(x = year, y = asr, color = er_label, shape = cancer)) +
   geom_line() +
   labs(x = "Year", y = "ASR", color = "ER Label", shape = "Cancer") +
   theme_minimal()
+```
+
+```{r load_data3}
+df <- rbind(df1, df2)
+df$year <- df$year + 1974
+
+df <- subset(df, age >= 30 & age <= 84 & year >= 1975)
+
+df$er_label <- ifelse(df$er == 0, "positive",
+                      ifelse(df$er == 1, "negative",
+                             ifelse(df$er == 2, "bord/unkw", "not available")))
+
+df$age_group <- cut(df$age, breaks = seq(29, 85, 5), labels = paste(seq(30, 80, 5), "-", seq(34, 84, 5)))
+
+df$age_index <- as.integer(df$age_group) + 6
+
+dfa<-subset(df, df$age_index >= 7 & df$age_index <=10)
+
+df4 <- dfa[c(1, 5, 6, 8, 9, 11)]
+
+result1 <- csu_asr(df4, "age_index", "count", "py",
+                  group_by = c("cancer", "er_label", "year"),
+                  var_age_group = c("er_label", "year"))
+
+df6 <- subset(result1, year >= 1992 )
+
+```
+## ASR have been computed for the age group 30-49
+
+```{r create_plot2}
+ggplot(df6, aes(x = year, y = asr, color = er_label, shape = cancer)) +
+  geom_point() +
+  geom_line() +
+  labs(x = "Year", y = "ASR", color = "ER Label", shape = "Cancer") +
+  theme_minimal()
+
+```
+
+```{r load_data4}
+df <- rbind(df1, df2)
+df$year <- df$year + 1974
+
+df <- subset(df, age >= 30 & age <= 84 & year >= 1975)
+
+df$er_label <- ifelse(df$er == 0, "positive",
+                      ifelse(df$er == 1, "negative",
+                             ifelse(df$er == 2, "bord/unkw", "not available")))
+
+df$age_group <- cut(df$age, breaks = seq(29, 85, 5), labels = paste(seq(30, 80, 5), "-", seq(34, 84, 5)))
+
+df$age_index <- as.integer(df$age_group) + 6
+
+dfb<-subset(df, df$age_index >= 11)
+
+df4 <- dfb[c(1, 5, 6, 8, 9, 11)]
+
+result2 <- csu_asr(df4, "age_index", "count", "py",
+                  group_by = c("cancer", "er_label", "year"),
+                  var_age_group = c("er_label", "year"))
+
+df7 <- subset(result2, year >= 1992 )
+
+```
+## ASR have been computed for the age group 50-84+
+
+```{r create_plot3}
+ggplot(df7, aes(x = year, y = asr, color = er_label, shape = cancer)) +
+  geom_point() +
+  geom_line() +
+  labs(x = "Year", y = "ASR", color = "ER Label", shape = "Cancer") +
+  theme_minimal()
+
 ```
