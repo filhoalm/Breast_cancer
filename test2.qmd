@@ -167,13 +167,13 @@ knitr::knit_engines$set(webr = function(options) {
 )
 ```
 
-## Exploration
+## Explorer
 
 ```{webr}
-library(readr)
-install.packages("Rcan")
-library(Rcan)
-library(ggplot2)
+# library(readr)
+# install.packages("Rcan")
+# library(Rcan)
+# library(ggplot2)
 
 df1 <- read.csv("https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/dataCheck/dcis.csv")
 names(df1) <- c("year", "age", "er", "asr", "count", "py", "std")
@@ -199,17 +199,32 @@ df$age_index <- as.integer(df$age_group) + 6
 
 df4 <- df[c(1, 5, 6, 8, 9, 11)]
 
-result <- csu_asr(df4, "age_index", "count", "py",
-                  group_by = c("cancer", "er_label", "year"),
-                  var_age_group = c("er_label", "year"))
-
-df5 <- subset(result, year >= 1992 )
-head(df5)
 
 ```
+
+## ASR function 
+
+```{webr}
+# Install non-base R packages
+webr::install("Rcan")
+# Load non-base packages like normal
+library("Rcan")
+
+df4 <- df[c(1, 5, 6, 8, 9, 11)]
+
+ result <- csu_asr(df4, "age_index", "count", "py",
+                   group_by = c("cancer", "er_label", "year"),
+                   var_age_group = c("er_label", "year"))
+ 
+ df5 <- subset(result, year >= 1992 )
+ head(df5)
+
+```
+
+
 ### ggplot2 Graphics
 
-Next, we look at using `ggplot2` graphics. By default, the `ggplot2` package is not available as it is *dependency* heavy.
+By default, the `ggplot2` package is not available as it is *dependency* heavy.
 
 ```{=html}
 <details>
@@ -244,24 +259,26 @@ Downloading webR package: pkgconfig
 Downloading webR package: tibble
 Downloading webR package: withr
 Downloading webR package: ggplot2
+
+Downloading webR package: readr
+Downloading webR package: Rcan
+
+
 </details>
 ```
+
+
 ```{webr}
 # Install non-base R packages
 webr::install("ggplot2")
 # Load non-base packages like normal
 library("ggplot2")
-p = ggplot(mpg, aes(class, hwy))
-p + geom_boxplot()
-```
 
-### Figure 1
-
-```{webr}
 ggplot(df5, aes(x = year, y = asr, color = er_label, shape = cancer)) +
   geom_point() +
   geom_line() +
   labs(x = "Year", y = "ASR", color = "ER Label", shape = "Cancer") +
   theme_minimal()
+
 ```
 

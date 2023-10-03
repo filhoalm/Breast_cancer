@@ -2551,10 +2551,10 @@ vertical-align: -.125em;
   <li><a href="#dcis" id="toc-dcis" class="nav-link" data-scroll-target="#dcis">DCIS</a></li>
   <li><a href="#idc" id="toc-idc" class="nav-link" data-scroll-target="#idc">IDC</a></li>
   </ul></li>
-  <li><a href="#exploration" id="toc-exploration" class="nav-link" data-scroll-target="#exploration">Exploration</a>
+  <li><a href="#explorer" id="toc-explorer" class="nav-link" data-scroll-target="#explorer">Explorer</a></li>
+  <li><a href="#asr-function" id="toc-asr-function" class="nav-link" data-scroll-target="#asr-function">ASR function</a>
   <ul class="collapse">
   <li><a href="#ggplot2-graphics" id="toc-ggplot2-graphics" class="nav-link" data-scroll-target="#ggplot2-graphics">ggplot2 Graphics</a></li>
-  <li><a href="#figure-1" id="toc-figure-1" class="nav-link" data-scroll-target="#figure-1">Figure 1</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -2831,8 +2831,8 @@ CodeMirror.defineMIME("text/x-rsrc", "r");
 </div>
 </section>
 </section>
-<section id="exploration" class="level2">
-<h2 class="anchored" data-anchor-id="exploration">Exploration</h2>
+<section id="explorer" class="level2">
+<h2 class="anchored" data-anchor-id="explorer">Explorer</h2>
 <div class="cell">
 <button class="btn btn-default btn-webr" disabled type="button" id="webr-run-button-1">
 Loading webR…
@@ -2853,7 +2853,96 @@ Loading webR…
     elt.style.height = "auto";
     editorDiv.append(elt);
   },{
-    value: `library(readr)\ninstall.packages("Rcan")\nlibrary(Rcan)\nlibrary(ggplot2)\n\ndf1 <- read.csv("https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/dataCheck/dcis.csv")\nnames(df1) <- c("year", "age", "er", "asr", "count", "py", "std")\ndf1$cancer <- "DCIS"\n\ndf2 <- read.csv("https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/dataCheck/idc.csv")\nnames(df2) <- c("year", "age", "er", "asr", "count", "py", "std")\ndf2$cancer <- "IDC"\n\n#\ndf <- rbind(df1, df2)\ndf$year <- df$year + 1974\n\ndf <- subset(df, age >= 30 & age <= 84 & year >= 1975)\n\ndf$er_label <- ifelse(df$er == 0, "positive",\n                      ifelse(df$er == 1, "negative",\n                             ifelse(df$er == 2, "bord/unkw", "not available")))\n\ndf$age_group <- cut(df$age, breaks = seq(29, 85, 5), labels = paste(seq(30, 80, 5), "-", seq(34, 84, 5)))\n\ndf$age_index <- as.integer(df$age_group) + 6\n\ndf4 <- df[c(1, 5, 6, 8, 9, 11)]\n\nresult <- csu_asr(df4, "age_index", "count", "py",\n                  group_by = c("cancer", "er_label", "year"),\n                  var_age_group = c("er_label", "year"))\n\ndf5 <- subset(result, year >= 1992 )\nhead(df5)\n`,
+    value: `# library(readr)\n# install.packages("Rcan")\n# library(Rcan)\n# library(ggplot2)\n\ndf1 <- read.csv("https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/dataCheck/dcis.csv")\nnames(df1) <- c("year", "age", "er", "asr", "count", "py", "std")\ndf1$cancer <- "DCIS"\n\ndf2 <- read.csv("https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/dataCheck/idc.csv")\nnames(df2) <- c("year", "age", "er", "asr", "count", "py", "std")\ndf2$cancer <- "IDC"\n\n#\ndf <- rbind(df1, df2)\ndf$year <- df$year + 1974\n\ndf <- subset(df, age >= 30 & age <= 84 & year >= 1975)\n\ndf$er_label <- ifelse(df$er == 0, "positive",\n                      ifelse(df$er == 1, "negative",\n                             ifelse(df$er == 2, "bord/unkw", "not available")))\n\ndf$age_group <- cut(df$age, breaks = seq(29, 85, 5), labels = paste(seq(30, 80, 5), "-", seq(34, 84, 5)))\n\ndf$age_index <- as.integer(df$age_group) + 6\n\ndf4 <- df[c(1, 5, 6, 8, 9, 11)]\n\n`,
+    lineNumbers: true,
+    mode: "r",
+    theme: "light default",
+    viewportMargin: Infinity,
+  });
+
+  runButton.onclick = async () => {
+    runButton.disabled = true;
+    let canvas = undefined;
+    await globalThis.webR.init();
+    await webR.evalRVoid("canvas(width=504, height=360)");
+    const result = await webRCodeShelter.captureR(editor.getValue(), {
+      withAutoprint: true,
+      captureStreams: true,
+      captureConditions: false,
+      env: webR.objs.emptyEnv,
+    });
+    try {
+      await webR.evalRVoid("dev.off()");
+      const out = result.output.filter(
+        evt => evt.type == "stdout" || evt.type == "stderr"
+      ).map((evt) => evt.data).join("\n");
+
+      const msgs = await webR.flush();
+      msgs.forEach(msg => {
+        if (msg.type === "canvasExec"){
+          if (!canvas) {
+            canvas = document.createElement("canvas");
+            canvas.setAttribute("width", 2 * 504);
+            canvas.setAttribute("height", 2 * 360);
+            canvas.style.width="700px";
+            canvas.style.display="block";
+            canvas.style.margin="auto";
+          }
+          Function(`this.getContext("2d").${msg.data}`).bind(canvas)();
+        }
+      });
+
+      outputDiv.innerHTML = "";
+      const pre = document.createElement("pre");
+      if (/\S/.test(out)) {
+        const code = document.createElement("code");
+        code.innerText = out;
+        pre.appendChild(code);
+      } else {
+        pre.style.visibility = "hidden";
+      }
+      outputDiv.appendChild(pre);
+
+      if (canvas) {
+        const p = document.createElement("p");
+        p.appendChild(canvas);
+        outputDiv.appendChild(p);
+      }
+    } finally {
+      webRCodeShelter.purge();
+      runButton.disabled = false;
+    }
+  }
+
+  await globalThis.webR.init();
+  runButton.innerText = "Run code";
+  runButton.disabled = false;
+</script>
+</div>
+</section>
+<section id="asr-function" class="level2">
+<h2 class="anchored" data-anchor-id="asr-function">ASR function</h2>
+<div class="cell">
+<button class="btn btn-default btn-webr" disabled type="button" id="webr-run-button-2">
+Loading webR…
+</button>
+<div id="webr-editor-2">
+
+</div>
+<div id="webr-code-output-2">
+<pre style="visibility: hidden"></pre>
+</div>
+<script type="module">
+  const runButton = document.getElementById("webr-run-button-2");
+  const outputDiv = document.getElementById("webr-code-output-2");
+  const editorDiv = document.getElementById("webr-editor-2");
+
+  const editor = CodeMirror((elt) => {
+    elt.style.border = "1px solid #eee";
+    elt.style.height = "auto";
+    editorDiv.append(elt);
+  },{
+    value: `# Install non-base R packages\nwebr::install("Rcan")\n# Load non-base packages like normal\nlibrary("Rcan")\n\ndf4 <- df[c(1, 5, 6, 8, 9, 11)]\n\n result <- csu_asr(df4, "age_index", "count", "py",\n                   group_by = c("cancer", "er_label", "year"),\n                   var_age_group = c("er_label", "year"))\n \n df5 <- subset(result, year >= 1992 )\n head(df5)\n`,
     lineNumbers: true,
     mode: "r",
     theme: "light default",
@@ -2921,7 +3010,7 @@ Loading webR…
 </div>
 <section id="ggplot2-graphics" class="level3">
 <h3 class="anchored" data-anchor-id="ggplot2-graphics">ggplot2 Graphics</h3>
-<p>Next, we look at using <code>ggplot2</code> graphics. By default, the <code>ggplot2</code> package is not available as it is <em>dependency</em> heavy.</p>
+<p>By default, the <code>ggplot2</code> package is not available as it is <em>dependency</em> heavy.</p>
 
 <details>
 <summary>
@@ -2955,96 +3044,12 @@ Downloading webR package: pkgconfig
 Downloading webR package: tibble
 Downloading webR package: withr
 Downloading webR package: ggplot2
+
+Downloading webR package: readr
+Downloading webR package: Rcan
+
+
 </details>
-<div class="cell">
-<button class="btn btn-default btn-webr" disabled type="button" id="webr-run-button-2">
-Loading webR…
-</button>
-<div id="webr-editor-2">
-
-</div>
-<div id="webr-code-output-2">
-<pre style="visibility: hidden"></pre>
-</div>
-<script type="module">
-  const runButton = document.getElementById("webr-run-button-2");
-  const outputDiv = document.getElementById("webr-code-output-2");
-  const editorDiv = document.getElementById("webr-editor-2");
-
-  const editor = CodeMirror((elt) => {
-    elt.style.border = "1px solid #eee";
-    elt.style.height = "auto";
-    editorDiv.append(elt);
-  },{
-    value: `# Install non-base R packages\nwebr::install("ggplot2")\n# Load non-base packages like normal\nlibrary("ggplot2")\np = ggplot(mpg, aes(class, hwy))\np + geom_boxplot()`,
-    lineNumbers: true,
-    mode: "r",
-    theme: "light default",
-    viewportMargin: Infinity,
-  });
-
-  runButton.onclick = async () => {
-    runButton.disabled = true;
-    let canvas = undefined;
-    await globalThis.webR.init();
-    await webR.evalRVoid("canvas(width=504, height=360)");
-    const result = await webRCodeShelter.captureR(editor.getValue(), {
-      withAutoprint: true,
-      captureStreams: true,
-      captureConditions: false,
-      env: webR.objs.emptyEnv,
-    });
-    try {
-      await webR.evalRVoid("dev.off()");
-      const out = result.output.filter(
-        evt => evt.type == "stdout" || evt.type == "stderr"
-      ).map((evt) => evt.data).join("\n");
-
-      const msgs = await webR.flush();
-      msgs.forEach(msg => {
-        if (msg.type === "canvasExec"){
-          if (!canvas) {
-            canvas = document.createElement("canvas");
-            canvas.setAttribute("width", 2 * 504);
-            canvas.setAttribute("height", 2 * 360);
-            canvas.style.width="700px";
-            canvas.style.display="block";
-            canvas.style.margin="auto";
-          }
-          Function(`this.getContext("2d").${msg.data}`).bind(canvas)();
-        }
-      });
-
-      outputDiv.innerHTML = "";
-      const pre = document.createElement("pre");
-      if (/\S/.test(out)) {
-        const code = document.createElement("code");
-        code.innerText = out;
-        pre.appendChild(code);
-      } else {
-        pre.style.visibility = "hidden";
-      }
-      outputDiv.appendChild(pre);
-
-      if (canvas) {
-        const p = document.createElement("p");
-        p.appendChild(canvas);
-        outputDiv.appendChild(p);
-      }
-    } finally {
-      webRCodeShelter.purge();
-      runButton.disabled = false;
-    }
-  }
-
-  await globalThis.webR.init();
-  runButton.innerText = "Run code";
-  runButton.disabled = false;
-</script>
-</div>
-</section>
-<section id="figure-1" class="level3">
-<h3 class="anchored" data-anchor-id="figure-1">Figure 1</h3>
 <div class="cell">
 <button class="btn btn-default btn-webr" disabled type="button" id="webr-run-button-3">
 Loading webR…
@@ -3065,7 +3070,7 @@ Loading webR…
     elt.style.height = "auto";
     editorDiv.append(elt);
   },{
-    value: `ggplot(df5, aes(x = year, y = asr, color = er_label, shape = cancer)) +\n  geom_point() +\n  geom_line() +\n  labs(x = "Year", y = "ASR", color = "ER Label", shape = "Cancer") +\n  theme_minimal()`,
+    value: `# Install non-base R packages\nwebr::install("ggplot2")\n# Load non-base packages like normal\nlibrary("ggplot2")\n\nggplot(df5, aes(x = year, y = asr, color = er_label, shape = cancer)) +\n  geom_point() +\n  geom_line() +\n  labs(x = "Year", y = "ASR", color = "ER Label", shape = "Cancer") +\n  theme_minimal()\n`,
     lineNumbers: true,
     mode: "r",
     theme: "light default",
