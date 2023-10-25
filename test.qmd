@@ -1,0 +1,283 @@
+---
+title: "SEER8: Breast cancer - in the browser"
+subtitle: "Ductal Carcinoma in Situ and Invasive Ductal Carcinoma: A Population-based Perspective"
+author: "AMF"
+engine: knitr
+execute:
+  echo: true
+  error: true
+embed-resources: true
+format:
+    html: 
+      toc: true
+editor: source
+---
+
+## Data source
+
+Institute NC. Surveillance, Epidemiology, and End Results (SEER 9,) Program Populations (1975-2018). (www.seer.cancer.gov/popdata), National Cancer Institute, DCCPS, Surveillance Research Program, released May 2023. February 2022S ed.: National Cancer Institute, 2022.
+
+### Morphology
+
+### DCIS
+
+'8201/2: Cribriform carcinoma in situ','8500/2: Intraductal carcinoma, noninfiltrating, NOS','8501/2: Comedocarcinoma, noninfiltrating','8503/2: Noninfiltrating intraductal papillary adenocarcinoma','8507/2: Intraductal micropapillary carcinoma','8523/2: Intraductal with other types of carcinoma in situ' AND {Extent of Disease.ER Status Recode Breast Cancer (1990+)} = 'Positive','Negative','Borderline/Unknown','Recode not available'
+
+### IDC
+
+'8500/3: Infiltrating duct carcinoma, NOS','8523/3: Infiltrating duct mixed with other types of carcinoma' AND {Extent of Disease.ER Status Recode Breast Cancer (1990+)} = 'Positive','Negative','Borderline/Unknown','Recode not available'
+
+::: callout-warning
+The SEER8 breast cancer project is under development and some contents of this documentation might be out of date.
+:::
+
+```{=html}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css">
+<style>
+  .CodeMirror pre {
+    background-color: unset !important;
+  }
+  .btn-webr {
+    background-color: #EEEEEE;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/r/r.js"></script>
+<script type="module">
+  import { WebR } from "https://webr.r-wasm.org/v0.1.0/webr.mjs";
+  globalThis.webR = new WebR({
+    SW_URL: "/"+location.pathname.split("/")[1]
+  });
+  await globalThis.webR.init();
+  globalThis.webRCodeShelter = await new globalThis.webR.Shelter();
+  document.querySelectorAll(".btn-webr").forEach((btn) => {
+    btn.innerText = "Run code";
+    btn.disabled = false;
+  });
+</script>
+```
+```{r}
+#| results: asis
+#| echo: false
+webr_counter = 0
+
+cat("importScripts('https://webr.r-wasm.org/v0.1.0/webr-worker.js');", file = "webr-worker.js")
+cat("importScripts('https://webr.r-wasm.org/v0.1.0/webr-serviceworker.js');", file = "webr-serviceworker.js")
+
+webr_editor = function(code = I(encodeString(code, quote = '`')), width, height) { 
+webr_counter <<- webr_counter + 1
+
+output = glue::glue('
+<button class="btn btn-default btn-webr" disabled type="button"  id="webr-run-button-{{ webr_counter }}">Loading webR...</button>
+<div id="webr-editor-{{ webr_counter }}"></div>
+<div id="webr-code-output-{{ webr_counter }}"><pre style="visibility: hidden"></pre></div>
+<script type="module">
+  const runButton = document.getElementById("webr-run-button-{{ webr_counter }}");
+  const outputDiv = document.getElementById("webr-code-output-{{ webr_counter }}");
+  const editorDiv = document.getElementById("webr-editor-{{ webr_counter }}");
+
+  const editor = CodeMirror((elt) => {
+    elt.style.border = "1px solid #eee";
+    elt.style.height = "auto";
+    editorDiv.append(elt);
+  },{
+    value: {{code}},
+    lineNumbers: true,
+    mode: "r",
+    theme: "light default",
+    viewportMargin: Infinity,
+  });
+
+  runButton.onclick = async () => {
+    runButton.disabled = true;
+    let canvas = undefined;
+    await globalThis.webR.init();
+    await webR.evalRVoid("canvas(width={{width}}, height={{height}})");
+    const result = await webRCodeShelter.captureR(editor.getValue(), {
+      withAutoprint: true,
+      captureStreams: true,
+      captureConditions: false,
+      env: webR.objs.emptyEnv,
+    });
+    try {
+      await webR.evalRVoid("dev.off()");
+      const out = result.output.filter(
+        evt => evt.type == "stdout" || evt.type == "stderr"
+      ).map((evt) => evt.data).join("\\n");
+
+      const msgs = await webR.flush();
+      msgs.forEach(msg => {
+        if (msg.type === "canvasExec"){
+          if (!canvas) {
+            canvas = document.createElement("canvas");
+            canvas.setAttribute("width", 2 * {{width}});
+            canvas.setAttribute("height", 2 * {{height}});
+            canvas.style.width="700px";
+            canvas.style.display="block";
+            canvas.style.margin="auto";
+          }
+          Function(`this.getContext("2d").${msg.data}`).bind(canvas)();
+        }
+      });
+
+      outputDiv.innerHTML = "";
+      const pre = document.createElement("pre");
+      if (/\\S/.test(out)) {
+        const code = document.createElement("code");
+        code.innerText = out;
+        pre.appendChild(code);
+      } else {
+        pre.style.visibility = "hidden";
+      }
+      outputDiv.appendChild(pre);
+
+      if (canvas) {
+        const p = document.createElement("p");
+        p.appendChild(canvas);
+        outputDiv.appendChild(p);
+      }
+    } finally {
+      webRCodeShelter.purge();
+      runButton.disabled = false;
+    }
+  }
+
+  await globalThis.webR.init();
+  runButton.innerText = "Run code";
+  runButton.disabled = false;
+</script>
+', .open = "{{", .close = "}}")
+}
+```
+
+```{r}
+#| echo: false
+knitr::knit_engines$set(webr = function(options) {
+  code = paste(options$code, collapse = "\n")
+  w = knitr::opts_current$get('fig.width') * 72
+  h = knitr::opts_current$get('fig.height') * 72
+  options$results = 'asis'
+  
+  form = webr_editor(code = I(encodeString(code, quote = '`')), width = w, height = h)
+  
+  form
+}
+)
+```
+
+## Explorer
+
+```{webr}
+# library(readr)
+# install.packages("Rcan")
+# library(Rcan)
+# library(ggplot2)
+
+df1 <- read.csv("https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/dataCheck/dcis.csv")
+names(df1) <- c("year", "age", "er", "asr", "count", "py", "std")
+df1$cancer <- "DCIS"
+
+df2 <- read.csv("https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/dataCheck/idc.csv")
+names(df2) <- c("year", "age", "er", "asr", "count", "py", "std")
+df2$cancer <- "IDC"
+
+#
+df <- rbind(df1, df2)
+df$year <- df$year + 1974
+
+df <- subset(df, age >= 30 & age <= 84 & year >= 1975)
+
+df$er_label <- ifelse(df$er == 0, "positive",
+                      ifelse(df$er == 1, "negative",
+                             ifelse(df$er == 2, "bord/unkw", "not available")))
+
+df$age_group <- cut(df$age, breaks = seq(29, 85, 5), labels = paste(seq(30, 80, 5), "-", seq(34, 84, 5)))
+
+df$age_index <- as.integer(df$age_group) + 6
+
+df4 <- df[c(1, 5, 6, 8, 9, 11)]
+
+
+```
+
+## ASR function 
+
+```{webr}
+# Install non-base R packages
+webr::install("Rcan")
+# Load non-base packages like normal
+library("Rcan")
+
+df4 <- df[c(1, 5, 6, 8, 9, 11)]
+
+ result <- csu_asr(df4, "age_index", "count", "py",
+                   group_by = c("cancer", "er_label", "year"),
+                   var_age_group = c("er_label", "year"))
+ 
+ df5 <- subset(result, year >= 1992 )
+ head(df5)
+
+```
+
+
+### ggplot2 Graphics
+
+By default, the `ggplot2` package is not available as it is *dependency* heavy.
+
+```{=html}
+<details>
+<summary>
+Package installation for `ggplot2` given by `webr::install("ggplot2")`
+</summary>
+Downloading webR package: cli
+Downloading webR package: glue
+Downloading webR package: gtable
+Downloading webR package: isoband
+Downloading webR package: rlang
+Downloading webR package: lifecycle
+Downloading webR package: MASS
+Downloading webR package: lattice
+Downloading webR package: nlme
+Downloading webR package: Matrix
+Downloading webR package: mgcv
+Downloading webR package: farver
+Downloading webR package: labeling
+Downloading webR package: colorspace
+Downloading webR package: munsell
+Downloading webR package: R6
+Downloading webR package: RColorBrewer
+Downloading webR package: viridisLite
+Downloading webR package: scales
+Downloading webR package: fansi
+Downloading webR package: magrittr
+Downloading webR package: utf8
+Downloading webR package: vctrs
+Downloading webR package: pillar
+Downloading webR package: pkgconfig
+Downloading webR package: tibble
+Downloading webR package: withr
+Downloading webR package: ggplot2
+
+Downloading webR package: readr
+Downloading webR package: Rcan
+
+
+</details>
+```
+
+
+```{webr}
+# Install non-base R packages
+webr::install("ggplot2")
+# Load non-base packages like normal
+library("ggplot2")
+
+ggplot(df5, aes(x = year, y = asr, color = er_label, shape = cancer)) +
+  geom_point() +
+  geom_line() +
+  labs(x = "Year", y = "ASR", color = "ER Label", shape = "Cancer") +
+  theme_minimal()
+
+```
