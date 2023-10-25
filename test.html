@@ -2817,7 +2817,7 @@ CodeMirror.defineMIME("text/x-rsrc", "r");
 <script type="module">
   import { WebR } from "https://webr.r-wasm.org/v0.1.0/webr.mjs";
   globalThis.webR = new WebR({
-    SW_URL: "/"+location.pathname.split("/")[1]
+    SW_URL: "/"+location.pathname.split("/")[1]+"/"
   });
   await globalThis.webR.init();
   globalThis.webRCodeShelter = await new globalThis.webR.Shelter();
