@@ -18,6 +18,12 @@ Institute NC. Surveillance, Epidemiology, and End Results (SEER 8,) Program Popu
 
 
 ### Dataset available
+#### SEER8
+SEER8 Research plus - IDC and DCIS by, age, year, ER status, from 1979 to 2020:
+DCIS:https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/dataCheck/dcis.csv"
+IDC: https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/dataCheck/idc.csv
+
+#### SEER13
 SEER13 Research plus - Malignant breast cancer by race and ethnicity, year, age, ER status, HER status from 1992 to 2018: https://github.com/filhoalm/Breast_cancer/blob/main/forecasting/data/breast_er_her_11072023.csv
 
 SEER13 Research plus - Malignant breast cancer by year, age, ER status, HER status, PR status from 1992 to 2018: 
