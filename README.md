@@ -16,6 +16,14 @@ Institute NC. Surveillance, Epidemiology, and End Results (SEER 8,) Program Popu
 
 '8500/3: Infiltrating duct carcinoma, NOS','8523/3: Infiltrating duct mixed with other types of carcinoma' AND {Extent of Disease.ER Status Recode Breast Cancer (1990+)} = 'Positive','Negative','Borderline/Unknown','Recode not available'
 
+
+### Dataset available
+SEER13 Research plus - Malignant breast cancer by race and ethnicity, year, age, ER status, HER status from 1992 to 2018: https://github.com/filhoalm/Breast_cancer/blob/main/forecasting/data/breast_er_her_11072023.csv
+
+SEER13 Research plus - Malignant breast cancer by year, age, ER status, HER status, PR status from 1992 to 2018: 
+https://github.com/filhoalm/Breast_cancer/blob/main/forecasting/data/breast_er_her_pr_1182023.csv
+
+
 ### Results
 
 
