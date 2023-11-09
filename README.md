@@ -35,7 +35,7 @@ https://github.com/filhoalm/Breast_cancer/blob/main/forecasting/data/breast_er_h
 Figure 1 shows the trends in the incidence of Infiltrating Ductal Cancer (IDC) and Ductal Carcinoma In Situ (DCIS) breast cancers relative to 1990, when ER status started to be recorded. A) depicts overall trends; B) depicts trends in younger women; and C) depicts trends in older women. The dashed line corresponds to a value of 1.
 
 ### Quarto version
-https://filhoalm.github.io/Breast_cancer/dataCheck/dataCheck.html
+https://filhoalm.github.io/Breast_cancer/SEER8/gitfiles/seer8.html
 
 ### WerR live version
 https://filhoalm.github.io/Breast_cancer/test.html
