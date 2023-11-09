@@ -1,10 +1,14 @@
-## Breast cancer research
+---
+author: "Notes from: AMF"
+title: "SEER - Breast cancer: invasive vs in situ"
+date: "11/8/2023"
+output: pdf_document
+---
 
-## Is Ductal Carcinoma in Situ a Precursor or Low-Risk Variant of Invasive Breast Cancer? A Population Perspective
 
-### Methods
+## Data source
 
-Institute NC. Surveillance, Epidemiology, and End Results (SEER 8,) Program Populations (1975-2020). (www.seer.cancer.gov/popdata), National Cancer Institute, DCCPS, Surveillance Research Program, released May 2023. February 2022S ed.: National Cancer Institute, 2022.
+Institute NC. Surveillance, Epidemiology, and End Results (SEER 8, and 13,) Program Populations (1975-2020). (www.seer.cancer.gov/popdata), National Cancer Institute, DCCPS, Surveillance Research Program, released May 2023. February 2022S ed.: National Cancer Institute, 2022.
 
 #### Morphology
 
