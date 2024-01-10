@@ -29,16 +29,15 @@ SEER13 Research plus - Malignant breast cancer by year, age, ER status, HER stat
 https://github.com/filhoalm/Breast_cancer/blob/main/forecasting/data/breast_er_her_pr_1182023.csv
 
 ### SEER Updates - 2022
-
-* Starting with the 1975-2019 SEER Research Data (November 2021 submission), Detroit is no longer included in any databases, and Illinois and Texas are included in the new 22-registry database (https://seer.cancer.gov/registries/terms.html).
+Starting with the 1975-2019 SEER Research Data (November 2021 submission), Detroit is no longer included in any databases, and Illinois and Texas are included in the new 22-registry database (https://seer.cancer.gov/registries/terms.html).
 
 #### SEER12 (ER and HER2) by race and ethnicity, age and year
-
-
+Malignant breast cancer
+https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/forecasting/data/seer12_1102024.csv
 
 #### SEER12 (ER, HER2, and PR status) by age and year
-  
-
+Malignant breast cancer 
+https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/forecasting/data/seer12_1102024.csv
 
 
 ### Results
