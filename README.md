@@ -28,6 +28,18 @@ SEER13 Research plus - Malignant breast cancer by race and ethnicity, year, age,
 SEER13 Research plus - Malignant breast cancer by year, age, ER status, HER status, PR status from 1992 to 2018: 
 https://github.com/filhoalm/Breast_cancer/blob/main/forecasting/data/breast_er_her_pr_1182023.csv
 
+### SEER Updates - 2022
+
+* Starting with the 1975-2019 SEER Research Data (November 2021 submission), Detroit is no longer included in any databases, and Illinois and Texas are included in the new 22-registry database (https://seer.cancer.gov/registries/terms.html).
+
+#### SEER12 (ER and HER2) by race and ethnicity, age and year
+
+
+
+#### SEER12 (ER, HER2, and PR status) by age and year
+  
+
+
 
 ### Results
 
