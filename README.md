@@ -42,8 +42,7 @@ Malignant breast cancer
 https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/forecasting/data/seer12_1102024.csv
 
 ### Survival
-Files available in a .zip files:
-net_survival_5y_er_pr_her_seer12
+Files available in a .zip files: (https://github.com/filhoalm/Breast_cancer/blob/main/Survival.zip)
 
 Case listing:
 Malignant breast cancer in females, by age, race an ethnicity, ER status, PR, status, HER2 status, 1992-2020.
