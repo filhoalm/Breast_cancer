@@ -64,8 +64,11 @@ Survival files are available in a .zip file: [Survival.zip](https://github.com/f
 - **C**: Trends in older women
   - The dashed line represents a value of 1.
 
-## Quarto Version
+## Incidence analysis
 View the Quarto version of the analysis [here](https://filhoalm.github.io/Breast_cancer/SEER8/gitfiles/seer8.html).
+
+## Survival analysis
+View the Quarto version of the analysis [here](https://filhoalm.github.io/Breast_cancer/Survival_snapshot/survival.html).
 
 ## WerR Live Version
 Access the interactive WerR live version [here](https://filhoalm.github.io/Breast_cancer/test.html).
