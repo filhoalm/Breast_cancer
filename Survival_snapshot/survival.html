@@ -275,7 +275,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>),</span>
 <span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">legend.position =</span> <span class="st">"right"</span></span>
 <span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Race and ethnicity"</span>, <span class="at">y =</span> y_label, <span class="at">fill =</span> <span class="st">"Stage"</span>, <span class="at">title =</span> <span class="st">"Malignant breast cancer net survival (1992-2020)"</span>)</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Race and ethnicity"</span>, <span class="at">y =</span> y_label, <span class="at">fill =</span> <span class="st">"Stage"</span>, <span class="at">title =</span> <span class="st">"Malignant breast cancer survival (1992-2020)"</span>)</span>
 <span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Create individual plots</span></span>
@@ -320,10 +320,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
+<section id="analysis-of-5-year-age-standardized-net-survival-by-breast-cancer-subtype-2010-2020" class="level2">
+<h2 class="anchored" data-anchor-id="analysis-of-5-year-age-standardized-net-survival-by-breast-cancer-subtype-2010-2020">Analysis of 5-Year Age-Standardized Net Survival by Breast Cancer Subtype (2010-2020)</h2>
+<p>One could speculate that the pronounced survival disadvantage in NHB patients is likely attributable to the prevalence of more aggressive forms of breast cancer. Now, let’s further explore the survivalship by Breast cancer subtypes:</p>
+<ul>
+<li><strong>HR-positive/HER2-negative (HR+/HER2-)</strong>: HR+/HER2- respond well to hormonal therapy and generally have a favorable prognosis.</li>
+<li><strong>HR-negative/HER2-negative (HR-/HER2-)</strong>: HR-/HER2- lack targeted therapy options and are associated with a poorer outcome.</li>
+<li><strong>HR-positive/HER2-positive (HR+/HER2+)</strong>: HR+/HER2+ benefit from both hormonal therapy and have therapies targeting HER2.</li>
+<li><strong>HR-negative/HER2-positive (HR-/HER2+)</strong>: HR-/HER2+ treated with HER2-directed therapies</li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="survival_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
 <section id="futher-investigation" class="level2">
 <h2 class="anchored" data-anchor-id="futher-investigation">Futher investigation</h2>
-<p>One could expeculate that the pronounced survival disadvantage in NHB patients is likely attributable to the prevalence of more aggressive forms of breast cancer, such as triple-negative breast cancer—a subtype found with higher frequency in this demographic. Now, let’s futher explore the survivalship by Breast cancer subtypes:</p>
-<p>HR+/HER2- HR-/HER2- HR+/HER2+ HR-/HER2+</p>
 </section>
 </section>
 
