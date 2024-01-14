@@ -334,8 +334,143 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="futher-investigation" class="level2">
-<h2 class="anchored" data-anchor-id="futher-investigation">Futher investigation</h2>
+<section id="temporal-trends-in-5-year-age-adjusted-net-survival-by-race-ethnicity-and-cancer-stage" class="level2">
+<h2 class="anchored" data-anchor-id="temporal-trends-in-5-year-age-adjusted-net-survival-by-race-ethnicity-and-cancer-stage">Temporal Trends in 5-Year Age-Adjusted Net Survival by Race, Ethnicity, and Cancer Stage</h2>
+<p>An analysis of 5-year age-adjusted net survival indicates a heterogeneous patterns, with a noted plateau in the higher tier of survival rates across most race and ethnicity groups. An exception is noted in the case of Non-Hispanic Blacks (NHB), who demonstrate a modest enhancement in survival when the data spanning from 1992 to 2015 are compared.</p>
+<p>In terms of cancer stage, particularly at the regional stage, all groups have derived benefits from an increased in net survival rates. A similar improvement has been observed in cases of distant metastasis.</p>
+<p>The table presents data for estimated annual percentage change (EAPC) in 5-year age-adjusted net survival rates across different races and cancer stages.</p>
+<p>In observing the localized stage across all groups, the data suggests a trend towards stabilization over time. Notably, Non-Hispanic White (NHW), Hispanic (HIS), and Asian or Pacific Islander (API) populations demonstrated a marginal but consistent increase in survival for the regional stage, with rates below 1%. Non-Hispanic Black (NHB) cohort displayed a more pronounced annual improvement of 1.1% from the period between 1992 to 2015. Distant stage revealed significant and increased in survival for NHW (2.4%), NHB (2.1%), HIS (2.9%), and API (2.1%).</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="survival_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="estimated-annual-percentage-change-eapc-in-5-year-age-adjusted-net-survival" class="level2">
+<h2 class="anchored" data-anchor-id="estimated-annual-percentage-change-eapc-in-5-year-age-adjusted-net-survival">Estimated annual percentage change (EAPC) in 5-year age-adjusted net survival</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load necessary libraries</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rcan) <span class="co"># Assuming Rcan is a library you have access to</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset the original dataframe</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>df2a <span class="ot">&lt;-</span> df2[<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">19</span>)]</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform the function (assuming it returns a data frame or similar object)</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">csu_eapc</span>(df2a, <span class="st">"Net.Relative.Age.Std"</span>, <span class="st">"year"</span>, </span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>                    <span class="at">group_by=</span><span class="fu">c</span>(<span class="st">"race"</span>, <span class="st">"stage"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>EAPC with  95 % CI level have been computed</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the result as a table</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># If you are in an R Markdown document and using Quarto, you could use:</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped">
+<thead>
+<tr class="header">
+<th style="text-align: left;">race</th>
+<th style="text-align: left;">stage</th>
+<th style="text-align: right;">eapc</th>
+<th style="text-align: right;">eapc_up</th>
+<th style="text-align: right;">eapc_low</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">NHW</td>
+<td style="text-align: left;">Localized</td>
+<td style="text-align: right;">0.0632228</td>
+<td style="text-align: right;">0.6457773</td>
+<td style="text-align: right;">-0.5159598</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">NHW</td>
+<td style="text-align: left;">Regional</td>
+<td style="text-align: right;">0.5099972</td>
+<td style="text-align: right;">1.1396866</td>
+<td style="text-align: right;">-0.1157719</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">NHW</td>
+<td style="text-align: left;">Distant</td>
+<td style="text-align: right;">2.4263695</td>
+<td style="text-align: right;">3.5584197</td>
+<td style="text-align: right;">1.3066943</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">NHB</td>
+<td style="text-align: left;">Localized</td>
+<td style="text-align: right;">0.3152329</td>
+<td style="text-align: right;">0.9123383</td>
+<td style="text-align: right;">-0.2783395</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">NHB</td>
+<td style="text-align: left;">Regional</td>
+<td style="text-align: right;">1.1070423</td>
+<td style="text-align: right;">1.7914545</td>
+<td style="text-align: right;">0.4272320</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">NHB</td>
+<td style="text-align: left;">Distant</td>
+<td style="text-align: right;">2.1153695</td>
+<td style="text-align: right;">3.5258697</td>
+<td style="text-align: right;">0.7240868</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">API</td>
+<td style="text-align: left;">Localized</td>
+<td style="text-align: right;">0.0414952</td>
+<td style="text-align: right;">0.6279400</td>
+<td style="text-align: right;">-0.5415318</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">API</td>
+<td style="text-align: left;">Regional</td>
+<td style="text-align: right;">0.3930158</td>
+<td style="text-align: right;">1.0341732</td>
+<td style="text-align: right;">-0.2440728</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">API</td>
+<td style="text-align: left;">Distant</td>
+<td style="text-align: right;">2.9525179</td>
+<td style="text-align: right;">4.1502866</td>
+<td style="text-align: right;">1.7685239</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">HIS</td>
+<td style="text-align: left;">Localized</td>
+<td style="text-align: right;">0.1389664</td>
+<td style="text-align: right;">0.7319316</td>
+<td style="text-align: right;">-0.4505084</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">HIS</td>
+<td style="text-align: left;">Regional</td>
+<td style="text-align: right;">0.5295265</td>
+<td style="text-align: right;">1.1758132</td>
+<td style="text-align: right;">-0.1126319</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">HIS</td>
+<td style="text-align: left;">Distant</td>
+<td style="text-align: right;">2.1883767</td>
+<td style="text-align: right;">3.3310755</td>
+<td style="text-align: right;">1.0583146</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Or using gt package</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co"># gt::gt(result)</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># If you meant to create contingency tables for categorical data</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># and 'result' contains categorical variables, you would do:</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co">#table_result &lt;- table(result$column1, result$column2) # Replace column1 and column2 with actual column names</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co">#knitr::kable(table_result)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 </section>
 
