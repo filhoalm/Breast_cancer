@@ -130,42 +130,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<section id="overview" class="level2">
-<h2 class="anchored" data-anchor-id="overview">Overview</h2>
-<p>Survival analysis using the Surveillance, Epidemiology, and End Results (SEER) database often employs several estimators for relative survival. These include methods developed by Ederer I and II, Hakulinen (both Exact and Simplified), and the Net Pohar-Perme (PP) approaches.</p>
-<section id="pohar-perme-method" class="level3">
-<h3 class="anchored" data-anchor-id="pohar-perme-method">Pohar Perme Method</h3>
-<p>The Pohar Perme method is utilized for computing cumulative expected survival, age-standardized according to the International Cancer Survival Standard 1 for individuals aged 15 and above. This method offers high accuracy for estimating 5-year survival and is widely accepted within the research community. For a detailed exposition of the method, see the <a href="https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1541-0420.2011.01640.x">journal article</a>.</p>
-</section>
-<section id="advantages-of-different-estimators" class="level3">
-<h3 class="anchored" data-anchor-id="advantages-of-different-estimators">Advantages of Different Estimators</h3>
-<p>The choice of estimator can have various advantages depending on the survival duration under analysis. For instance, while the Pohar-Perme method excels for 5-year survival estimations, the Ederer methods may offer benefits when considering longer-term follow-up (such as 10-15 years).</p>
-<p>A comparative analysis of different methodologies for calculating age-standardized net survival is available in this <a href="https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/s12874-015-0057-3">BMC Medical Research Methodology article</a>. The comparison aids researchers in selecting the most appropriate estimator based on the specifics of their study and the survival timeframes of interest.</p>
-</section>
-</section>
-<section id="observed-vs-age-standardized-relative-survival" class="level2">
-<h2 class="anchored" data-anchor-id="observed-vs-age-standardized-relative-survival">Observed vs Age-standardized relative survival</h2>
-<div class="note">
-<p><strong>Not Actual Survival</strong>: Relative survival is an estimate of the probability of survival from the disease of interest in the absence of other causes of death. It does not reflect the actual survival experience of individual patients. For this purpose, we use Kaplan-Meier curves.</p>
-</div>
-<p>These two common metrics used are observed survival and age-standardized relative survival. These terms reflect different methodologies for estimating survival rates, and each serves a specific purpose in understanding the survival patterns of patient populations.</p>
-<section id="observed-survival" class="level3">
-<h3 class="anchored" data-anchor-id="observed-survival">Observed Survival:</h3>
-<p>Observed survival refers to the calculation of survival probabilities from a group of patients over time, without adjusting for any other factors like age or stage of disease. It includes all causes of death. It can be influenced by the composition of the population, such as the age distribution. A population with older patients might naturally have lower observed survival rates simply because the mortality risks increase with age. It is often expressed as a ratio where the numerator is the observed survival of the cancer patients, and the denominator is the expected survival of a similar group from the general population.</p>
-</section>
-<section id="age-standardized-relative-survival" class="level3">
-<h3 class="anchored" data-anchor-id="age-standardized-relative-survival">Age-standardized Relative Survival:</h3>
-<p>Age-standardized relative survival takes observed survival by adjusting for the expected survival rate (LIFE TABLES) of a comparable group in the general population (matched by age, sex, and sometimes other variables). It allows to isolate the effect of the cancer from other causes of death that would affect anyone in the general population. By comparing the observed survival to the expected survival rates of a standard population, age-standardized relative survival removes the confounding impact of differing mortality risks that are unrelated to the condition being studied.</p>
-<section id="icss" class="level4">
-<h4 class="anchored" data-anchor-id="icss">ICSS</h4>
-<p>SEER uses ICSS standard population. ICSS was created based on EUROCARE project. https://seer.cancer.gov/stdpopulations/survival.html</p>
-</section>
-<section id="who-world-standard" class="level4">
-<h4 class="anchored" data-anchor-id="who-world-standard">WHO world standard</h4>
-<p>This is my personal contribution to the topic. We developed the World Cancer Population based on a global cancer patient-based standard population that adjusts for the expected age structure of different cancers. This is an alternative to ICCS (which presents lots of limitations). WHO pop can be found here:<a href="https://www.sciencedirect.com/science/article/pii/S1877782120301363?via%3Dihub">Cancer Epidemiology</a></p>
-</section>
-</section>
-</section>
 <section id="results" class="level1">
 <h1>Results</h1>
 <section id="cancer-net-survival-rates-by-stage" class="level3">
@@ -323,10 +287,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="analysis-of-5-year-age-standardized-net-survival-by-breast-cancer-subtype-2010-2020">Analysis of 5-Year Age-Standardized Net Survival by Breast Cancer Subtype (2010-2020)</h2>
 <p>One could speculate that the pronounced survival disadvantage in NHB patients is likely attributable to the prevalence of more aggressive forms of breast cancer. Now, let’s further explore the survivalship by Breast cancer subtypes:</p>
 <ul>
-<li><strong>HR-positive/HER2-negative (HR+/HER2-)</strong>: HR+/HER2- respond well to hormonal therapy and generally have a favorable prognosis.</li>
-<li><strong>HR-negative/HER2-negative (HR-/HER2-)</strong>: HR-/HER2- lack targeted therapy options and are associated with a poorer outcome.</li>
-<li><strong>HR-positive/HER2-positive (HR+/HER2+)</strong>: HR+/HER2+ benefit from both hormonal therapy and have therapies targeting HER2.</li>
-<li><strong>HR-negative/HER2-positive (HR-/HER2+)</strong>: HR-/HER2+ treated with HER2-directed therapies</li>
+<li><strong>HR-positive/HER2-negative (HR+/HER2-)</strong>: HR+/HER2-</li>
+<li><strong>HR-negative/HER2-negative (HR-/HER2-)</strong>: HR-/HER2-</li>
+<li><strong>HR-positive/HER2-positive (HR+/HER2+)</strong>: HR+/HER2+</li>
+<li><strong>HR-negative/HER2-positive (HR-/HER2+)</strong>: HR-/HER2+</li>
 </ul>
 <div class="cell">
 <div class="cell-output-display">
@@ -336,7 +300,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="temporal-trends-in-5-year-age-adjusted-net-survival-by-race-ethnicity-and-cancer-stage" class="level2">
 <h2 class="anchored" data-anchor-id="temporal-trends-in-5-year-age-adjusted-net-survival-by-race-ethnicity-and-cancer-stage">Temporal Trends in 5-Year Age-Adjusted Net Survival by Race, Ethnicity, and Cancer Stage</h2>
-<p>An analysis of 5-year age-adjusted net survival indicates a heterogeneous patterns, with a noted plateau in the higher tier of survival rates across most race and ethnicity groups. An exception is noted in the case of Non-Hispanic Blacks (NHB), who demonstrate a modest enhancement in survival when the data spanning from 1992 to 2015 are compared.</p>
 <p>The table presents data for estimated annual percentage change (EAPC) in 5-year age-adjusted net survival rates across different races and cancer stages.</p>
 <p>In observing the localized stage across all groups, the data suggests a trend towards stabilization over time. Notably, Non-Hispanic White (NHW), Hispanic (HIS), and Asian or Pacific Islander (API) populations demonstrated a marginal but consistent increase in survival for the regional stage, with rates below 1%. Non-Hispanic Black (NHB) cohort displayed a more pronounced annual improvement of 1.1% from the period between 1992 to 2015. Distant stage revealed significant and increased in survival for NHW (2.4%), NHB (2.1%), HIS (2.9%), and API (2.1%).</p>
 <div class="cell">
@@ -478,6 +441,42 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co">#table_result &lt;- table(result$column1, result$column2) # Replace column1 and column2 with actual column names</span></span>
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co">#knitr::kable(table_result)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<p>Survival analysis using the Surveillance, Epidemiology, and End Results (SEER) database often employs several estimators for relative survival. These include methods developed by Ederer I and II, Hakulinen (both Exact and Simplified), and the Net Pohar-Perme (PP) approaches.</p>
+<section id="pohar-perme-method" class="level3">
+<h3 class="anchored" data-anchor-id="pohar-perme-method">Pohar Perme Method</h3>
+<p>The Pohar Perme method is utilized for computing cumulative expected survival, age-standardized according to the International Cancer Survival Standard 1 for individuals aged 15 and above. This method offers high accuracy for estimating 5-year survival and is widely accepted within the research community. For a detailed exposition of the method, see the <a href="https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1541-0420.2011.01640.x">journal article</a>.</p>
+</section>
+<section id="advantages-of-different-estimators" class="level3">
+<h3 class="anchored" data-anchor-id="advantages-of-different-estimators">Advantages of Different Estimators</h3>
+<p>The choice of estimator can have various advantages depending on the survival duration under analysis. For instance, while the Pohar-Perme method excels for 5-year survival estimations, the Ederer methods may offer benefits when considering longer-term follow-up (such as 10-15 years).</p>
+<p>A comparative analysis of different methodologies for calculating age-standardized net survival is available in this <a href="https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/s12874-015-0057-3">BMC Medical Research Methodology article</a>. The comparison aids researchers in selecting the most appropriate estimator based on the specifics of their study and the survival timeframes of interest.</p>
+</section>
+</section>
+<section id="observed-vs-age-standardized-relative-survival" class="level2">
+<h2 class="anchored" data-anchor-id="observed-vs-age-standardized-relative-survival">Observed vs Age-standardized relative survival</h2>
+<div class="note">
+<p><strong>Not Actual Survival</strong>: Relative survival is an estimate of the probability of survival from the disease of interest in the absence of other causes of death. It does not reflect the actual survival experience of individual patients. For this purpose, we use Kaplan-Meier curves.</p>
+</div>
+<p>These two common metrics used are observed survival and age-standardized relative survival. These terms reflect different methodologies for estimating survival rates, and each serves a specific purpose in understanding the survival patterns of patient populations.</p>
+<section id="observed-survival" class="level3">
+<h3 class="anchored" data-anchor-id="observed-survival">Observed Survival:</h3>
+<p>Observed survival refers to the calculation of survival probabilities from a group of patients over time, without adjusting for any other factors like age or stage of disease. It includes all causes of death. It can be influenced by the composition of the population, such as the age distribution. A population with older patients might naturally have lower observed survival rates simply because the mortality risks increase with age. It is often expressed as a ratio where the numerator is the observed survival of the cancer patients, and the denominator is the expected survival of a similar group from the general population.</p>
+</section>
+<section id="age-standardized-relative-survival" class="level3">
+<h3 class="anchored" data-anchor-id="age-standardized-relative-survival">Age-standardized Relative Survival:</h3>
+<p>Age-standardized relative survival takes observed survival by adjusting for the expected survival rate (LIFE TABLES) of a comparable group in the general population (matched by age, sex, and sometimes other variables). It allows to isolate the effect of the cancer from other causes of death that would affect anyone in the general population. By comparing the observed survival to the expected survival rates of a standard population, age-standardized relative survival removes the confounding impact of differing mortality risks that are unrelated to the condition being studied.</p>
+<section id="icss" class="level4">
+<h4 class="anchored" data-anchor-id="icss">ICSS</h4>
+<p>SEER uses ICSS standard population. ICSS was created based on EUROCARE project. https://seer.cancer.gov/stdpopulations/survival.html</p>
+</section>
+<section id="who-world-standard" class="level4">
+<h4 class="anchored" data-anchor-id="who-world-standard">WHO world standard</h4>
+<p>This is my personal contribution to the topic. We developed the World Cancer Population based on a global cancer patient-based standard population that adjusts for the expected age structure of different cancers. This is an alternative to ICCS (which presents lots of limitations). WHO pop can be found here:<a href="https://www.sciencedirect.com/science/article/pii/S1877782120301363?via%3Dihub">Cancer Epidemiology</a></p>
+</section>
+</section>
 </section>
 </section>
 
