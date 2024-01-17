@@ -1,0 +1,296 @@
+
+---
+title: "Malignant Breast Cancer by Molecular Subtype, Race and Ethnicity(SEER12)"
+author: "AMF"
+format: html
+editor: visual
+---
+
+## Overview
+
+This report provides a comprehensive analysis of malignant breast cancer incidence rates by molecular subtype, race and ethnicity, using data from the SEER12 registries.
+
+- **HR-positive/HER2-negative (HR+/HER2-)**: HR+/HER2- 
+- **HR-negative/HER2-negative (HR-/HER2-)**: HR-/HER2- 
+- **HR-positive/HER2-positive (HR+/HER2+)**: HR+/HER2+ 
+- **HR-negative/HER2-positive (HR-/HER2+)**: HR-/HER2+ 
+
+## Methods
+
+Data from SEER12 is available below.
+
+
+```{r setup}
+# Load the data from the GitHub repository as before
+file_url <- "https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/Incidence/breast_seer12_subtype_race.csv"
+breast_cancer_data <- read.csv(url(file_url), stringsAsFactors = FALSE)
+
+# Rename the variables to the desired names
+colnames(breast_cancer_data) <- c("year", "age", "race", "subtype", "rate", "cases", "py", "er")
+
+# View the first few rows with the new variable names
+#head(breast_cancer_data)
+
+
+```
+
+
+## Temporal trends of breast cancer by subtype, race and ethnicity, 2010-2020
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+# Assuming your data frame is named 'breast_cancer_data' and it has columns 'age', 'race', 'subtype', 'cases', and 'py'
+
+# First, categorize age into the age groups if it hasn't been done already
+age_breaks <- c(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, Inf)
+age_labels <- c("0-4", "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", "35-39", "40-44",
+                "45-49", "50-54", "55-59", "60-64", "65-69", "70-74", "75-79", "80-84", "85+")
+
+breast_cancer_data$age_group <- cut(breast_cancer_data$age, breaks=age_breaks, labels=age_labels, right=FALSE, include.lowest=TRUE)
+
+# Now, aggregate both cases and py by the new age groups as well as by race and subtype
+data <- aggregate(cbind(cases, py) ~ age_group + race + year + subtype, data=breast_cancer_data, sum)
+data$year <- as.numeric(data$year) + 1991
+# Check the result
+
+data<-subset(data, data$year > 1991)
+
+# Recode the race and stage values
+data$race <- factor(data$race, levels = c(0, 1, 2, 3, 4, 5),
+                  labels = c("NHW", "NHB", "AIAN", "API", "HIS", "Unknown"))
+data$subtype <- factor(data$subtype, levels = c(0, 1, 2, 3, 4, 5),
+                     labels = c("HR+/HER2+", "HR-/HER2+", "HR+/HER2-", "HR-/HER2-", "Unknown", "Recode not available"))
+
+# U.S 2000 Standard population
+us_2000_std_pop <- c(
+  '0-4'   = 19167602,
+  '5-9'   = 20099441,
+  '10-14' = 20677153,
+  '15-19' = 21376861,
+  '20-24' = 21453335,
+  '25-29' = 21154684,
+  '30-34' = 19943469,
+  '35-39' = 20873546,
+  '40-44' = 22723816,
+  '45-49' = 22263074,
+  '50-54' = 19613129,
+  '55-59' = 16574307,
+  '60-64' = 13407195,
+  '65-69' = 11049005,
+  '70-74' = 8602216,
+  '75-79' = 6625462,
+  '80-84' = 4919015,
+  '85+'   = 5127427
+)
+
+calculate_asir <- function(data, standard_population) {
+  # Ensure that age_group matches standard_population names
+  if (!all(data$age_group %in% names(standard_population))) {
+    stop("Age groups in data do not match standard population age groups.")
+  }
+  
+  # Calculate age-specific incidence rates for each row in the data
+  data$age_specific_rate <- data$cases / data$py
+  
+  # Standardize incidence rates using the standard population
+  data$standardized_rate <- mapply(function(age_group, rate) {
+    return (rate * standard_population[age_group])
+  }, age_group = data$age_group, rate = data$age_specific_rate)
+  
+  # Aggregate the standardized rates by race and subtype
+  asir <- aggregate(standardized_rate ~ race + year + subtype, data, sum)
+  
+  # Normalize by the total standard population to get ASIR
+  total_standard_population <- sum(standard_population)
+  asir$asir <- asir$standardized_rate / total_standard_population * 1e5 # per 100,000 population
+  
+  return(asir[, c('year', 'race', 'subtype', 'asir')])
+}
+
+# Example usage
+# Your data should include the 'age_group', 'race', 'subtype', 'cases', and 'py' columns matching standard_population names.
+asr <- as.data.frame(calculate_asir(data, us_2000_std_pop))
+asr$asir<-round((asr$asir),2)
+
+df1<-subset(asr, asr$subtype=="HR+/HER2+" |asr$subtype=="HR-/HER2+"|asr$subtype=="HR+/HER2-"|asr$subtype=="HR-/HER2-")
+df2<-subset(df1, df1$year >=2010)
+df3<-subset(df2, df2$race=="NHW"|df2$race=="NHB"|df2$race=="API"|df2$race=="HIS")
+
+#write.csv(df3, "C:/Users/filhoam/Desktop/Breast/Incidence/asr_subtype_race.csv")
+
+
+
+
+#####
+
+library(ggplot2)
+library(dplyr)
+library(gridExtra)
+library(grid)
+
+# Assuming asr is your dataframe coming from the earlier calculations
+# Plot the data with points and a smooth line, displaying separate lines for each race by subtype
+# Create a Lancet-style theme for ggplot2
+lancet_theme <- theme_minimal() +
+  theme(
+    text = element_text(size = 12), # Base text size is small (2pt)
+    plot.title = element_text(face = "bold"),
+    plot.subtitle = element_text(face = "italic"),
+    axis.text = element_text(color = "black"), # Axis tick labels color
+    axis.text.x = element_text(size = rel(0.1)), # X-axis tick labels size (relative)
+    axis.text.y = element_text(size = rel(0.1)), # Y-axis tick labels size (relative)
+    axis.title.x = element_text(size = rel(0.1), face = "bold"), # X-axis title size (relative)
+    axis.title.y = element_text(size = rel(0.1), face = "bold"), # Y-axis title size (relative)
+    legend.position = "bottom",
+    legend.text = element_text(size = rel(0.2)),
+    legend.title = element_blank(),
+    strip.background = element_rect(fill = "white", color = "black"),
+    strip.text = element_text(face = "bold"),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.border = element_rect(color = "black", fill = NA)
+  )
+
+
+# Assuming you have already defined lancet_theme, you can update it like this:
+lancet_theme <- lancet_theme +
+  theme(axis.text.x = element_text(size = rel(0.5))) # Decrease x-axis text size to 80% of the current size
+lancet_theme <- lancet_theme +
+  theme(axis.text.y = element_text(size = rel(0.5))) # Decrease x-axis text size to 80% of the current size
+
+# Prepare the colors
+# Define your color palette
+colors <- c("NHW" = "blue", "NHB" = "red", "AIAN" = "green", "API" = "purple", "HIS" = "orange")
+
+# Update the lancet_theme to include a legend
+lancet_theme <- theme_light() +
+  theme(
+    # ... (Other theme components from earlier)
+    legend.position = "none" # Turn off the legend here, we'll add it separately later
+  )
+
+# Helper function to create each plot without a legend
+make_plot <- function(df, subtype) {
+  ggplot(df, aes(x = year, y = asir, color = race, group = interaction(race, subtype))) +
+    geom_point() +
+    geom_smooth(method = "loess", se = FALSE, aes(linetype = race)) +
+    scale_color_manual(values = colors) +
+    facet_wrap(~subtype, scales = "free_y") +
+    labs(x = "Year", y = "Age-Standardized Incidence Rate (ASIR)") +
+    lancet_theme
+}
+# 
+# # Create the individual plots without legends
+# a <- make_plot(subset(df3, subtype == "HR+/HER2+"), "HR+/HER2+")
+# b <- make_plot(subset(df3, subtype == "HR-/HER2+"), "HR-/HER2+")
+# c <- make_plot(subset(df3, subtype == "HR+/HER2-"), "HR+/HER2-")
+# d <- make_plot(subset(df3, subtype == "HR-/HER2-"), "HR-/HER2-")
+
+# Create the individual plots with consistent y-axis limits and updated theme
+a <- make_plot(subset(df3, subtype == "HR+/HER2+"), "HR+/HER2+") + lancet_theme
+b <- make_plot(subset(df3, subtype == "HR-/HER2+"), "HR-/HER2+") + lancet_theme
+c <- make_plot(subset(df3, subtype == "HR+/HER2-"), "HR+/HER2-") + lancet_theme
+d <- make_plot(subset(df3, subtype == "HR-/HER2-"), "HR-/HER2-") + lancet_theme
+
+# Create a plot (or use an existing one) for extracting the legend
+legend_plot <- make_plot(subset(df3, subtype == "HR+/HER2+"), "HR+/HER2+")
+
+# Turn on the legend for this plot
+legend_plot <- legend_plot + theme(legend.position = "bottom")
+
+# Extract the legend
+legend <- cowplot::get_legend(legend_plot)
+
+# # Arrange the plots and the extracted legend using grid.arrange
+# grid.arrange(
+#   arrangeGrob(a, b, c, d, ncol = 4, top = textGrob('Age-standardized incidence rates, (2010-2020)',
+#                                                    gp = gpar(fontsize = 5))),
+#   legend,
+#   ncol = 1, heights = c(10, 1)  # Adjust the relative heights as needed
+# )
+
+
+# In case you want to save the plot to a file
+# g <- arrangeGrob(a, b, c, d, legend, ncol = 1, heights = c(10, 1))
+# ggsave("combined_plots_with_legend.pdf", g, width = 14, height = 6)
+
+#dev.off()
+
+
+```
+
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+# Load necessary libraries
+library(grid)
+library(gridExtra)
+
+# Ensure plots `a`, `b`, `c`, `d`, and `legend` are created before this chunk
+# They might look something like this:
+# a <- ggplot(...) + ... (your ggplot code here)
+# b <- ggplot(...) + ... (and so on for the other plots)
+# legend <- gtable::gtable_filter(ggplotGrob(a), "guide-box")
+
+# Arrange the plots and the extracted legend using grid.arrange
+grid.arrange(
+  arrangeGrob(a, b, c, d, ncol = 4,heights=c(20,15), top = textGrob('Age-standardized incidence rates, (2010-2020)',
+                                                   gp = gpar(fontsize = 12))),
+  legend,
+  ncol = 1, heights = c(10, 1)  # Adjust the relative heights as needed
+)
+
+```
+
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+# Load necessary libraries
+library(Rcan) # Assuming Rcan is a library you have access to
+
+# Perform the function (assuming it returns a data frame or similar object)
+result <- csu_eapc(df3, "asir", "year", 
+                   group_by=c("race", "subtype"))
+
+# Display the result as a table
+# If you are in an R Markdown document and using Quarto, you could use:
+#knitr::kable(result)
+
+# Or using gt package
+# gt::gt(result)
+
+# If you meant to create contingency tables for categorical data
+# and 'result' contains categorical variables, you would do:
+#table_result <- table(result$column1, result$column2) # Replace column1 and column2 with actual column names
+#knitr::kable(table_result)
+
+df4<-result
+# Create the lollipop chart using ggplot2
+# Set factor levels for the stage to reorder
+df4$subtype <- factor(df4$subtype, levels = c("HR+/HER2+" , "HR-/HER2+", "HR+/HER2-", "HR-/HER2-"))
+
+# Set colors for the points
+colors <- c("HR+/HER2+" = "#E69F00", "HR-/HER2+" = "#56B4E9", "HR+/HER2-" = "#009E73", "HR-/HER2-" = "#001E73")
+
+# Create the lollipop chart using ggplot2 following Lancet style
+ggplot(df4, aes(x = reorder(interaction(race, subtype, sep = " - "), eapc), y = eapc)) + 
+  geom_segment(aes(xend = interaction(race, subtype, sep = " - "), yend = 0), color = "gray70") +
+  geom_point(aes(color = subtype), size=5) +
+  scale_color_manual(values = colors) +
+  coord_flip() +
+  theme_minimal(base_size = 14) +
+  labs(x = " ",
+       y = "EAPC",
+       title = "EAPC in 5-Year Age-Adjusted Incidence Rates",
+       #caption = "Data Source: [Your Data Source]"
+  ) +
+  theme(text = element_text(family = "sans"),
+        axis.text.x = element_text(angle = 90, hjust = 1, face = "plain"),
+        axis.title.x = element_blank(),
+        axis.title.y = element_text(face = "bold"),
+        legend.title = element_text(face = "bold"),
+        legend.position = "bottom",
+        legend.box.background = element_rect(color = "black"),
+        plot.title = element_text(hjust = 0.5, face = "bold", size = 16),
+        plot.caption = element_text(size = 8, face = "italic", hjust = 0)) +
+  guides(color = guide_legend(title = "Stage"))
+
+# Print the plot
+
+```
