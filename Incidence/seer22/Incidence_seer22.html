@@ -146,12 +146,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="methods" class="level2">
 <h2 class="anchored" data-anchor-id="methods">Methods</h2>
 <p>Data from SEER12 is available below.</p>
-</section>
-<section id="transforming-seer22-data-into-a-rate-object" class="level2">
-<h2 class="anchored" data-anchor-id="transforming-seer22-data-into-a-rate-object">Transforming SEER22 Data into a ‘rate’ Object</h2>
-<p>The SEER22 database provides data in a long format, which is not directly compatible with the WebTool for analysis. Our primary task involves transforming these datasets into a ‘rate’ object format. This format is requisite to ensure that the data can be efficiently processed using WebTool, a platform designed for cancer-related epidemiological analysis.</p>
+<section id="transforming-seer22-data-into-a-rate-object" class="level3">
+<h3 class="anchored" data-anchor-id="transforming-seer22-data-into-a-rate-object">Transforming SEER22 Data into a ‘rate’ Object</h3>
+<p>The SEER22 database provides data in a long format, which is not directly compatible with the WebTool for analysis. Our primary task involves transforming these datasets into a ‘rate’ object format. This format is requisite to ensure that the data can be efficiently processed using WebTool.</p>
 <p>For more detailed information on the structures and functionalities of ‘rate’ objects and best practices for analyzing SEER data, please consult the following research article:</p>
-<p>“Web Tool for Epidemiological Analysis Using SEER Data” [A Web Tool for Age-Period-Cohort Analysis of Cancer Incidence and Mortality Rates] (https://pubmed.ncbi.nlm.nih.gov/25146089/)</p>
+<p>You can access the repository and download the rate files using the following link:</p>
+<p><a href="https://github.com/filhoalm/Breast_cancer/tree/main/RCode%208-16-22">GitHub Repository for Breast Cancer Rate Files</a></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the necessary libraries</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
@@ -216,7 +216,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a><span class="co"># View the results</span></span>
 <span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a><span class="co"># head(final_data)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>To align with the improved text section, we can provide an example of an R code snippet that selects a specific combination of race and ER (Estrogen Receptor) status from the dataset and includes summary information—attributes crucial for the WebTool to interpret the ‘rate’ objects.</p>
+<p>To align with the improved text section, we can provide an example of an R code that selects a specific combination of race and ER (Estrogen Receptor) status from the dataset and includes summary information—attributes.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># NHW with Positive ER status</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">subset</span>(final_data, age <span class="sc">&gt;=</span> <span class="dv">35</span> <span class="sc">&amp;</span> age <span class="sc">&lt;=</span> <span class="dv">84</span>)</span>
@@ -268,14 +268,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#write.csv(combined_data_nhw_positive, "C:/Users/filhoam/Desktop/Breast/Incidence/seer22/nhw_positive.csv", row.names = FALSE)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="breast-cancer-rate-objects-on-github" class="level1">
-<h1>Breast Cancer Rate Objects on GitHub</h1>
-<p>To ensure ease of access to pertinent data, a dedicated GitHub folder has been created, containing all rate files segmented by race, ethnicity, and ER (Estrogen Receptor).</p>
-<p>You can access the repository and download the rate files using the following link:</p>
-<p><a href="https://github.com/filhoalm/Breast_cancer/tree/main/RCode%208-16-22">GitHub Repository for Breast Cancer Rate Files</a></p>
-<section id="explore-webtool-functions" class="level2">
-<h2 class="anchored" data-anchor-id="explore-webtool-functions">Explore webtool functions</h2>
-<p>We have established a comprehensive repository that houses all the functional components of WebTool. This central repository provides an array of functions designed for streamlining the analysis of epidemiological data.</p>
+<section id="breast-cancer-rate-objects" class="level3">
+<h3 class="anchored" data-anchor-id="breast-cancer-rate-objects">Breast Cancer Rate Objects</h3>
+<p>To ensureaccess to pertinent data, a dedicated GitHub folder has been created, containing all rate files segmented by race, ethnicity, and ER (Estrogen Receptor).</p>
+</section>
+<section id="r-webtool-functions" class="level3">
+<h3 class="anchored" data-anchor-id="r-webtool-functions">R Webtool functions</h3>
+<p>Repository that content all the functional components of WebTool. This central repository provides an array of functions designed for streamlining the analysis of epidemiological data.</p>
 <p>For more detailed insights into the capabilities and applications of the WebTool functions, you are encouraged to consult the following reference:</p>
 <p><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4221491/">“A Web Tool for Age-Period-Cohort Analysis of Cancer Incidence and Mortality Rates”</a></p>
 <p>This reference material offers insightful context on the development of WebTool functions and their respective applications in the field of disease epidemiology.</p>
@@ -305,13 +304,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co"># # Make sure you have the tools package</span></span>
 <span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="co"># library(tools)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-</section>
-<section id="webtools-functions" class="level1">
-<h1>WebTools functions</h1>
 <p>Webtool provides specialized function designed to facilitate the execution of core operations. Two of the most essential functions:</p>
-<section id="csv2rates-function" class="level2">
-<h2 class="anchored" data-anchor-id="csv2rates-function">csv2rates Function</h2>
+<section id="csv2rates-function" class="level4">
+<h4 class="anchored" data-anchor-id="csv2rates-function">csv2rates Function</h4>
 <p>The <code>csv2rates</code> function is a data transformation utility that converts data from CSV (Comma-Separated Values) files into the standardized ‘rate’ object format required by WebTool:</p>
 <ul>
 <li><strong>Reading the CSV file</strong> that contains the epidemiological data.</li>
@@ -321,9 +316,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 <p>This conversion is critical for ensuring that the data can be analyzed accurately and efficiently within the WebTool framework.</p>
 </section>
-<section id="apc2fit-function" class="level2">
-<h2 class="anchored" data-anchor-id="apc2fit-function">apc2fit Function</h2>
+<section id="apc2fit-function" class="level4">
+<h4 class="anchored" data-anchor-id="apc2fit-function">apc2fit Function</h4>
 <p>The <code>apc2fit</code> function implements the Age-Period-Cohort (APC) model fitting on the ‘rate’ objects. The APC model is widely used in epidemiology to examine how particular outcomes change over time and across different cohorts. This function allows researchers to:</p>
+</section>
+</section>
 </section>
 <section id="apc-parameters-and-functions" class="level2">
 <h2 class="anchored" data-anchor-id="apc-parameters-and-functions">APC Parameters and Functions</h2>
@@ -341,12 +338,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell">
 <div class="cell-output-display">
 
-<table class="table table-striped table-hover" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>Table 1: Estimable APC Parameters and Functions Calculated by the Web Tool</caption>
+<table class="table" style="font-size: 12px; width: auto !important; ">
+<caption style="font-size: initial !important;">Table 1: Estimable APC Parameters and Functions Calculated by the Web Tool</caption>
  <thead>
   <tr>
-   <th style="text-align:left;"> Nomenclature </th>
-   <th style="text-align:left;"> Interpretation </th>
+   <th style="text-align:left;transform: scale(0.5); transform-origin: top left;"> Nomenclature </th>
+   <th style="text-align:left;transform: scale(0.5); transform-origin: top left;"> Interpretation </th>
   </tr>
  </thead>
 <tbody>
@@ -457,25 +454,99 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
 <span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a><span class="co"># # View the combined results</span></span>
 <span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a><span class="co"># print(combined_results)</span></span>
-<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a><span class="co"># # Define a vector of column names to round</span></span>
-<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a><span class="co"># columns_to_round &lt;- c("Rate", "CI Lo", "CI Hi")</span></span>
-<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a><span class="co"># # Loop through each column name and apply the rounding function</span></span>
-<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a><span class="co"># for (col in columns_to_round) {</span></span>
-<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a><span class="co">#   combined_results[[col]] &lt;- round(combined_results[[col]], 0)</span></span>
-<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a><span class="co"># }</span></span>
-<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a><span class="co"># write.csv(combined_results, "C:/Users/filhoam/Desktop/Breast/Incidence/seer22/combined_results_race_er.csv", row.names = FALSE)</span></span>
-<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a><span class="co"># ####</span></span>
-<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a><span class="co">#  </span></span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a><span class="co"># # Define a vector of column names to round</span></span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a><span class="co"># columns_to_round &lt;- c("Rate", "CI Lo", "CI Hi")</span></span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a><span class="co"># # Loop through each column name and apply the rounding function</span></span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a><span class="co"># for (col in columns_to_round) {</span></span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a><span class="co">#   combined_results[[col]] &lt;- round(combined_results[[col]], 0)</span></span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a><span class="co"># }</span></span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a><span class="co"># write.csv(combined_results, "C:/Users/filhoam/Desktop/Breast/Incidence/seer22/combined_results_race_er.csv", row.names = FALSE)</span></span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+<section id="preliminarly-results" class="level2">
+<h2 class="anchored" data-anchor-id="preliminarly-results">Preliminarly Results</h2>
+<section id="breast-cancer-incidence-trends-by-race-ethnicity-and-er-status" class="level3">
+<h3 class="anchored" data-anchor-id="breast-cancer-incidence-trends-by-race-ethnicity-and-er-status">Breast Cancer Incidence Trends by Race, Ethnicity and ER Status</h3>
+<p>Analysis of SEER22 data reveals trends in the incidence rates of malignant breast cancer from 2010 to 2020. The following figure illustrates these trends segmented by race, ethnicity, and estrogen receptor (ER) status.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(grid)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># URL to the CSV file hosted on GitHub</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">"https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/Incidence/seer22/combined_results_race_er.csv"</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the CSV file into a data frame</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>combined_results <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(url, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the first few rows of the data frame</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming asr is your dataframe coming from the earlier calculations</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the data with points and a smooth line, displaying separate lines for each race by subtype</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a Lancet-style theme for ggplot2</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>lancet_theme <span class="ot">&lt;-</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>), <span class="co"># Base text size is small (2pt)</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"italic"</span>),</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">"black"</span>), <span class="co"># Axis tick labels color</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.1</span>)), <span class="co"># X-axis tick labels size (relative)</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.1</span>)), <span class="co"># Y-axis tick labels size (relative)</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.1</span>), <span class="at">face =</span> <span class="st">"bold"</span>), <span class="co"># X-axis title size (relative)</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.1</span>), <span class="at">face =</span> <span class="st">"bold"</span>), <span class="co"># Y-axis title size (relative)</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.2</span>)),</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">color =</span> <span class="st">"black"</span>),</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.major.x =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.border =</span> <span class="fu">element_rect</span>(<span class="at">color =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="cn">NA</span>)</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming you have already defined lancet_theme, you can update it like this:</span></span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>lancet_theme <span class="ot">&lt;-</span> lancet_theme <span class="sc">+</span></span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.5</span>))) <span class="co"># Decrease x-axis text size to 80% of the current size</span></span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>lancet_theme <span class="ot">&lt;-</span> lancet_theme <span class="sc">+</span></span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.5</span>))) <span class="co"># Decrease x-axis text size to 80% of the current size</span></span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare the colors</span></span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a><span class="co"># Define your color palette</span></span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"NHW"</span> <span class="ot">=</span> <span class="st">"blue"</span>, <span class="st">"NHB"</span> <span class="ot">=</span> <span class="st">"red"</span>, <span class="st">"AIAN"</span> <span class="ot">=</span> <span class="st">"green"</span>, <span class="st">"API"</span> <span class="ot">=</span> <span class="st">"purple"</span>, <span class="st">"HIS"</span> <span class="ot">=</span> <span class="st">"orange"</span>)</span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a><span class="co"># Update the lancet_theme to include a legend</span></span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>lancet_theme <span class="ot">&lt;-</span> <span class="fu">theme_light</span>() <span class="sc">+</span></span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ... (Other theme components from earlier)</span></span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"none"</span> <span class="co"># Turn off the legend here, we'll add it separately later</span></span>
+<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a><span class="co"># Helper function to create each plot without a legend</span></span>
+<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a>a<span class="ot">&lt;-</span><span class="fu">ggplot</span>(combined_results, <span class="fu">aes</span>(<span class="at">x =</span> Period, <span class="at">y =</span> Rate, <span class="at">color =</span> race, <span class="at">group =</span> <span class="fu">interaction</span>(race, er))) <span class="sc">+</span></span>
+<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"loess"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="fu">aes</span>(<span class="at">linetype =</span> race)) <span class="sc">+</span></span>
+<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> colors) <span class="sc">+</span></span>
+<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>er, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
+<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Age-Standardized Incidence Rate (ASIR)"</span>, <span class="at">color =</span> <span class="st">"Race"</span>, <span class="at">linetype =</span> <span class="st">"Race"</span>) <span class="sc">+</span></span>
+<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a>   <span class="co"># Assuming you want the legend at the bottom+</span></span>
+<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a>  lancet_theme <span class="sc">+</span></span>
+<span id="cb8-62"><a href="#cb8-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span>
+<span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming you already have a ggplot object 'a'</span></span>
+<span id="cb8-65"><a href="#cb8-65" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> a <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">plot.margin =</span> <span class="fu">unit</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>), <span class="st">"cm"</span>),  <span class="co"># Set plot margins</span></span>
+<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a>               <span class="at">aspect.ratio =</span> <span class="dv">2</span>)  <span class="co"># Make the plot "skinny" by setting aspect ratio (height is twice the width)</span></span>
+<span id="cb8-67"><a href="#cb8-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-68"><a href="#cb8-68" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the plot to visualize the adjustments in the R environment</span></span>
+<span id="cb8-69"><a href="#cb8-69" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(a)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Incidence_seer22_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Figure 1. Trends in incidence rates of malignant breast cancer by race and ethnicity, and ER status, 2010 - 2020. SEER22</p>
 </section>
 </section>
 

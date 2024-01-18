@@ -18,13 +18,15 @@ This report provides a comprehensive analysis of malignant breast cancer inciden
 
 Data from SEER12 is available below.
 
-## Transforming SEER22 Data into a 'rate' Object
+### Transforming SEER22 Data into a 'rate' Object
 
-The SEER22 database provides data in a long format, which is not directly compatible with the WebTool for analysis. Our primary task involves transforming these datasets into a 'rate' object format. This format is requisite to ensure that the data can be efficiently processed using WebTool, a platform designed for cancer-related epidemiological analysis.
+The SEER22 database provides data in a long format, which is not directly compatible with the WebTool for analysis. Our primary task involves transforming these datasets into a 'rate' object format. This format is requisite to ensure that the data can be efficiently processed using WebTool.
 
 For more detailed information on the structures and functionalities of 'rate' objects and best practices for analyzing SEER data, please consult the following research article:
 
-"Web Tool for Epidemiological Analysis Using SEER Data" [A Web Tool for Age-Period-Cohort Analysis of Cancer Incidence and Mortality Rates] (https://pubmed.ncbi.nlm.nih.gov/25146089/)
+You can access the repository and download the rate files using the following link:
+
+[GitHub Repository for Breast Cancer Rate Files](https://github.com/filhoalm/Breast_cancer/tree/main/RCode%208-16-22)
 
 ```{r, message=FALSE, warning=FALSE}
 # Load the necessary libraries
@@ -92,7 +94,7 @@ final_data <- final_data %>%
 
 ```
 
-To align with the improved text section, we can provide an example of an R code snippet that selects a specific combination of race and ER (Estrogen Receptor) status from the dataset and includes summary information—attributes crucial for the WebTool to interpret the 'rate' objects. 
+To align with the improved text section, we can provide an example of an R code that selects a specific combination of race and ER (Estrogen Receptor) status from the dataset and includes summary information—attributes.
 ```{r, message=FALSE, warning=FALSE}
 # NHW with Positive ER status
 df <- subset(final_data, age >= 35 & age <= 84)
@@ -122,18 +124,14 @@ head(combined_data_nhw_positive)
 
 ```
 
-# Breast Cancer Rate Objects on GitHub
+### Breast Cancer Rate Objects
 
-To ensure ease of access to pertinent data, a dedicated GitHub folder has been created, containing all rate files segmented by race, ethnicity, and ER (Estrogen Receptor).
-
-You can access the repository and download the rate files using the following link:
-
-[GitHub Repository for Breast Cancer Rate Files](https://github.com/filhoalm/Breast_cancer/tree/main/RCode%208-16-22)
+To ensureaccess to pertinent data, a dedicated GitHub folder has been created, containing all rate files segmented by race, ethnicity, and ER (Estrogen Receptor).
 
 
-## Explore webtool functions
+### R Webtool functions
 
-We have established a comprehensive repository that houses all the functional components of WebTool. This central repository provides an array of functions designed for streamlining the analysis of epidemiological data.
+Repository that content all the functional components of WebTool. This central repository provides an array of functions designed for streamlining the analysis of epidemiological data.
 
 For more detailed insights into the capabilities and applications of the WebTool functions, you are encouraged to consult the following reference:
 
@@ -171,12 +169,9 @@ This reference material offers insightful context on the development of WebTool 
 ```
 
 
-
-# WebTools functions
-
 Webtool provides specialized function designed to facilitate the execution of core operations. Two of the most essential functions:
 
-## csv2rates Function
+#### csv2rates Function
 
 The `csv2rates` function is a data transformation utility that converts data from CSV (Comma-Separated Values) files into the standardized 'rate' object format required by WebTool:
 
@@ -188,7 +183,7 @@ The `csv2rates` function is a data transformation utility that converts data fro
 This conversion is critical for ensuring that the data can be analyzed accurately and efficiently within the WebTool framework.
 
 
-## apc2fit Function
+#### apc2fit Function
 The `apc2fit` function implements the Age-Period-Cohort (APC) model fitting on the 'rate' objects. The APC model is widely used in epidemiology to examine how particular outcomes change over time and across different cohorts. This function allows researchers to:
 
 
@@ -248,11 +243,13 @@ apc_table_data <- data.frame(
   )
 )
 
+
+
 # Create HTML table with kable and style it with kableExtra
 kable(apc_table_data, format = "html", caption = "Table 1: Estimable APC Parameters and Functions Calculated by the Web Tool") %>%
-  kable_styling(bootstrap_options = c("striped", "hover"), full_width = F) %>%
-  column_spec(1, bold = TRUE) # Making the first column bold to mimic a header column
-
+  kable_styling(full_width = F, position = "left", font_size = 12) %>%
+  column_spec(1, bold = TRUE) %>%
+  row_spec(0, extra_css = "transform: scale(0.5); transform-origin: top left;") # Using CSS to scale the table to half size
 
 
 ```
@@ -312,9 +309,7 @@ Here is an illustrative example that demonstrates this refined approach:
 # 
 # # View the combined results
 # print(combined_results)
-# 
-# 
-# 
+#  
 # # Define a vector of column names to round
 # columns_to_round <- c("Rate", "CI Lo", "CI Hi")
 # 
@@ -325,12 +320,87 @@ Here is an illustrative example that demonstrates this refined approach:
 # 
 # write.csv(combined_results, "C:/Users/filhoam/Desktop/Breast/Incidence/seer22/combined_results_race_er.csv", row.names = FALSE)
 # 
-# 
-# ####
-# 
-# 
-# 
+```
 
 
+
+
+## Preliminarly Results
+
+### Breast Cancer Incidence Trends by Race, Ethnicity and ER Status
+
+Analysis of SEER22 data reveals trends in the incidence rates of malignant breast cancer from 2010 to 2020. The following figure illustrates these trends segmented by race, ethnicity, and estrogen receptor (ER) status.
+```{r, message=FALSE, warning=FALSE}
+library(ggplot2)
+library(dplyr)
+library(gridExtra)
+library(grid)
+# URL to the CSV file hosted on GitHub
+url <- "https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/Incidence/seer22/combined_results_race_er.csv"
+
+# Read the CSV file into a data frame
+combined_results <- read.csv(url, stringsAsFactors = FALSE)
+
+# Check the first few rows of the data frame
+# Assuming asr is your dataframe coming from the earlier calculations
+# Plot the data with points and a smooth line, displaying separate lines for each race by subtype
+# Create a Lancet-style theme for ggplot2
+lancet_theme <- theme_minimal() +
+  theme(
+    text = element_text(size = 12), # Base text size is small (2pt)
+    plot.title = element_text(face = "bold"),
+    plot.subtitle = element_text(face = "italic"),
+    axis.text = element_text(color = "black"), # Axis tick labels color
+    axis.text.x = element_text(size = rel(0.1)), # X-axis tick labels size (relative)
+    axis.text.y = element_text(size = rel(0.1)), # Y-axis tick labels size (relative)
+    axis.title.x = element_text(size = rel(0.1), face = "bold"), # X-axis title size (relative)
+    axis.title.y = element_text(size = rel(0.1), face = "bold"), # Y-axis title size (relative)
+    legend.position = "bottom",
+    legend.text = element_text(size = rel(0.2)),
+    legend.title = element_blank(),
+    strip.background = element_rect(fill = "white", color = "black"),
+    strip.text = element_text(face = "bold"),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.border = element_rect(color = "black", fill = NA)
+  )
+
+# Assuming you have already defined lancet_theme, you can update it like this:
+lancet_theme <- lancet_theme +
+  theme(axis.text.x = element_text(size = rel(0.5))) # Decrease x-axis text size to 80% of the current size
+lancet_theme <- lancet_theme +
+  theme(axis.text.y = element_text(size = rel(0.5))) # Decrease x-axis text size to 80% of the current size
+
+# Prepare the colors
+# Define your color palette
+colors <- c("NHW" = "blue", "NHB" = "red", "AIAN" = "green", "API" = "purple", "HIS" = "orange")
+
+# Update the lancet_theme to include a legend
+lancet_theme <- theme_light() +
+  theme(
+    # ... (Other theme components from earlier)
+    legend.position = "none" # Turn off the legend here, we'll add it separately later
+  )
+
+# Helper function to create each plot without a legend
+
+a<-ggplot(combined_results, aes(x = Period, y = Rate, color = race, group = interaction(race, er))) +
+  geom_point() +
+  geom_smooth(method = "loess", se = FALSE, aes(linetype = race)) +
+  scale_color_manual(values = colors) +
+  facet_wrap(~er, scales = "free_y") +
+  labs(x = "Year", y = "Age-Standardized Incidence Rate (ASIR)", color = "Race", linetype = "Race") +
+   # Assuming you want the legend at the bottom+
+  lancet_theme +
+  theme(legend.position = "bottom")
+
+# Assuming you already have a ggplot object 'a'
+a <- a + theme(plot.margin = unit(c(1, 1, 1, 1), "cm"),  # Set plot margins
+               aspect.ratio = 2)  # Make the plot "skinny" by setting aspect ratio (height is twice the width)
+
+# Print the plot to visualize the adjustments in the R environment
+print(a)
 
 ```
+
+Figure 1. Trends in incidence rates of malignant breast cancer by race and ethnicity, and ER status, 2010 - 2020. SEER22
