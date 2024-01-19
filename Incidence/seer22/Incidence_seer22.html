@@ -166,55 +166,35 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert 'year' to numeric and adjust the actual year</span></span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>breast_cancer_data<span class="sc">$</span>year <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(breast_cancer_data<span class="sc">$</span>year) <span class="sc">+</span> <span class="dv">1999</span></span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Categorize age into age groups</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>age_breaks <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">15</span>, <span class="dv">20</span>, <span class="dv">25</span>, <span class="dv">30</span>, <span class="dv">35</span>, <span class="dv">40</span>, <span class="dv">45</span>, <span class="dv">50</span>, <span class="dv">55</span>, <span class="dv">60</span>, <span class="dv">65</span>, <span class="dv">70</span>, <span class="dv">75</span>, <span class="dv">80</span>, <span class="dv">85</span>, <span class="cn">Inf</span>)</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>age_labels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"0-4"</span>, <span class="st">"5-9"</span>, <span class="st">"10-14"</span>, <span class="st">"15-19"</span>, <span class="st">"20-24"</span>, <span class="st">"25-29"</span>, <span class="st">"30-34"</span>, <span class="st">"35-39"</span>, <span class="st">"40-44"</span>,</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>                <span class="st">"45-49"</span>, <span class="st">"50-54"</span>, <span class="st">"55-59"</span>, <span class="st">"60-64"</span>, <span class="st">"65-69"</span>, <span class="st">"70-74"</span>, <span class="st">"75-79"</span>, <span class="st">"80-84"</span>, <span class="st">"85+"</span>)</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>breast_cancer_data <span class="ot">&lt;-</span> breast_cancer_data <span class="sc">%&gt;%</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age_group =</span> <span class="fu">cut</span>(age, <span class="at">breaks=</span>age_breaks, <span class="at">labels=</span>age_labels, <span class="at">right=</span><span class="cn">FALSE</span>, <span class="at">include.lowest=</span><span class="cn">TRUE</span>))</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Aggregate cases and py by the new age groups, race, year, and er</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>aggregated_data <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(<span class="fu">cbind</span>(cases, py) <span class="sc">~</span> age_group <span class="sc">+</span> race <span class="sc">+</span> er <span class="sc">+</span> year, <span class="at">data=</span>breast_cancer_data, sum)</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Create an identifier variable for reshaping</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>breast_cancer_data <span class="ot">&lt;-</span> breast_cancer_data <span class="sc">%&gt;%</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">id =</span> <span class="fu">paste</span>(age, race, er, <span class="at">sep =</span> <span class="st">"_"</span>))</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Reshape 'cases' and 'py' to wide format</span></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>bc_cases_wide <span class="ot">&lt;-</span> <span class="fu">reshape</span>(breast_cancer_data, <span class="at">idvar =</span> <span class="st">"id"</span>, <span class="at">timevar =</span> <span class="st">"year"</span>, <span class="at">direction =</span> <span class="st">"wide"</span>, <span class="at">v.names =</span> <span class="st">"cases"</span>)</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>bc_py_wide <span class="ot">&lt;-</span> <span class="fu">reshape</span>(breast_cancer_data, <span class="at">idvar =</span> <span class="st">"id"</span>, <span class="at">timevar =</span> <span class="st">"year"</span>, <span class="at">direction =</span> <span class="st">"wide"</span>, <span class="at">v.names =</span> <span class="st">"py"</span>)</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge the 'cases' and 'py' data frames</span></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>merged_data <span class="ot">&lt;-</span> <span class="fu">merge</span>(bc_cases_wide, bc_py_wide, <span class="at">by =</span> <span class="st">"id"</span>, <span class="at">all =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a sorted vector of year column names for cases and py</span></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>years <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">unique</span>(breast_cancer_data<span class="sc">$</span>year))</span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>sorted_colnames <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">lapply</span>(years, <span class="cf">function</span>(y) <span class="fu">c</span>(<span class="fu">paste0</span>(<span class="st">"cases."</span>, y), <span class="fu">paste0</span>(<span class="st">"py."</span>, y))))</span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="co"># Select columns in the order of 'id', then alternating 'cases.YEAR' and 'py.YEAR'</span></span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>final_data <span class="ot">&lt;-</span> merged_data <span class="sc">%&gt;%</span></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">c</span>(id, sorted_colnames))</span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="co"># Split the 'id' back into 'age', 'race', and 'er' and convert them accordingly</span></span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>final_data <span class="ot">&lt;-</span> final_data <span class="sc">%&gt;%</span></span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age =</span> <span class="fu">as.numeric</span>(<span class="fu">unlist</span>(<span class="fu">lapply</span>(<span class="fu">strsplit</span>(id, <span class="st">"_"</span>), <span class="st">`</span><span class="at">[</span><span class="st">`</span>, <span class="dv">1</span>))),</span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>         <span class="at">race =</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(<span class="fu">lapply</span>(<span class="fu">strsplit</span>(id, <span class="st">"_"</span>), <span class="st">`</span><span class="at">[</span><span class="st">`</span>, <span class="dv">2</span>)), </span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>                       <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"0"</span>, <span class="st">"1"</span>, <span class="st">"2"</span>, <span class="st">"3"</span>, <span class="st">"4"</span>, <span class="st">"5"</span>),</span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>                       <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"NHW"</span>, <span class="st">"NHB"</span>, <span class="st">"AIAN"</span>, <span class="st">"API"</span>, <span class="st">"HIS"</span>, <span class="st">"Unknown"</span>)),</span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>         <span class="at">er =</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(<span class="fu">lapply</span>(<span class="fu">strsplit</span>(id, <span class="st">"_"</span>), <span class="st">`</span><span class="at">[</span><span class="st">`</span>, <span class="dv">3</span>)),</span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>                     <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"0"</span>, <span class="st">"1"</span>, <span class="st">"2"</span>, <span class="st">"3"</span>),</span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>                     <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Positive"</span>, <span class="st">"Negative"</span>, <span class="st">"Borderline/Unknown"</span>, <span class="st">"Recode not available"</span>)),</span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>         <span class="at">.keep =</span> <span class="st">"unused"</span>)</span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a><span class="co"># # Drop the 'id' variable and reorder the dataframe</span></span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a><span class="co"># final_data &lt;- final_data %&gt;%</span></span>
-<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a><span class="co">#   select(-id) %&gt;%</span></span>
-<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a><span class="co">#   select(age, race, er, everything())</span></span>
-<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a><span class="co"># View the results</span></span>
-<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a><span class="co"># head(final_data)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Create an identifier variable for reshaping</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>breast_cancer_data <span class="ot">&lt;-</span> breast_cancer_data <span class="sc">%&gt;%</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">id =</span> <span class="fu">paste</span>(age, race, er, <span class="at">sep =</span> <span class="st">"_"</span>))</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Reshape 'cases' and 'py' to wide format</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>bc_cases_wide <span class="ot">&lt;-</span> <span class="fu">reshape</span>(breast_cancer_data, <span class="at">idvar =</span> <span class="st">"id"</span>, <span class="at">timevar =</span> <span class="st">"year"</span>, <span class="at">direction =</span> <span class="st">"wide"</span>, <span class="at">v.names =</span> <span class="st">"cases"</span>)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>bc_py_wide <span class="ot">&lt;-</span> <span class="fu">reshape</span>(breast_cancer_data, <span class="at">idvar =</span> <span class="st">"id"</span>, <span class="at">timevar =</span> <span class="st">"year"</span>, <span class="at">direction =</span> <span class="st">"wide"</span>, <span class="at">v.names =</span> <span class="st">"py"</span>)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge the 'cases' and 'py' data frames</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>merged_data <span class="ot">&lt;-</span> <span class="fu">merge</span>(bc_cases_wide, bc_py_wide, <span class="at">by =</span> <span class="st">"id"</span>, <span class="at">all =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a sorted vector of year column names for cases and py</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>years <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">unique</span>(breast_cancer_data<span class="sc">$</span>year))</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>sorted_colnames <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">lapply</span>(years, <span class="cf">function</span>(y) <span class="fu">c</span>(<span class="fu">paste0</span>(<span class="st">"cases."</span>, y), <span class="fu">paste0</span>(<span class="st">"py."</span>, y))))</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Select columns in the order of 'id', then alternating 'cases.YEAR' and 'py.YEAR'</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>final_data <span class="ot">&lt;-</span> merged_data <span class="sc">%&gt;%</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">c</span>(id, sorted_colnames))</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Split the 'id' back into 'age', 'race', and 'er' and convert them accordingly</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>final_data <span class="ot">&lt;-</span> final_data <span class="sc">%&gt;%</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age =</span> <span class="fu">as.numeric</span>(<span class="fu">unlist</span>(<span class="fu">lapply</span>(<span class="fu">strsplit</span>(id, <span class="st">"_"</span>), <span class="st">`</span><span class="at">[</span><span class="st">`</span>, <span class="dv">1</span>))),</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>         <span class="at">race =</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(<span class="fu">lapply</span>(<span class="fu">strsplit</span>(id, <span class="st">"_"</span>), <span class="st">`</span><span class="at">[</span><span class="st">`</span>, <span class="dv">2</span>)), </span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>                       <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"0"</span>, <span class="st">"1"</span>, <span class="st">"2"</span>, <span class="st">"3"</span>, <span class="st">"4"</span>, <span class="st">"5"</span>),</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>                       <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"NHW"</span>, <span class="st">"NHB"</span>, <span class="st">"AIAN"</span>, <span class="st">"API"</span>, <span class="st">"HIS"</span>, <span class="st">"Unknown"</span>)),</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>         <span class="at">er =</span> <span class="fu">factor</span>(<span class="fu">unlist</span>(<span class="fu">lapply</span>(<span class="fu">strsplit</span>(id, <span class="st">"_"</span>), <span class="st">`</span><span class="at">[</span><span class="st">`</span>, <span class="dv">3</span>)),</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>                     <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"0"</span>, <span class="st">"1"</span>, <span class="st">"2"</span>, <span class="st">"3"</span>),</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>                     <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Positive"</span>, <span class="st">"Negative"</span>, <span class="st">"Borderline/Unknown"</span>, <span class="st">"Recode not available"</span>)),</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>         <span class="at">.keep =</span> <span class="st">"unused"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>To align with the improved text section, we provided an example of an R code that selects a specific combination of race and ER (Estrogen Receptor) status from the dataset and includes summary information—attributes.</p>
 <div class="cell">
@@ -468,9 +448,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="preliminarly-results" class="level2">
 <h2 class="anchored" data-anchor-id="preliminarly-results">Preliminarly Results</h2>
-<section id="breast-cancer-incidence-trends-by-race-ethnicity-and-er-status" class="level3">
-<h3 class="anchored" data-anchor-id="breast-cancer-incidence-trends-by-race-ethnicity-and-er-status">Breast Cancer Incidence Trends by Race, Ethnicity and ER Status</h3>
-<p>Analysis of SEER22 data reveals trends in the incidence rates of malignant breast cancer from 2010 to 2020. The following figure illustrates these trends segmented by race, ethnicity, and estrogen receptor (ER) status.</p>
+<section id="fitted-temporal-trends-ftt" class="level3">
+<h3 class="anchored" data-anchor-id="fitted-temporal-trends-ftt">Fitted Temporal Trends (FTT)</h3>
+<p>Breast Cancer Incidence Trends by Race, Ethnicity and ER Status. Analysis of SEER22 data reveals trends in the incidence rates of malignant breast cancer from 2010 to 2020. The following figure illustrates these trends segmented by race, ethnicity, and estrogen receptor (ER) status.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
@@ -553,28 +533,47 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 <p>Figure 2. Fitted Temporal Trends (FTT) in incidence rates of malignant breast cancer by race and ethnicity, and ER status, 2010 - 2019. SEER22</p>
+</section>
+<section id="net-drift" class="level3">
+<h3 class="anchored" data-anchor-id="net-drift">Net Drift</h3>
+<p>APC analogue of the estimated annual percentage change (EAPC) in the age-standardized rate (ASR); log-linear component of FTT(p | a0), PRR(p | p0) and CRR(c | c0)</p>
 <div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>  Period Rate CI.Lo CI.Hi race       er
-1 2010.5  246   241   251  NHW Positive
-2 2011.5  255   250   260  NHW Positive
-3 2012.5  257   251   262  NHW Positive
-4 2013.5  262   257   267  NHW Positive
-5 2014.5  267   262   273  NHW Positive
-6 2015.5  273   267   278  NHW Positive</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  Period Rate CI.Lo CI.Hi race       er
-1 2010.5  246   241   251  NHW Positive
-2 2011.5  255   250   260  NHW Positive
-3 2012.5  257   251   262  NHW Positive
-4 2013.5  262   257   267  NHW Positive
-5 2014.5  267   262   273  NHW Positive
-6 2015.5  273   267   278  NHW Positive</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>EAPC with  95 % CI level have been computed</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># URL to the CSV file hosted on GitHub</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">"https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/Incidence/seer22/nedrift_race_er.csv"</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the CSV file into a data frame</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>df3 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(url, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(df3)<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">"eapc"</span>, <span class="st">"low"</span>, <span class="st">"high"</span>, <span class="st">"race"</span>, <span class="st">"er"</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>df4<span class="ot">&lt;-</span>df3</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the lollipop chart using ggplot2</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Set factor levels for the stage to reorder</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>df4<span class="sc">$</span>er <span class="ot">&lt;-</span> <span class="fu">factor</span>(df4<span class="sc">$</span>er, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Positive"</span> , <span class="st">"Negative"</span>, <span class="st">"Borderline/Unknown"</span>, <span class="st">"Recode not available"</span>))</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Set colors for the points</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Positive"</span> <span class="ot">=</span> <span class="st">"#E69F00"</span>, <span class="st">"Negative"</span> <span class="ot">=</span> <span class="st">"#56B4E9"</span>, <span class="st">"Borderline/Unknown"</span> <span class="ot">=</span> <span class="st">"#009E73"</span>, <span class="st">"Recode not available"</span> <span class="ot">=</span> <span class="st">"#001E73"</span>)</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the lollipop chart using ggplot2 following Lancet style</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df4, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(<span class="fu">interaction</span>(race, er, <span class="at">sep =</span> <span class="st">" - "</span>), eapc), <span class="at">y =</span> eapc)) <span class="sc">+</span> </span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">xend =</span> <span class="fu">interaction</span>(race, er, <span class="at">sep =</span> <span class="st">" - "</span>), <span class="at">yend =</span> <span class="dv">0</span>), <span class="at">color =</span> <span class="st">"gray70"</span>) <span class="sc">+</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> er), <span class="at">size=</span><span class="dv">5</span>) <span class="sc">+</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> colors) <span class="sc">+</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">" "</span>,</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Net Drift"</span>,</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Net Drift, 2010-2019"</span>,</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>       <span class="co">#caption = "Data Source: [Your Data Source]"</span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"sans"</span>),</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">face =</span> <span class="st">"plain"</span>),</span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.x =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.box.background =</span> <span class="fu">element_rect</span>(<span class="at">color =</span> <span class="st">"black"</span>),</span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">16</span>),</span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>, <span class="at">face =</span> <span class="st">"italic"</span>, <span class="at">hjust =</span> <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">"Stage"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="Incidence_seer22_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
 </div>
