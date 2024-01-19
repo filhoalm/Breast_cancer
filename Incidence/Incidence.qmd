@@ -1,4 +1,3 @@
-
 ---
 title: "Malignant Breast Cancer by Molecular Subtype, Race and Ethnicity(SEER12)"
 author: "AMF"
@@ -10,15 +9,14 @@ editor: visual
 
 This report provides a comprehensive analysis of malignant breast cancer incidence rates by molecular subtype, race and ethnicity, using data from the SEER12 registries.
 
-- **HR-positive/HER2-negative (HR+/HER2-)**: HR+/HER2- 
-- **HR-negative/HER2-negative (HR-/HER2-)**: HR-/HER2- 
-- **HR-positive/HER2-positive (HR+/HER2+)**: HR+/HER2+ 
-- **HR-negative/HER2-positive (HR-/HER2+)**: HR-/HER2+ 
+-   **HR-positive/HER2-negative (HR+/HER2-)**: HR+/HER2-
+-   **HR-negative/HER2-negative (HR-/HER2-)**: HR-/HER2-
+-   **HR-positive/HER2-positive (HR+/HER2+)**: HR+/HER2+
+-   **HR-negative/HER2-positive (HR-/HER2+)**: HR-/HER2+
 
 ## Methods
 
 Data from SEER12 is available below.
-
 
 ```{r setup}
 # Load the data from the GitHub repository as before
@@ -34,8 +32,8 @@ colnames(breast_cancer_data) <- c("year", "age", "race", "subtype", "rate", "cas
 
 ```
 
-
 ## Temporal trends of breast cancer by subtype, race and ethnicity, 2010-2020
+
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
 # Assuming your data frame is named 'breast_cancer_data' and it has columns 'age', 'race', 'subtype', 'cases', and 'py'
 
@@ -217,7 +215,6 @@ legend <- cowplot::get_legend(legend_plot)
 
 ```
 
-
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
 # Load necessary libraries
 library(grid)
@@ -239,45 +236,31 @@ grid.arrange(
 
 ```
 
-
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
-# Load necessary libraries
-library(Rcan) # Assuming Rcan is a library you have access to
+# URL to the CSV file hosted on GitHub
+url <- "https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/Incidence/seer22/nedrift_race_er.csv"
 
-# Perform the function (assuming it returns a data frame or similar object)
-result <- csu_eapc(df3, "asir", "year", 
-                   group_by=c("race", "subtype"))
-
-# Display the result as a table
-# If you are in an R Markdown document and using Quarto, you could use:
-#knitr::kable(result)
-
-# Or using gt package
-# gt::gt(result)
-
-# If you meant to create contingency tables for categorical data
-# and 'result' contains categorical variables, you would do:
-#table_result <- table(result$column1, result$column2) # Replace column1 and column2 with actual column names
-#knitr::kable(table_result)
-
-df4<-result
+# Read the CSV file into a data frame
+df3 <- read.csv(url, stringsAsFactors = FALSE)
+names(df3)<-c("eapc", "low", "high", "race", "er")
+df4<-df3
 # Create the lollipop chart using ggplot2
 # Set factor levels for the stage to reorder
-df4$subtype <- factor(df4$subtype, levels = c("HR+/HER2+" , "HR-/HER2+", "HR+/HER2-", "HR-/HER2-"))
+df4$er <- factor(df4$er, levels = c("Positive" , "Negative", "Borderline/Unknown", "Recode not available"))
 
 # Set colors for the points
-colors <- c("HR+/HER2+" = "#E69F00", "HR-/HER2+" = "#56B4E9", "HR+/HER2-" = "#009E73", "HR-/HER2-" = "#001E73")
+colors <- c("Positive" = "#E69F00", "Negative" = "#56B4E9", "Borderline/Unknown" = "#009E73", "Recode not available" = "#001E73")
 
 # Create the lollipop chart using ggplot2 following Lancet style
-ggplot(df4, aes(x = reorder(interaction(race, subtype, sep = " - "), eapc), y = eapc)) + 
-  geom_segment(aes(xend = interaction(race, subtype, sep = " - "), yend = 0), color = "gray70") +
-  geom_point(aes(color = subtype), size=5) +
+ggplot(df4, aes(x = reorder(interaction(race, er, sep = " - "), eapc), y = eapc)) + 
+  geom_segment(aes(xend = interaction(race, er, sep = " - "), yend = 0), color = "gray70") +
+  geom_point(aes(color = er), size=5) +
   scale_color_manual(values = colors) +
   coord_flip() +
   theme_minimal(base_size = 14) +
   labs(x = " ",
-       y = "EAPC",
-       title = "EAPC in 5-Year Age-Adjusted Incidence Rates",
+       y = "Net Drift",
+       title = "Net Drift, 2010-2019",
        #caption = "Data Source: [Your Data Source]"
   ) +
   theme(text = element_text(family = "sans"),
