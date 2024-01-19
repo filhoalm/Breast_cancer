@@ -343,17 +343,17 @@ process_file <- function(file_path, race, er_status) {
   fit <- apc2fit(rates)
   
   # Extract the fitted temporal trends and convert to data frame
-  fitted_temporal_trends <- as.data.frame(fit$FittedTemporalTrends)
+  NetDrift <- as.data.frame(fit$NetDrift)
   
   # Add race and er_status columns
-  fitted_temporal_trends$race <- race
-  fitted_temporal_trends$er <- er_status
+  NetDrift$race <- race
+  NetDrift$er <- er_status
   
-  return(fitted_temporal_trends)
+  return(NetDrift)
 }
 
 # Base directory path where files are stored
-base_path <- "C:/Users/filhoam/Desktop/Breast/Incidence/seer22/"
+base_path <- "C:/Users/filhoam/Desktop/Breast/Incidence/seer22/exclude2020/"
 
 # Vector of file identifiers
 file_identifiers <- c("nhw_positive", "nhw_negative", "nhb_positive", "nhb_negative", 
@@ -392,7 +392,7 @@ for (col in columns_to_round) {
   combined_results[[col]] <- round(combined_results[[col]], 0)
 }
 
-write.csv(combined_results, "C:/Users/filhoam/Desktop/Breast/Incidence/seer22/combined_results_race_er.csv", row.names = FALSE)
+#write.csv(combined_results, "C:/Users/filhoam/Desktop/Breast/Incidence/seer22/nedrift_race_er.csv", row.names = FALSE)
 
 
 ####

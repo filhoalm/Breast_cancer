@@ -216,7 +216,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a><span class="co"># View the results</span></span>
 <span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a><span class="co"># head(final_data)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>To align with the improved text section, we can provide an example of an R code that selects a specific combination of race and ER (Estrogen Receptor) status from the dataset and includes summary information—attributes.</p>
+<p>To align with the improved text section, we provided an example of an R code that selects a specific combination of race and ER (Estrogen Receptor) status from the dataset and includes summary information—attributes.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># NHW with Positive ER status</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">subset</span>(final_data, age <span class="sc">&gt;=</span> <span class="dv">35</span> <span class="sc">&amp;</span> age <span class="sc">&lt;=</span> <span class="dv">84</span>)</span>
@@ -277,7 +277,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Repository that content all the functional components of WebTool. This central repository provides an array of functions designed for streamlining the analysis of epidemiological data.</p>
 <p>For more detailed insights into the capabilities and applications of the WebTool functions, you are encouraged to consult the following reference:</p>
 <p><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4221491/">“A Web Tool for Age-Period-Cohort Analysis of Cancer Incidence and Mortality Rates”</a></p>
-<p>This reference material offers insightful context on the development of WebTool functions and their respective applications in the field of disease epidemiology.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#my_path &lt;- "https://github.com/filhoalm/Breast_cancer/tree/main/RCode%208-16-22/APC/"</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># setwd(my_path)  </span></span>
@@ -546,7 +545,40 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><img src="Incidence_seer22_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>Figure 1. Trends in incidence rates of malignant breast cancer by race and ethnicity, and ER status, 2010 - 2020. SEER22</p>
+<p>Figure 1. Fitted Temporal Trends (FTT) in incidence rates of malignant breast cancer by race and ethnicity, and ER status, 2010 - 2020. SEER22</p>
+<p>We can observe a sharp drop in rates for the year 2020. The reason is the Covid-19 pandemic effect, which impacted oncology systems and diagnostic capacity. To address this, we will exclude the year 2020 and then estimate the Net Drift.</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="Incidence_seer22_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Figure 2. Fitted Temporal Trends (FTT) in incidence rates of malignant breast cancer by race and ethnicity, and ER status, 2010 - 2019. SEER22</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>  Period Rate CI.Lo CI.Hi race       er
+1 2010.5  246   241   251  NHW Positive
+2 2011.5  255   250   260  NHW Positive
+3 2012.5  257   251   262  NHW Positive
+4 2013.5  262   257   267  NHW Positive
+5 2014.5  267   262   273  NHW Positive
+6 2015.5  273   267   278  NHW Positive</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Period Rate CI.Lo CI.Hi race       er
+1 2010.5  246   241   251  NHW Positive
+2 2011.5  255   250   260  NHW Positive
+3 2012.5  257   251   262  NHW Positive
+4 2013.5  262   257   267  NHW Positive
+5 2014.5  267   262   273  NHW Positive
+6 2015.5  273   267   278  NHW Positive</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>EAPC with  95 % CI level have been computed</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="Incidence_seer22_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
 </section>
 </section>
 

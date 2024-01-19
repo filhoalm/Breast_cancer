@@ -94,7 +94,7 @@ final_data <- final_data %>%
 
 ```
 
-To align with the improved text section, we can provide an example of an R code that selects a specific combination of race and ER (Estrogen Receptor) status from the dataset and includes summary information—attributes.
+To align with the improved text section, we provided an example of an R code that selects a specific combination of race and ER (Estrogen Receptor) status from the dataset and includes summary information—attributes.
 ```{r, message=FALSE, warning=FALSE}
 # NHW with Positive ER status
 df <- subset(final_data, age >= 35 & age <= 84)
@@ -136,8 +136,6 @@ Repository that content all the functional components of WebTool. This central r
 For more detailed insights into the capabilities and applications of the WebTool functions, you are encouraged to consult the following reference:
 
 ["A Web Tool for Age-Period-Cohort Analysis of Cancer Incidence and Mortality Rates"](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4221491/)
-
-This reference material offers insightful context on the development of WebTool functions and their respective applications in the field of disease epidemiology.
 
 
 ```{r, message=FALSE, warning=FALSE}
@@ -403,4 +401,169 @@ print(a)
 
 ```
 
-Figure 1. Trends in incidence rates of malignant breast cancer by race and ethnicity, and ER status, 2010 - 2020. SEER22
+Figure 1. Fitted Temporal Trends (FTT) in incidence rates of malignant breast cancer by race and ethnicity, and ER status, 2010 - 2020. SEER22
+
+
+We can observe a sharp drop in rates for the year 2020. The reason is the Covid-19 pandemic effect, which impacted oncology systems and diagnostic capacity. To address this, we will exclude the year 2020 and then estimate the Net Drift.
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+# URL to the CSV file hosted on GitHub
+url <- "https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/Incidence/seer22/combined_results_race_er.csv"
+
+# Read the CSV file into a data frame
+combined_results <- read.csv(url, stringsAsFactors = FALSE)
+
+combined_results<-subset(combined_results, combined_results$Period != 2020.5)
+
+# Check the first few rows of the data frame
+# Assuming asr is your dataframe coming from the earlier calculations
+# Plot the data with points and a smooth line, displaying separate lines for each race by subtype
+# Create a Lancet-style theme for ggplot2
+lancet_theme <- theme_minimal() +
+  theme(
+    text = element_text(size = 12), # Base text size is small (2pt)
+    plot.title = element_text(face = "bold"),
+    plot.subtitle = element_text(face = "italic"),
+    axis.text = element_text(color = "black"), # Axis tick labels color
+    axis.text.x = element_text(size = rel(0.1)), # X-axis tick labels size (relative)
+    axis.text.y = element_text(size = rel(0.1)), # Y-axis tick labels size (relative)
+    axis.title.x = element_text(size = rel(0.1), face = "bold"), # X-axis title size (relative)
+    axis.title.y = element_text(size = rel(0.1), face = "bold"), # Y-axis title size (relative)
+    legend.position = "bottom",
+    legend.text = element_text(size = rel(0.2)),
+    legend.title = element_blank(),
+    strip.background = element_rect(fill = "white", color = "black"),
+    strip.text = element_text(face = "bold"),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.border = element_rect(color = "black", fill = NA)
+  )
+
+# Assuming you have already defined lancet_theme, you can update it like this:
+lancet_theme <- lancet_theme +
+  theme(axis.text.x = element_text(size = rel(0.5))) # Decrease x-axis text size to 80% of the current size
+lancet_theme <- lancet_theme +
+  theme(axis.text.y = element_text(size = rel(0.5))) # Decrease x-axis text size to 80% of the current size
+
+# Prepare the colors
+# Define your color palette
+colors <- c("NHW" = "blue", "NHB" = "red", "AIAN" = "green", "API" = "purple", "HIS" = "orange")
+
+# Update the lancet_theme to include a legend
+lancet_theme <- theme_light() +
+  theme(
+    # ... (Other theme components from earlier)
+    legend.position = "none" # Turn off the legend here, we'll add it separately later
+  )
+
+# Helper function to create each plot without a legend
+
+a<-ggplot(combined_results, aes(x = Period, y = Rate, color = race, group = interaction(race, er))) +
+  geom_point() +
+  geom_smooth(method = "loess", se = FALSE, aes(linetype = race)) +
+  scale_color_manual(values = colors) +
+  facet_wrap(~er, scales = "free_y") +
+  labs(x = "Year", y = "Age-Standardized Incidence Rate (ASIR)", color = "Race", linetype = "Race") +
+   # Assuming you want the legend at the bottom+
+  lancet_theme +
+  theme(legend.position = "bottom")
+
+# Assuming you already have a ggplot object 'a'
+a <- a + theme(plot.margin = unit(c(1, 1, 1, 1), "cm"),  # Set plot margins
+               aspect.ratio = 2)  # Make the plot "skinny" by setting aspect ratio (height is twice the width)
+
+# Print the plot to visualize the adjustments in the R environment
+print(a)
+
+```
+
+Figure 2. Fitted Temporal Trends (FTT) in incidence rates of malignant breast cancer by race and ethnicity, and ER status, 2010 - 2019. SEER22
+
+
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+# URL to the CSV file hosted on GitHub
+url <- "https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/Incidence/seer22/combined_results_race_er.csv"
+
+# Read the CSV file into a data frame
+combined_results <- read.csv(url, stringsAsFactors = FALSE)
+
+combined_results<-subset(combined_results, combined_results$Period != 2020.5)
+
+head(combined_results)
+df3<-combined_results
+head(df3)
+names(df3)<-c("year", "asir", "low", "high", "race", "er")
+
+# Load necessary libraries
+library(Rcan) # Assuming Rcan is a library you have access to
+
+# Perform the function (assuming it returns a data frame or similar object)
+result <- csu_eapc(df3, "asir", "year", 
+                   group_by=c("race", "er"))
+
+# Display the result as a table
+# If you are in an R Markdown document and using Quarto, you could use:
+#knitr::kable(result)
+
+# Or using gt package
+# gt::gt(result)
+
+# If you meant to create contingency tables for categorical data
+# and 'result' contains categorical variables, you would do:
+#table_result <- table(result$column1, result$column2) # Replace column1 and column2 with actual column names
+#knitr::kable(table_result)
+
+df4<-result
+# Create the lollipop chart using ggplot2
+# Set factor levels for the stage to reorder
+df4$er <- factor(df4$er, levels = c("Positive" , "Negative", "Borderline/Unknown", "Recode not available"))
+
+# Set colors for the points
+colors <- c("Positive" = "#E69F00", "Negative" = "#56B4E9", "Borderline/Unknown" = "#009E73", "Recode not available" = "#001E73")
+
+# Create the lollipop chart using ggplot2 following Lancet style
+ggplot(df4, aes(x = reorder(interaction(race, er, sep = " - "), eapc), y = eapc)) + 
+  geom_segment(aes(xend = interaction(race, er, sep = " - "), yend = 0), color = "gray70") +
+  geom_point(aes(color = er), size=5) +
+  scale_color_manual(values = colors) +
+  coord_flip() +
+  theme_minimal(base_size = 14) +
+  labs(x = " ",
+       y = "EAPC",
+       title = "EAPC in 5-Year Age-Adjusted Incidence Rates",
+       #caption = "Data Source: [Your Data Source]"
+  ) +
+  theme(text = element_text(family = "sans"),
+        axis.text.x = element_text(angle = 90, hjust = 1, face = "plain"),
+        axis.title.x = element_blank(),
+        axis.title.y = element_text(face = "bold"),
+        legend.title = element_text(face = "bold"),
+        legend.position = "bottom",
+        legend.box.background = element_rect(color = "black"),
+        plot.title = element_text(hjust = 0.5, face = "bold", size = 16),
+        plot.caption = element_text(size = 8, face = "italic", hjust = 0)) +
+  guides(color = guide_legend(title = "Stage"))
+
+# Print the plot
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
