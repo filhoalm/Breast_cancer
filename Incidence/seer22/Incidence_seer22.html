@@ -580,6 +580,27 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </section>
 </section>
+<section id="molecular-subtype" class="level2">
+<h2 class="anchored" data-anchor-id="molecular-subtype">Molecular subtype</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># # Load the data from the GitHub repository</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co"># file_url &lt;- "https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/Incidence/seer22/subtype/seer22_race_subtype.csv"</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># breast_cancer_data &lt;- read.csv(file_url, stringsAsFactors = FALSE)</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># # Rename the variables to the desired names</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># names(breast_cancer_data) &lt;- c("age", "year", "race", "subtype", "rate", "cases", "py")</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co"># #... same code</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="Incidence_seer22_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Figure 3. Fitted Temporal Trends (FTT) in incidence rates of malignant breast cancer by race and ethnicity, and subtype status, 2010 - 2019. SEER22</p>
+</section>
+<section id="net-drifts---molecular-subtypes" class="level2">
+<h2 class="anchored" data-anchor-id="net-drifts---molecular-subtypes">Net Drifts - molecular subtypes</h2>
+</section>
 
 </main>
 <!-- /main column -->

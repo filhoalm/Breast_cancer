@@ -505,8 +505,128 @@ ggplot(df4, aes(x = reorder(interaction(race, er, sep = " - "), eapc), y = eapc)
 
 ```
 
+## Molecular subtype
 
 
+```{r, message=FALSE, warning=FALSE}
+# # Load the data from the GitHub repository
+# file_url <- "https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/Incidence/seer22/subtype/seer22_race_subtype.csv"
+# breast_cancer_data <- read.csv(file_url, stringsAsFactors = FALSE)
+# 
+# # Rename the variables to the desired names
+# names(breast_cancer_data) <- c("age", "year", "race", "subtype", "rate", "cases", "py")
+# #... same code
+
+```
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+# URL of the CSV file
+url <- "https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/Incidence/seer22/subtype/FTT.csv"
+
+# Read the CSV data into a dataframe
+data <- read.csv(url, header = TRUE, stringsAsFactors = FALSE)
+
+# View the first few rows of the dataframe
+
+# Assuming 'data' is your data frame
+# Use mutate with sub to remove the period and digit(s) at the end of the 'X' variable
+data <- data %>%
+  mutate(X_cleaned = sub("\\.\\d+$", "", X)) # Removes the period and any digits that follow it at the end of the string
+
+# Base R approach with substr
+data$X_cleaned <- substr(data$X_cleaned, 2, nchar(data$X_cleaned))
+
+# Or using substring, which is an alias for substr
+data$X_cleaned <- substring(data$X_cleaned, 4)
+
+# View the result
+
+df3<-data[c(2,3,4,5,6,8)]
+names(df3)[6]<-c("subtype")
+
+names(df3)<-c("year", "rate", "low", "high", "race", "subtype")
+
+#names(combined_results) <- c("age", "year", "race", "subtype", "rate", "cases", "py")
+
+#combined_results<-subset(combined_results, combined_results$Period != 2020.5)
+
+# Check the first few rows of the data frame
+# Assuming asr is your dataframe coming from the earlier calculations
+# Plot the data with points and a smooth line, displaying separate lines for each race by subtype
+# Create a Lancet-style theme for ggplot2
+lancet_theme <- theme_minimal() +
+  theme(
+    text = element_text(size = 12), # Base text size is small (2pt)
+    plot.title = element_text(face = "bold"),
+    plot.subtitle = element_text(face = "italic"),
+    axis.text = element_text(color = "black"), # Axis tick labels color
+    axis.text.x = element_text(size = rel(0.1)), # X-axis tick labels size (relative)
+    axis.text.y = element_text(size = rel(0.1)), # Y-axis tick labels size (relative)
+    axis.title.x = element_text(size = rel(0.1), face = "bold"), # X-axis title size (relative)
+    axis.title.y = element_text(size = rel(0.1), face = "bold"), # Y-axis title size (relative)
+    legend.position = "bottom",
+    legend.text = element_text(size = rel(0.2)),
+    legend.title = element_blank(),
+    strip.background = element_rect(fill = "white", color = "black"),
+    strip.text = element_text(face = "bold"),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.border = element_rect(color = "black", fill = NA)
+  )
+
+# Assuming you have already defined lancet_theme, you can update it like this:
+lancet_theme <- lancet_theme +
+  theme(axis.text.x = element_text(size = rel(0.5))) # Decrease x-axis text size to 80% of the current size
+lancet_theme <- lancet_theme +
+  theme(axis.text.y = element_text(size = rel(0.5))) # Decrease x-axis text size to 80% of the current size
+
+# Prepare the colors
+# Define your color palette
+colors <- c("NHW" = "blue", "NHB" = "red", "AIAN" = "green", "API" = "purple", "HIS" = "orange")
+
+# Update the lancet_theme to include a legend
+lancet_theme <- theme_light() +
+  theme(
+    # ... (Other theme components from earlier)
+    legend.position = "none" # Turn off the legend here, we'll add it separately later
+  )
+
+# Helper function to create each plot without a legend
+# Load necessary packages
+library(ggplot2)
+library(grid)  # Required for unit()
+
+# Your existing ggplot code assigned to variable 'a'
+a <- ggplot(df3, aes(x = year, y = rate, color = race, group = interaction(race, subtype))) +
+  geom_point() +
+  geom_smooth(method = "loess", se = FALSE, aes(linetype = race)) +
+  scale_color_manual(values = colors) +
+  facet_wrap(~subtype, scales = "free_y", nrow = 1) +  # Ensure plots are in one row
+  labs(x = "Year", y = "Incidence Rate", color = "Race", linetype = "Race") +
+  theme(legend.position = "bottom")
+
+# Apply Lancet theme if available, or a default theme otherwise
+if (exists("lancet_theme")) {
+  a <- a + lancet_theme
+} else {
+  a <- a + theme_minimal()
+}
+
+# Adjust plot margins (optional; tweak as needed)
+a <- a + theme(plot.margin = margin(t = 1, r = 1, b = 1, l = 1, unit = "cm"))
+
+# Print the plot to visualize
+print(a)
+
+# Save to file if needed
+# ggsave("my_plot.png", plot = a, width = 20, height = 5, units = "cm")  # Adjust width and height as needed
+```
+
+Figure 3. Fitted Temporal Trends (FTT) in incidence rates of malignant breast cancer by race and ethnicity, and subtype status, 2010 - 2019. SEER22
+
+## Net Drifts - molecular subtypes
+
+```{r, message=FALSE, warning=FALSE}
 
 
 
