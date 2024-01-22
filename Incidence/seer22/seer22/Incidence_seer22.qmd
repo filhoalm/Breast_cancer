@@ -74,7 +74,8 @@ final_data <- final_data %>%
 
 ```
 
-To align with the improved text section, we provided an example of an R code that selects a specific combination of race and ER (Estrogen Receptor) status from the dataset and includes summary information—attributes.
+To align with the improved text section, we provided an example of an R code that selects a specific combination of race and ER (Estrogen Receptor) status from the dataset and includes summary information---attributes.
+
 ```{r, message=FALSE, warning=FALSE}
 # NHW with Positive ER status
 df <- subset(final_data, age >= 35 & age <= 84)
@@ -108,7 +109,6 @@ head(combined_data_nhw_positive)
 
 To ensureaccess to pertinent data, a dedicated GitHub folder has been created, containing all rate files segmented by race, ethnicity, and ER (Estrogen Receptor).
 
-
 ### R Webtool functions
 
 Repository that content all the functional components of WebTool. This central repository provides an array of functions designed for streamlining the analysis of epidemiological data.
@@ -116,7 +116,6 @@ Repository that content all the functional components of WebTool. This central r
 For more detailed insights into the capabilities and applications of the WebTool functions, you are encouraged to consult the following reference:
 
 ["A Web Tool for Age-Period-Cohort Analysis of Cancer Incidence and Mortality Rates"](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4221491/)
-
 
 ```{r, message=FALSE, warning=FALSE}
 #my_path <- "https://github.com/filhoalm/Breast_cancer/tree/main/RCode%208-16-22/APC/"
@@ -146,27 +145,24 @@ For more detailed insights into the capabilities and applications of the WebTool
 
 ```
 
-
 Webtool provides specialized function designed to facilitate the execution of core operations. Two of the most essential functions:
 
 #### csv2rates Function
 
 The `csv2rates` function is a data transformation utility that converts data from CSV (Comma-Separated Values) files into the standardized 'rate' object format required by WebTool:
 
-- **Reading the CSV file** that contains the epidemiological data.
-- **Ensuring** that the data adheres to the required structure, including appropriate variable names and formatting.
-- **Calculating rates** such as incidences or mortalities, normalized to the population at risk.
-- **Returning a 'rate' object** that can be directly utilized in subsequent WebTool analyses.
+-   **Reading the CSV file** that contains the epidemiological data.
+-   **Ensuring** that the data adheres to the required structure, including appropriate variable names and formatting.
+-   **Calculating rates** such as incidences or mortalities, normalized to the population at risk.
+-   **Returning a 'rate' object** that can be directly utilized in subsequent WebTool analyses.
 
 This conversion is critical for ensuring that the data can be analyzed accurately and efficiently within the WebTool framework.
 
-
 #### apc2fit Function
+
 The `apc2fit` function implements the Age-Period-Cohort (APC) model fitting on the 'rate' objects. The APC model is widely used in epidemiology to examine how particular outcomes change over time and across different cohorts. This function allows researchers to:
 
-
 ## APC Parameters and Functions
-
 
 ```{r, message=FALSE, warning=FALSE}
 
@@ -231,13 +227,11 @@ kable(apc_table_data, format = "html", caption = "Table 1: Estimable APC Paramet
 
 
 ```
- Source: ["A Web Tool for Age-Period-Cohort Analysis of Cancer Incidence and Mortality Rates"](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4221491/)
- 
- 
- 
-We created a function and a loop to handle the high volume of files and analysis
-Here is an illustrative example that demonstrates this refined approach:
- 
+
+Source: ["A Web Tool for Age-Period-Cohort Analysis of Cancer Incidence and Mortality Rates"](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4221491/)
+
+We created a function and a loop to handle the high volume of files and analysis Here is an illustrative example that demonstrates this refined approach:
+
 ```{r, message=FALSE, warning=FALSE}
 
 # # Function to read the CSV, fit the model, and create a data frame with additional columns
@@ -300,14 +294,12 @@ Here is an illustrative example that demonstrates this refined approach:
 # 
 ```
 
-
-
-
 ## Preliminarly Results
 
-### Fitted Temporal Trends (FTT) 
+### Fitted Temporal Trends (FTT)
 
 Breast Cancer Incidence Trends by Race, Ethnicity and ER Status. Analysis of SEER22 data reveals trends in the incidence rates of malignant breast cancer from 2010 to 2020. The following figure illustrates these trends segmented by race, ethnicity, and estrogen receptor (ER) status.
+
 ```{r, message=FALSE, warning=FALSE}
 library(ggplot2)
 library(dplyr)
@@ -382,7 +374,6 @@ print(a)
 ```
 
 Figure 1. Fitted Temporal Trends (FTT) in incidence rates of malignant breast cancer by race and ethnicity, and ER status, 2010 - 2020. SEER22
-
 
 We can observe a sharp drop in rates for the year 2020. The reason is the Covid-19 pandemic effect, which impacted oncology systems and diagnostic capacity. To address this, we will exclude the year 2020 and then estimate the Net Drift.
 
@@ -459,11 +450,9 @@ print(a)
 
 Figure 2. Fitted Temporal Trends (FTT) in incidence rates of malignant breast cancer by race and ethnicity, and ER status, 2010 - 2019. SEER22
 
+### Net Drift
 
-
-### Net Drift	
-
-APC analogue of the estimated annual percentage change (EAPC) in the age-standardized rate (ASR); log-linear component of FTT(p | a0), PRR(p | p0) and CRR(c | c0)
+APC analogue of the estimated annual percentage change (EAPC) in the age-standardized rate (ASR); log-linear component of FTT(p \| a0), PRR(p \| p0) and CRR(c \| c0)
 
 ```{r, message=FALSE, warning=FALSE}
 # URL to the CSV file hosted on GitHub
@@ -484,6 +473,7 @@ colors <- c("Positive" = "#E69F00", "Negative" = "#56B4E9", "Borderline/Unknown"
 ggplot(df4, aes(x = reorder(interaction(race, er, sep = " - "), eapc), y = eapc)) + 
   geom_segment(aes(xend = interaction(race, er, sep = " - "), yend = 0), color = "gray70") +
   geom_point(aes(color = er), size=5) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black") + 
   scale_color_manual(values = colors) +
   coord_flip() +
   theme_minimal(base_size = 14) +
@@ -505,22 +495,171 @@ ggplot(df4, aes(x = reorder(interaction(race, er, sep = " - "), eapc), y = eapc)
 
 ```
 
+## Molecular subtype
 
+```{r, message=FALSE, warning=FALSE}
+# # Load the data from the GitHub repository
+# file_url <- "https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/Incidence/seer22/subtype/seer22_race_subtype.csv"
+# breast_cancer_data <- read.csv(file_url, stringsAsFactors = FALSE)
+# 
+# # Rename the variables to the desired names
+# names(breast_cancer_data) <- c("age", "year", "race", "subtype", "rate", "cases", "py")
+# #... same code
 
+```
 
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+# URL of the CSV file
+url <- "https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/Incidence/seer22/subtype/FTT.csv"
 
+# Read the CSV data into a dataframe
+data <- read.csv(url, header = TRUE, stringsAsFactors = FALSE)
 
+# View the first few rows of the dataframe
 
+# Assuming 'data' is your data frame
+# Use mutate with sub to remove the period and digit(s) at the end of the 'X' variable
+data <- data %>%
+  mutate(X_cleaned = sub("\\.\\d+$", "", X)) # Removes the period and any digits that follow it at the end of the string
 
+# Base R approach with substr
+data$X_cleaned <- substr(data$X_cleaned, 2, nchar(data$X_cleaned))
 
+# Or using substring, which is an alias for substr
+data$X_cleaned <- substring(data$X_cleaned, 4)
 
+# View the result
 
+df3<-data[c(2,3,4,5,6,8)]
+names(df3)[6]<-c("subtype")
 
+names(df3)<-c("year", "rate", "low", "high", "race", "subtype")
 
+#names(combined_results) <- c("age", "year", "race", "subtype", "rate", "cases", "py")
 
+#combined_results<-subset(combined_results, combined_results$Period != 2020.5)
 
+# Check the first few rows of the data frame
+# Assuming asr is your dataframe coming from the earlier calculations
+# Plot the data with points and a smooth line, displaying separate lines for each race by subtype
+# Create a Lancet-style theme for ggplot2
+lancet_theme <- theme_minimal() +
+  theme(
+    text = element_text(size = 12), # Base text size is small (2pt)
+    plot.title = element_text(face = "bold"),
+    plot.subtitle = element_text(face = "italic"),
+    axis.text = element_text(color = "black"), # Axis tick labels color
+    axis.text.x = element_text(size = rel(0.1)), # X-axis tick labels size (relative)
+    axis.text.y = element_text(size = rel(0.1)), # Y-axis tick labels size (relative)
+    axis.title.x = element_text(size = rel(0.1), face = "bold"), # X-axis title size (relative)
+    axis.title.y = element_text(size = rel(0.1), face = "bold"), # Y-axis title size (relative)
+    legend.position = "bottom",
+    legend.text = element_text(size = rel(0.2)),
+    legend.title = element_blank(),
+    strip.background = element_rect(fill = "white", color = "black"),
+    strip.text = element_text(face = "bold"),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.border = element_rect(color = "black", fill = NA)
+  )
 
+# Assuming you have already defined lancet_theme, you can update it like this:
+lancet_theme <- lancet_theme +
+  theme(axis.text.x = element_text(size = rel(0.5))) # Decrease x-axis text size to 80% of the current size
+lancet_theme <- lancet_theme +
+  theme(axis.text.y = element_text(size = rel(0.5))) # Decrease x-axis text size to 80% of the current size
 
+# Prepare the colors
+# Define your color palette
+colors <- c("NHW" = "blue", "NHB" = "red", "AIAN" = "green", "API" = "purple", "HIS" = "orange")
 
+# Update the lancet_theme to include a legend
+lancet_theme <- theme_light() +
+  theme(
+    # ... (Other theme components from earlier)
+    legend.position = "none" # Turn off the legend here, we'll add it separately later
+  )
+
+# Helper function to create each plot without a legend
+# Load necessary packages
+library(ggplot2)
+library(grid)  # Required for unit()
+
+# Your existing ggplot code assigned to variable 'a'
+a <- ggplot(df3, aes(x = year, y = rate, color = race, group = interaction(race, subtype))) +
+  geom_point() +
+  geom_smooth(method = "loess", se = FALSE, aes(linetype = race)) +
+  scale_color_manual(values = colors) +
+  facet_wrap(~subtype, scales = "free_y", nrow = 1) +  # Ensure plots are in one row
+  labs(x = "Year", y = "Incidence Rate", color = "Race", linetype = "Race") +
+  theme(legend.position = "bottom")
+
+# Apply Lancet theme if available, or a default theme otherwise
+if (exists("lancet_theme")) {
+  a <- a + lancet_theme
+} else {
+  a <- a + theme_minimal()
+}
+
+# Adjust plot margins (optional; tweak as needed)
+a <- a + theme(plot.margin = margin(t = 1, r = 1, b = 1, l = 1, unit = "cm"))
+
+# Print the plot to visualize
+print(a)
+
+# Save to file if needed
+# ggsave("my_plot.png", plot = a, width = 20, height = 5, units = "cm")  # Adjust width and height as needed
+```
+
+Figure 3. Fitted Temporal Trends (FTT) in incidence rates of malignant breast cancer by race and ethnicity, and subtype status, 2010 - 2019. SEER22
+
+## Net Drifts - molecular subtypes
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+library(ggplot2)
+
+# URL to the CSV file hosted on GitHub
+url <- "https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/Incidence/seer22/subtype/NetDrift.csv"
+
+# Read the CSV file into a data frame
+df3 <- read.csv(url, stringsAsFactors = FALSE)
+names(df3) <- c("eapc", "low", "high", "race", "subtype")
+
+# Set factor levels for the subtype to reorder
+df3$subtype <- factor(df3$subtype, levels = c("HR+_HER2+", "HR+_HER2-", "HR-_HER2+", "HR-_HER2-"))
+
+# Set colors for the points
+colors <- c("HR+_HER2+" = "#E69F00", 
+            "HR+_HER2-" = "#56B4E9", 
+            "HR-_HER2+" = "#009E73",
+            "HR-_HER2-" = "#001E73")
+
+# Create the lollipop chart using ggplot2
+plot<-ggplot(df3, aes(x = reorder(interaction(race, subtype, sep = " - "), eapc), y = eapc)) + 
+  geom_segment(aes(xend = interaction(race, subtype, sep = " - "), yend = 0), color = "gray70") +
+  geom_point(aes(color = subtype), size=5) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black") + 
+  scale_color_manual(values = colors) +
+  coord_flip() +
+  theme_minimal(base_size = 14) +
+  labs(x = "", y = "Net Drift", title = "Net Drift, 2010-2019") +
+  theme(
+    text = element_text(family = "sans"),
+    axis.text.x = element_text(angle = 90, hjust = 1, face = "plain"),
+    axis.title.x = element_blank(),
+    axis.title.y = element_text(face = "bold"),
+    legend.title = element_text(face = "bold"),
+    legend.position = "bottom",
+    legend.box.background = element_rect(color = "black"),
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 16),
+    plot.caption = element_text(size = 8, face = "italic", hjust = 0)
+  ) +
+  guides(color = guide_legend(title = "Subtype"))
+
+# Display the plot
+#print(ggplot_object)  # Make sure to print the plot if running in a script
+plot
+
+```
 
 
