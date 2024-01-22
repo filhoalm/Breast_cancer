@@ -814,7 +814,19 @@ plot
 ```
 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
-data<-subset(combined_results, combined_results$race=="NHW" & combined_results$er=="Positive")
+
+
+# URL to the CSV file hosted on GitHub
+url <- "https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/Incidence/seer22/nedrift_race_er.csv"
+
+# Read the CSV file into a data frame
+combined_results <- read.csv(url, stringsAsFactors = FALSE)
+names(combined_results) <- c("age", "drift", "low", "high", "race", "er")
+
+# Assuming 'combined_results' is already defined with the columns 'age', 'drift', 'er', 'low', 'high', 'race'
+
+# Define colors for ER status
+fill_colors <- c("Positive" = "darkblue", "Negative" = "darkred")
 
 data<-subset(combined_results, combined_results$race=="NHW")
 # Create a ggplot with colored ribbons for the 95% CI
@@ -913,3 +925,5 @@ d<-ggplot(data3, aes(x = age, y = drift, color = er)) +
 grid.arrange(a, b, c, d, ncol = 4, heights = c(2,1))
 
 ```
+
+Figure 4. Local Drifts in Age-Specific Incidence Rates Stratified by Race and ER Status
