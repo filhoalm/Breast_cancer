@@ -74,7 +74,8 @@ final_data <- final_data %>%
 
 ```
 
-To align with the improved text section, we provided an example of an R code that selects a specific combination of race and ER (Estrogen Receptor) status from the dataset and includes summary information—attributes.
+To align with the improved text section, we provided an example of an R code that selects a specific combination of race and ER (Estrogen Receptor) status from the dataset and includes summary information---attributes.
+
 ```{r, message=FALSE, warning=FALSE}
 # NHW with Positive ER status
 df <- subset(final_data, age >= 35 & age <= 84)
@@ -108,7 +109,6 @@ head(combined_data_nhw_positive)
 
 To ensureaccess to pertinent data, a dedicated GitHub folder has been created, containing all rate files segmented by race, ethnicity, and ER (Estrogen Receptor).
 
-
 ### R Webtool functions
 
 Repository that content all the functional components of WebTool. This central repository provides an array of functions designed for streamlining the analysis of epidemiological data.
@@ -116,7 +116,6 @@ Repository that content all the functional components of WebTool. This central r
 For more detailed insights into the capabilities and applications of the WebTool functions, you are encouraged to consult the following reference:
 
 ["A Web Tool for Age-Period-Cohort Analysis of Cancer Incidence and Mortality Rates"](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4221491/)
-
 
 ```{r, message=FALSE, warning=FALSE}
 #my_path <- "https://github.com/filhoalm/Breast_cancer/tree/main/RCode%208-16-22/APC/"
@@ -146,27 +145,24 @@ For more detailed insights into the capabilities and applications of the WebTool
 
 ```
 
-
 Webtool provides specialized function designed to facilitate the execution of core operations. Two of the most essential functions:
 
 #### csv2rates Function
 
 The `csv2rates` function is a data transformation utility that converts data from CSV (Comma-Separated Values) files into the standardized 'rate' object format required by WebTool:
 
-- **Reading the CSV file** that contains the epidemiological data.
-- **Ensuring** that the data adheres to the required structure, including appropriate variable names and formatting.
-- **Calculating rates** such as incidences or mortalities, normalized to the population at risk.
-- **Returning a 'rate' object** that can be directly utilized in subsequent WebTool analyses.
+-   **Reading the CSV file** that contains the epidemiological data.
+-   **Ensuring** that the data adheres to the required structure, including appropriate variable names and formatting.
+-   **Calculating rates** such as incidences or mortalities, normalized to the population at risk.
+-   **Returning a 'rate' object** that can be directly utilized in subsequent WebTool analyses.
 
 This conversion is critical for ensuring that the data can be analyzed accurately and efficiently within the WebTool framework.
 
-
 #### apc2fit Function
+
 The `apc2fit` function implements the Age-Period-Cohort (APC) model fitting on the 'rate' objects. The APC model is widely used in epidemiology to examine how particular outcomes change over time and across different cohorts. This function allows researchers to:
 
-
 ## APC Parameters and Functions
-
 
 ```{r, message=FALSE, warning=FALSE}
 
@@ -231,13 +227,11 @@ kable(apc_table_data, format = "html", caption = "Table 1: Estimable APC Paramet
 
 
 ```
- Source: ["A Web Tool for Age-Period-Cohort Analysis of Cancer Incidence and Mortality Rates"](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4221491/)
- 
- 
- 
-We created a function and a loop to handle the high volume of files and analysis
-Here is an illustrative example that demonstrates this refined approach:
- 
+
+Source: ["A Web Tool for Age-Period-Cohort Analysis of Cancer Incidence and Mortality Rates"](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4221491/)
+
+We created a function and a loop to handle the high volume of files and analysis Here is an illustrative example that demonstrates this refined approach:
+
 ```{r, message=FALSE, warning=FALSE}
 
 # # Function to read the CSV, fit the model, and create a data frame with additional columns
@@ -300,14 +294,12 @@ Here is an illustrative example that demonstrates this refined approach:
 # 
 ```
 
-
-
-
 ## Preliminarly Results
 
-### Fitted Temporal Trends (FTT) 
+### Fitted Temporal Trends (FTT)
 
 Breast Cancer Incidence Trends by Race, Ethnicity and ER Status. Analysis of SEER22 data reveals trends in the incidence rates of malignant breast cancer from 2010 to 2020. The following figure illustrates these trends segmented by race, ethnicity, and estrogen receptor (ER) status.
+
 ```{r, message=FALSE, warning=FALSE}
 library(ggplot2)
 library(dplyr)
@@ -382,7 +374,6 @@ print(a)
 ```
 
 Figure 1. Fitted Temporal Trends (FTT) in incidence rates of malignant breast cancer by race and ethnicity, and ER status, 2010 - 2020. SEER22
-
 
 We can observe a sharp drop in rates for the year 2020. The reason is the Covid-19 pandemic effect, which impacted oncology systems and diagnostic capacity. To address this, we will exclude the year 2020 and then estimate the Net Drift.
 
@@ -459,11 +450,9 @@ print(a)
 
 Figure 2. Fitted Temporal Trends (FTT) in incidence rates of malignant breast cancer by race and ethnicity, and ER status, 2010 - 2019. SEER22
 
+### Net Drift
 
-
-### Net Drift	
-
-APC analogue of the estimated annual percentage change (EAPC) in the age-standardized rate (ASR); log-linear component of FTT(p | a0), PRR(p | p0) and CRR(c | c0)
+APC analogue of the estimated annual percentage change (EAPC) in the age-standardized rate (ASR); log-linear component of FTT(p \| a0), PRR(p \| p0) and CRR(c \| c0)
 
 ```{r, message=FALSE, warning=FALSE}
 # URL to the CSV file hosted on GitHub
@@ -484,6 +473,7 @@ colors <- c("Positive" = "#E69F00", "Negative" = "#56B4E9", "Borderline/Unknown"
 ggplot(df4, aes(x = reorder(interaction(race, er, sep = " - "), eapc), y = eapc)) + 
   geom_segment(aes(xend = interaction(race, er, sep = " - "), yend = 0), color = "gray70") +
   geom_point(aes(color = er), size=5) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black") + 
   scale_color_manual(values = colors) +
   coord_flip() +
   theme_minimal(base_size = 14) +
@@ -506,7 +496,6 @@ ggplot(df4, aes(x = reorder(interaction(race, er, sep = " - "), eapc), y = eapc)
 ```
 
 ## Molecular subtype
-
 
 ```{r, message=FALSE, warning=FALSE}
 # # Load the data from the GitHub repository
@@ -626,21 +615,301 @@ Figure 3. Fitted Temporal Trends (FTT) in incidence rates of malignant breast ca
 
 ## Net Drifts - molecular subtypes
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+library(ggplot2)
+
+# URL to the CSV file hosted on GitHub
+url <- "https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/Incidence/seer22/subtype/NetDrift.csv"
+
+# Read the CSV file into a data frame
+df3 <- read.csv(url, stringsAsFactors = FALSE)
+names(df3) <- c("eapc", "low", "high", "race", "subtype")
+
+# Set factor levels for the subtype to reorder
+df3$subtype <- factor(df3$subtype, levels = c("HR+_HER2+", "HR+_HER2-", "HR-_HER2+", "HR-_HER2-"))
+
+# Set colors for the points
+colors <- c("HR+_HER2+" = "#E69F00", 
+            "HR+_HER2-" = "#56B4E9", 
+            "HR-_HER2+" = "#009E73",
+            "HR-_HER2-" = "#001E73")
+
+# Create the lollipop chart using ggplot2
+plot<-ggplot(df3, aes(x = reorder(interaction(race, subtype, sep = " - "), eapc), y = eapc)) + 
+  geom_segment(aes(xend = interaction(race, subtype, sep = " - "), yend = 0), color = "gray70") +
+  geom_point(aes(color = subtype), size=5) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black") + 
+  scale_color_manual(values = colors) +
+  coord_flip() +
+  theme_minimal(base_size = 14) +
+  labs(x = "", y = "Net Drift", title = "Net Drift, 2010-2019") +
+  theme(
+    text = element_text(family = "sans"),
+    axis.text.x = element_text(angle = 90, hjust = 1, face = "plain"),
+    axis.title.x = element_blank(),
+    axis.title.y = element_text(face = "bold"),
+    legend.title = element_text(face = "bold"),
+    legend.position = "bottom",
+    legend.box.background = element_rect(color = "black"),
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 16),
+    plot.caption = element_text(size = 8, face = "italic", hjust = 0)
+  ) +
+  guides(color = guide_legend(title = "Subtype"))
+
+# Display the plot
+#print(ggplot_object)  # Make sure to print the plot if running in a script
+plot
+
+```
+
+
+## Local Drifts
 
 
 
 
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+# my_path <- "C:/Users/filhoam/Desktop/NIH/RCode 8-16-22/RCode 8-16-22/APC/"
+# setwd(my_path)  
+# functions <- list.files(pattern = "*.R")       # Get all file names
+# apc<- lapply(functions, source)  # Read all data frames
+# 
+# # Note: You will need to install all packages prior to loading them.
+# packages <- c("dplyr",
+#               "ggplot2",
+#               "ggpubr",
+#               "ggthemes",
+#               "gridExtra",
+#               "hrbrthemes",
+#               "patchwork",
+#               "Matrix",
+#               "pracma",
+#               "scales",
+#               "RColorBrewer")
+# 
+# # Load
+# lapply(packages, require, character.only = TRUE)
+# 
+# #
+# # Make sure you have the tools package
+# library(tools)
+# 
+# # Function to read the CSV, fit the model, and create a data frame with additional columns
+# process_file <- function(file_path, race, er_status) {
+#   # Read file into rates (adjust csv2rates according to your function's needs)
+#   rates <- csv2rates(file_path)
+#   
+#   # Fit the APC model
+#   fit <- apc2fit(rates)
+#   
+#   # Extract the fitted temporal trends and convert to data frame
+#   LocalDrifts <- as.data.frame(fit$LocalDrifts)
+#   
+#   # Add race and er_status columns
+#   LocalDrifts$race <- race
+#   LocalDrifts$er <- er_status
+#   
+#   return(LocalDrifts)
+# }
+# 
+# # Base directory path where files are stored
+# base_path <- "C:/Users/filhoam/Desktop/Breast/Incidence/seer22/exclude2020/"
+# 
+# # Vector of file identifiers
+# file_identifiers <- c("nhw_positive", "nhw_negative", "nhb_positive", "nhb_negative", 
+#                       "his_positive", "his_negative", "api_positive", "api_negative")
+# 
+# # Initialize an empty list to store results
+# all_results <- list()
+# 
+# # Loop through each file identifier
+# for (identifier in file_identifiers) {
+#   # Construct the full file path
+#   file_path <- file.path(base_path, paste0(identifier, ".csv"))
+#   
+#   # Split identifier into race and ER status parts
+#   parts <- unlist(strsplit(identifier, "_"))
+#   race <- toupper(parts[1])
+#   er_status <- toTitleCase(parts[2])
+#   
+#   # Process the file and store the result in the list
+#   all_results[[identifier]] <- process_file(file_path, race, er_status)
+# }
+# 
+# # If you want a combined data frame with all results
+# combined_results <- do.call(rbind, all_results)
+# 
+# # View the combined results
+# print(combined_results)
+# 
+# names(combined_results)[2]<-c("drift")
+# 
+# # Define a vector of column names to round
+# columns_to_round <- c("drift", "CI Lo", "CI Hi")
+# 
+# # # Loop through each column name and apply the rounding function
+# # for (col in columns_to_round) {
+# #   combined_results[[col]] <- round(combined_results[[col]], 0)
+# # }
+# 
+# #write.csv(combined_results, "C:/Users/filhoam/Desktop/Breast/Incidence/seer22/nedrift_race_subtype.csv", row.names = FALSE)
+
+```
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+
+# library(ggplot2)
+# library(patchwork)
+# 
+# # URL to the CSV file hosted on GitHub
+# url <- "https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/Incidence/seer22/seer22/nedrift_race_subtype.csv"
+# 
+# # Read the CSV file into a data frame
+# combined_results <- read.csv(url, stringsAsFactors = FALSE)
+# names(combined_results) <- c("age", "drift", "low", "high", "race", "er")
+# 
+# # Assuming 'combined_results' is already defined with the columns 'age', 'drift', 'er', 'low', 'high', 'race'
+# 
+# # Define colors for ER status
+# fill_colors <- c("Positive" = "darkblue", "Negative" = "darkred")
+# 
+# # Function to create a plot for a given race
+# create_plot <- function(data, race_name) {
+#   ggplot(data, aes(x = age, y = drift, color = er)) +
+#     geom_line(size = 0.5) +
+#     geom_point(size = 3.0, pch = 21, fill = "white") +
+#     ylim(-5, 5) +
+#     geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
+#     geom_ribbon(aes(ymin = low, ymax = high, fill = er), alpha = 0.1, size = 0) +
+#     scale_fill_manual(values = fill_colors) +
+#     theme_minimal() +
+#     labs(x = "Age", y = "Local Drifts", title = race_name) +
+#     theme(
+#       text = element_text(size = 14),
+#       plot.title = element_text(size = 16, face = "bold"),
+#       legend.position = "none"  # Remove individual plot legends
+#     ) +
+#     guides(color = guide_legend(title = "ER Status"), fill = guide_legend(title = "ER Status"))
+# }
+# 
+# # Create individual plots for each race
+# plots <- lapply(c("NHW", "NHB", "HIS", "API"), function(race) {
+#   create_plot(combined_results[combined_results$race == race, ], race)
+# })
+# 
+# 
+# 
+# library(ggplot2)
+# library(gridExtra)
+# 
+# # Generate individual plots for each race
+# a1 <- create_plot(subset(combined_results, race == "NHW"), "NHW")
+# b1 <- create_plot(subset(combined_results, race == "NHB"), "NHB")
+# c1 <- create_plot(subset(combined_results, race == "HIS"), "HIS")
+# d1 <- create_plot(subset(combined_results, race == "API"), "API")
+# 
+# # Arrange the plots in a single row with 4 columns
+# #grid.arrange(a, b, c, d, ncol = 4, heights = c(2,1))
+
+```
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+data<-subset(combined_results, combined_results$race=="NHW" & combined_results$er=="Positive")
+
+data<-subset(combined_results, combined_results$race=="NHW")
+# Create a ggplot with colored ribbons for the 95% CI
+a<-ggplot(data, aes(x = age, y = drift, color = er)) +
+  geom_line(size = 0.5) +  # Add lines
+  geom_point(size = 3.0, pch = 21, fill = "white") +  # Add points
+  ylim(-5, 5) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black") + 
+  geom_ribbon(aes(ymin = low, ymax = high, fill = er), alpha = 0.1, size = 0) +  # Add CI area with color
+  scale_fill_manual(values = c("Positive" = "darkblue", "Negative" = "darkred")) +  # Define colors for ER status
+  theme_minimal() +  # Use a minimal theme
+  labs(
+    x = "Age", 
+    y = "Local Drifts", 
+    title = "NHW"
+  ) +
+  theme(
+    text = element_text(size = 14),
+    plot.title = element_text(size = 16, face = "bold"),
+    legend.position = "none"  # Remove individual plot legends
+  ) +
+  guides(color = guide_legend(title = "ER Status"), fill = guide_legend(title = "ER Status"))
+
+#
+data1<-subset(combined_results, combined_results$race=="NHB")
+# Create a ggplot with colored ribbons for the 95% CI
+b<-ggplot(data1, aes(x = age, y = drift, color = er)) +
+  geom_line(size = 0.5) +  # Add lines
+  geom_point(size = 3.0, pch = 21, fill = "white") +  # Add points
+  ylim(-5, 5) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black") + 
+  geom_ribbon(aes(ymin = low, ymax = high, fill = er), alpha = 0.1, size = 0) +  # Add CI area with color
+  scale_fill_manual(values = c("Positive" = "darkblue", "Negative" = "darkred")) +  # Define colors for ER status
+  theme_minimal() +  # Use a minimal theme
+  labs(
+    x = "Age", 
+    y = "Local Drifts", 
+    title = "NHB"
+  ) +
+  theme(
+    text = element_text(size = 14),
+    plot.title = element_text(size = 16, face = "bold"),
+    legend.position = "none"  # Remove individual plot legends
+  ) +
+  guides(color = guide_legend(title = "ER Status"), fill = guide_legend(title = "ER Status"))
+
+#
+data2<-subset(combined_results, combined_results$race=="HIS")
+# Create a ggplot with colored ribbons for the 95% CI
+c<-ggplot(data2, aes(x = age, y = drift, color = er)) +
+  geom_line(size = 0.5) +  # Add lines
+  geom_point(size = 3.0, pch = 21, fill = "white") +  # Add points
+  ylim(-5, 5) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black") + 
+  geom_ribbon(aes(ymin = low, ymax = high, fill = er), alpha = 0.1, size = 0) +  # Add CI area with color
+  scale_fill_manual(values = c("Positive" = "darkblue", "Negative" = "darkred")) +  # Define colors for ER status
+  theme_minimal() +  # Use a minimal theme
+  labs(
+    x = "Age", 
+    y = "Local Drifts", 
+    title = "HIS"
+  ) +
+  theme(
+    text = element_text(size = 14),
+    plot.title = element_text(size = 16, face = "bold"),
+    legend.position = "none"  # Remove individual plot legends
+  ) +
+  guides(color = guide_legend(title = "ER Status"), fill = guide_legend(title = "ER Status"))
 
 
 
 
+data3<-subset(combined_results, combined_results$race=="API")
+# Create a ggplot with colored ribbons for the 95% CI
+d<-ggplot(data3, aes(x = age, y = drift, color = er)) +
+  geom_line(size = 0.5) +  # Add lines
+  geom_point(size = 3.0, pch = 21, fill = "white") +  # Add points
+  ylim(-5, 5) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black") + 
+  geom_ribbon(aes(ymin = low, ymax = high, fill = er), alpha = 0.1, size = 0) +  # Add CI area with color
+  scale_fill_manual(values = c("Positive" = "darkblue", "Negative" = "darkred")) +  # Define colors for ER status
+  theme_minimal() +  # Use a minimal theme
+  labs(
+    x = "Age", 
+    y = "Local Drifts", 
+    title = "API"
+  ) +
+  theme(
+    text = element_text(size = 14),
+    plot.title = element_text(size = 16, face = "bold"),
+    legend.position = "none"  # Remove individual plot legends
+  ) +
+  guides(color = guide_legend(title = "ER Status"), fill = guide_legend(title = "ER Status"))
 
+# Arrange the plots in a single row with 4 columns
+grid.arrange(a, b, c, d, ncol = 4, heights = c(2,1))
 
-
-
-
-
-
-
-
+```

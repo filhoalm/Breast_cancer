@@ -486,7 +486,7 @@ process_file <- function(file_path, race, er_status) {
      
   #   # Add race and er_status columns
      fitted_temporal_trends$race <- race
-     fitted_temporal_trends$er <- er_status
+     fitted_temporal_trends$subtype <- er_status
   #   
      return(fitted_temporal_trends)
 }
@@ -525,7 +525,55 @@ print(combined_results)
 
 FTT<-combined_results
 
-#write.csv(FTT, "C:/Users/filhoam/Desktop/Breast/Incidence/seer22/subtype/FTT.csv", row.names = FALSE)
+#write.csv(FTT, "C:/Users/filhoam/Desktop/Breast/Incidence/seer22/subtype/FTT.csv", row.names = TRUE)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #
@@ -583,5 +631,5 @@ print(combined_results)
 
 NetDrift<-combined_results
 
-#write.csv(NetDrift, "C:/Users/filhoam/Desktop/Breast/Incidence/seer22/subtype/NetDrift.csv", row.names = FALSE)
+#write.csv(NetDrift, "C:/Users/filhoam/Desktop/Breast/Incidence/seer22/subtype/NetDrift.csv", row.names = TRUE)
 
