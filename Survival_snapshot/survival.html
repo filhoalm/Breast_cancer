@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="AMF">
+<meta name="dcterms.date" content="2024-01-24">
 
-<title>Malignant Breast Cancer Net Survival by Race and Ethnicity, Stage, and ER Status (SEER12)</title>
+<title>Progress in five-year relative survival rates for malignant breast cancer in the U.S by race and ethnicity: A population-based study using SEER 12 data, 2000–2015</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -101,15 +102,34 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </head>
 
-<body class="fullcontent">
+<body>
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
-
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#methods" id="toc-methods" class="nav-link active" data-scroll-target="#methods">Methods</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a>
+  <ul class="collapse">
+  <li><a href="#estimated-annual-percentage-change-eapc-in-5-year-age-adjusted-net-survival" id="toc-estimated-annual-percentage-change-eapc-in-5-year-age-adjusted-net-survival" class="nav-link" data-scroll-target="#estimated-annual-percentage-change-eapc-in-5-year-age-adjusted-net-survival">Estimated annual percentage change (EAPC) in 5-year age-adjusted net survival</a></li>
+  </ul></li>
+  <li><a href="#overview" id="toc-overview" class="nav-link" data-scroll-target="#overview">Overview</a>
+  <ul class="collapse">
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a>
+  <ul class="collapse">
+  <li><a href="#technical-articles" id="toc-technical-articles" class="nav-link" data-scroll-target="#technical-articles">Technical articles</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Malignant Breast Cancer Net Survival by Race and Ethnicity, Stage, and ER Status (SEER12)</h1>
+<h1 class="title">Progress in five-year relative survival rates for malignant breast cancer in the U.S by race and ethnicity: A population-based study using SEER 12 data, 2000–2015</h1>
 </div>
 
 
@@ -123,22 +143,29 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
   </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">January 24, 2024</p>
+    </div>
+  </div>
   
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">January 24, 2024</p>
+    </div>
+  </div>
     
   </div>
   
 
 </header>
 
-<section id="results" class="level1">
-<h1>Results</h1>
-<section id="cancer-net-survival-rates-by-stage" class="level3">
-<h3 class="anchored" data-anchor-id="cancer-net-survival-rates-by-stage">Cancer Net Survival Rates by Stage</h3>
-<p>This section might detail the overarching results of the analyses performed in the document.</p>
-</section>
-<section id="loading-required-r-libraries-for-data-analysis" class="level3">
-<h3 class="anchored" data-anchor-id="loading-required-r-libraries-for-data-analysis">Loading Required R Libraries for Data Analysis</h3>
-<p>This part of the document would clearly list and load the necessary libraries that will be used throughout the analysis.</p>
+<section id="methods" class="level1">
+<h1>Methods</h1>
+<section id="load-required-libraries" class="level4">
+<h4 class="anchored" data-anchor-id="load-required-libraries">load required libraries</h4>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install and load necessary packages</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">"downloader"</span>)) {</span>
@@ -149,9 +176,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="importing-encrypted-seer12-data-files-from-github-repository" class="level3">
-<h3 class="anchored" data-anchor-id="importing-encrypted-seer12-data-files-from-github-repository">Importing Encrypted SEER12 Data Files from GitHub Repository</h3>
+<section id="importing-encrypted-seer12-data-files-from-github-repository" class="level5">
+<h5 class="anchored" data-anchor-id="importing-encrypted-seer12-data-files-from-github-repository">Importing Encrypted SEER12 Data Files from GitHub Repository</h5>
 <p>Discuss the process involved in accessing locked data files from SEER12 that have been stored on GitHub.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the URL where the zip file is located</span></span>
@@ -177,8 +203,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="data-transformation-reshaping-and-labeling-seer-variables" class="level3">
-<h3 class="anchored" data-anchor-id="data-transformation-reshaping-and-labeling-seer-variables">Data Transformation: Reshaping and Labeling SEER Variables</h3>
+<section id="data-transformation-reshaping-and-labeling-seer-variables" class="level5">
+<h5 class="anchored" data-anchor-id="data-transformation-reshaping-and-labeling-seer-variables">Data Transformation: Reshaping and Labeling SEER Variables</h5>
 <p>This section could describe the steps for restructuring the SEER12 dataset for analysis and the process of creating meaningful labels for each variable</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Rename variables</span></span>
@@ -214,8 +240,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Filtering for specific races and stages</span></span>
 <span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>df4 <span class="ot">&lt;-</span> <span class="fu">subset</span>(df, race <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"NHW"</span>, <span class="st">"NHB"</span>, <span class="st">"HIS"</span>, <span class="st">"API"</span>) <span class="sc">&amp;</span> stage <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Localized"</span>, <span class="st">"Regional"</span>, <span class="st">"Distant"</span>) <span class="sc">&amp;</span> type <span class="sc">==</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="graphical-data-visualization-of-seer12-statistics" class="level4">
-<h4 class="anchored" data-anchor-id="graphical-data-visualization-of-seer12-statistics">Graphical Data Visualization of SEER12 Statistics</h4>
+</section>
+</section>
+</section>
+<section id="results" class="level1">
+<h1>Results</h1>
+<section id="graphical-data-visualization-of-seer12-statistics" class="level5">
+<h5 class="anchored" data-anchor-id="graphical-data-visualization-of-seer12-statistics">Graphical Data Visualization of SEER12 Statistics</h5>
 <p>Present any figures or charts that have been generated to visually represent the findings from the SEER12 data.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define plot function to avoid repetition</span></span>
@@ -249,73 +280,114 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">plot_function</span>(df4, <span class="st">"Observed.Age.Std"</span>, <span class="st">"Age-adjusted Observed Survival"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-</section>
-<section id="assessing-observed-survival-and-age-adjusted-survival-differences" class="level2">
-<h2 class="anchored" data-anchor-id="assessing-observed-survival-and-age-adjusted-survival-differences">Assessing Observed Survival and Age-adjusted Survival Differences</h2>
-<p>Upon close examination, it is evident that Asian/Pacific Islander (API) populations exhibit the highest 5-year observed survival rates for both localized (93.6%) and regional (82.3%) stages. Conversely, Non-Hispanic Black (NHB) individuals have the lowest observed survival for the distant stage at 17.9%.</p>
+<section id="assessing-observed-survival-and-age-adjusted-survival-differences" class="level5">
+<h5 class="anchored" data-anchor-id="assessing-observed-survival-and-age-adjusted-survival-differences">Assessing Observed Survival and Age-adjusted Survival Differences</h5>
+<p>A visual inspection evaluation of <span class="citation" data-cites="Figure1">@Figure1</span>, it is evident that Asian/Pacific Islander (API) populations exhibit the highest 5-year observed survival rates for both localized (93.6%) and regional (82.3%) stages. Conversely, Non-Hispanic Black (NHB) individuals have the lowest observed survival for the distant stage at 17.9%.</p>
 <p>However, when we take into account age-adjusted survival, the disparities shrink, indicating potential influences from various risk factors such as age and other causes of mortality.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(c, d, <span class="at">ncol =</span> <span class="dv">1</span>, <span class="at">heights=</span><span class="fu">c</span>(<span class="dv">10</span>,<span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="survival_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="survival_files/figure-html/fig1-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">Figure 1. Assessing Observed Survival and Age-adjusted Survival Differences</figcaption><p></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
-<section id="analysis-of-5-year-net-survival-and-age-adjusted-net-survival" class="level2">
-<h2 class="anchored" data-anchor-id="analysis-of-5-year-net-survival-and-age-adjusted-net-survival">Analysis of 5-Year Net Survival and Age-adjusted Net Survival</h2>
+<section id="analysis-of-5-year-net-survival-and-age-adjusted-net-survival" class="level5">
+<h5 class="anchored" data-anchor-id="analysis-of-5-year-net-survival-and-age-adjusted-net-survival">Analysis of 5-Year Net Survival and Age-adjusted Net Survival</h5>
 <p>By accounting for competing causes of death, the observed differences in 5-year net survival rates for localized cancer are mitigated, resulting in more comparable outcomes across racial and ethnicity groups.</p>
 <p>Adjustments for age in the age-standardized (age-std) net survival analysis further minimize disparities between these groups. Yet, it is noteworthy that Non-Hispanic Black women continue to exhibit less favorable 5-year survival rates—75.5% for regional and 19.5% for distant stages—suggesting inequities that warrant attention.</p>
 <p>These insights underline the significance of considering various factors when estimating survival, as they can profoundly impact the perceived survival outcomes among different population groups.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(a, b, <span class="at">ncol =</span> <span class="dv">1</span>, <span class="at">heights=</span><span class="fu">c</span>(<span class="dv">10</span>,<span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="survival_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="survival_files/figure-html/fig2-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">Figure 2. 5-Year Net Survival and Age-adjusted Net Survival</figcaption><p></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
-<section id="evaluating-5-year-age-adjusted-net-survival-by-stage-and-er-status-in-breast-cancer" class="level2">
-<h2 class="anchored" data-anchor-id="evaluating-5-year-age-adjusted-net-survival-by-stage-and-er-status-in-breast-cancer">Evaluating 5-Year Age-Adjusted Net Survival by Stage and ER Status in Breast Cancer</h2>
+<section id="evaluating-5-year-age-adjusted-net-survival-by-stage-and-er-status-in-breast-cancer" class="level5">
+<h5 class="anchored" data-anchor-id="evaluating-5-year-age-adjusted-net-survival-by-stage-and-er-status-in-breast-cancer">Evaluating 5-Year Age-Adjusted Net Survival by Stage and ER Status in Breast Cancer</h5>
 <p>Estrogen receptor (ER) status is a critical marker in the prognosis of breast cancer, providing valuable predictive insights about the course of the disease. To explore into survival disparities, we analyze 5-year age-adjusted net survival rates across different stages, with a focus on ER status in conjunction with race and ethnicity.</p>
 <p>In contrast, Non-Hispanic Black (NHB) patients consistently exhibit poor survival outcomes with age-adjusted net survival rates of 77.7% for localized, 53% for regional, and a grim 13.3% for distant stages.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="survival_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="survival_files/figure-html/fig3-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">Figure 3. 5-Year Age-Adjusted Net Survival by Stage and ER Status in Breast Cancer</figcaption><p></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
-<section id="analysis-of-5-year-age-standardized-net-survival-by-breast-cancer-subtype-2010-2020" class="level2">
-<h2 class="anchored" data-anchor-id="analysis-of-5-year-age-standardized-net-survival-by-breast-cancer-subtype-2010-2020">Analysis of 5-Year Age-Standardized Net Survival by Breast Cancer Subtype (2010-2020)</h2>
+<section id="analysis-of-5-year-age-standardized-net-survival-by-breast-cancer-subtype-2010-2020" class="level5">
+<h5 class="anchored" data-anchor-id="analysis-of-5-year-age-standardized-net-survival-by-breast-cancer-subtype-2010-2020">Analysis of 5-Year Age-Standardized Net Survival by Breast Cancer Subtype (2010-2020)</h5>
 <p>One could speculate that the pronounced survival disadvantage in NHB patients is likely attributable to the prevalence of more aggressive forms of breast cancer. Now, let’s further explore the survivalship by Breast cancer subtypes:</p>
+<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <ul>
 <li><strong>HR-positive/HER2-negative (HR+/HER2-)</strong>: HR+/HER2-</li>
 <li><strong>HR-negative/HER2-negative (HR-/HER2-)</strong>: HR-/HER2-</li>
 <li><strong>HR-positive/HER2-positive (HR+/HER2+)</strong>: HR+/HER2+</li>
 <li><strong>HR-negative/HER2-positive (HR-/HER2+)</strong>: HR-/HER2+</li>
 </ul>
+</div>
+</div>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="survival_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="survival_files/figure-html/fig4-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">Figure 4. 5-Year Age-Standardized Net Survival by Breast Cancer Subtype (2010-2020)</figcaption><p></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
-<section id="temporal-trends-in-5-year-age-adjusted-net-survival-by-race-ethnicity-and-cancer-stage" class="level2">
-<h2 class="anchored" data-anchor-id="temporal-trends-in-5-year-age-adjusted-net-survival-by-race-ethnicity-and-cancer-stage">Temporal Trends in 5-Year Age-Adjusted Net Survival by Race, Ethnicity, and Cancer Stage</h2>
+<section id="temporal-trends-in-5-year-age-adjusted-net-survival-by-race-ethnicity-and-cancer-stage" class="level5">
+<h5 class="anchored" data-anchor-id="temporal-trends-in-5-year-age-adjusted-net-survival-by-race-ethnicity-and-cancer-stage">Temporal Trends in 5-Year Age-Adjusted Net Survival by Race, Ethnicity, and Cancer Stage</h5>
 <p>The table presents data for estimated annual percentage change (EAPC) in 5-year age-adjusted net survival rates across different races and cancer stages.</p>
 <p>In observing the localized stage across all groups, the data suggests a trend towards stabilization over time. Notably, Non-Hispanic White (NHW), Hispanic (HIS), and Asian or Pacific Islander (API) populations demonstrated a marginal but consistent increase in survival for the regional stage, with rates below 1%. Non-Hispanic Black (NHB) cohort displayed a more pronounced annual improvement of 1.1% from the period between 1992 to 2015. Distant stage revealed significant and increased in survival for NHW (2.4%), NHB (2.1%), HIS (2.9%), and API (2.1%).</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="survival_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="survival_files/figure-html/fig5-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">Figure 5. 5-Year Age-Adjusted Net Survival by Race, Ethnicity, and Cancer Stage</figcaption><p></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
-<section id="estimated-annual-percentage-change-eapc-in-5-year-age-adjusted-net-survival" class="level2">
-<h2 class="anchored" data-anchor-id="estimated-annual-percentage-change-eapc-in-5-year-age-adjusted-net-survival">Estimated annual percentage change (EAPC) in 5-year age-adjusted net survival</h2>
+<section id="estimated-annual-percentage-change-eapc-in-5-year-age-adjusted-net-survival" class="level3">
+<h3 class="anchored" data-anchor-id="estimated-annual-percentage-change-eapc-in-5-year-age-adjusted-net-survival">Estimated annual percentage change (EAPC) in 5-year age-adjusted net survival</h3>
 <div class="cell">
 
 </div>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="survival_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="survival_files/figure-html/fig6-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">Figure 6. 5-Year Age-Adjusted Net Survival by Race, Ethnicity, and Cancer Stage</figcaption><p></p>
+</figure>
+</div>
 </div>
 </div>
 <div class="cell">
@@ -442,41 +514,51 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co">#knitr::kable(table_result)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="overview" class="level2">
-<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+</section>
+<section id="overview" class="level1">
+<h1>Overview</h1>
 <p>Survival analysis using the Surveillance, Epidemiology, and End Results (SEER) database often employs several estimators for relative survival. These include methods developed by Ederer I and II, Hakulinen (both Exact and Simplified), and the Net Pohar-Perme (PP) approaches.</p>
-<section id="pohar-perme-method" class="level3">
-<h3 class="anchored" data-anchor-id="pohar-perme-method">Pohar Perme Method</h3>
+<section id="pohar-perme-method" class="level5">
+<h5 class="anchored" data-anchor-id="pohar-perme-method">Pohar Perme Method</h5>
 <p>The Pohar Perme method is utilized for computing cumulative expected survival, age-standardized according to the International Cancer Survival Standard 1 for individuals aged 15 and above. This method offers high accuracy for estimating 5-year survival and is widely accepted within the research community. For a detailed exposition of the method, see the <a href="https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1541-0420.2011.01640.x">journal article</a>.</p>
 </section>
-<section id="advantages-of-different-estimators" class="level3">
-<h3 class="anchored" data-anchor-id="advantages-of-different-estimators">Advantages of Different Estimators</h3>
+<section id="advantages-of-different-estimators" class="level5">
+<h5 class="anchored" data-anchor-id="advantages-of-different-estimators">Advantages of Different Estimators</h5>
 <p>The choice of estimator can have various advantages depending on the survival duration under analysis. For instance, while the Pohar-Perme method excels for 5-year survival estimations, the Ederer methods may offer benefits when considering longer-term follow-up (such as 10-15 years).</p>
 <p>A comparative analysis of different methodologies for calculating age-standardized net survival is available in this <a href="https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/s12874-015-0057-3">BMC Medical Research Methodology article</a>. The comparison aids researchers in selecting the most appropriate estimator based on the specifics of their study and the survival timeframes of interest.</p>
 </section>
-</section>
-<section id="observed-vs-age-standardized-relative-survival" class="level2">
-<h2 class="anchored" data-anchor-id="observed-vs-age-standardized-relative-survival">Observed vs Age-standardized relative survival</h2>
-<div class="note">
+<section id="observed-vs-age-standardized-relative-survival" class="level5">
+<h5 class="anchored" data-anchor-id="observed-vs-age-standardized-relative-survival">Observed vs Age-standardized relative survival</h5>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <p><strong>Not Actual Survival</strong>: Relative survival is an estimate of the probability of survival from the disease of interest in the absence of other causes of death. It does not reflect the actual survival experience of individual patients. For this purpose, we use Kaplan-Meier curves.</p>
 </div>
+</div>
 <p>These two common metrics used are observed survival and age-standardized relative survival. These terms reflect different methodologies for estimating survival rates, and each serves a specific purpose in understanding the survival patterns of patient populations.</p>
-<section id="on-observed-survival" class="level3">
-<h3 class="anchored" data-anchor-id="on-observed-survival">On Observed Survival:</h3>
+</section>
+<section id="on-observed-survival" class="level5">
+<h5 class="anchored" data-anchor-id="on-observed-survival">On Observed Survival:</h5>
 <p>Observed survival refers to the calculation of survival probabilities from a group of patients over time, without adjusting for any other factors like age or stage of disease. It includes all causes of death. It can be influenced by the composition of the population, such as the age distribution. A population with older patients might naturally have lower observed survival rates simply because the mortality risks increase with age. It is often expressed as a ratio where the numerator is the observed survival of the cancer patients, and the denominator is the expected survival of a similar group from the general population.</p>
 </section>
-<section id="on-age-standardized-relative-survival" class="level3">
-<h3 class="anchored" data-anchor-id="on-age-standardized-relative-survival">On age-standardized Relative Survival:</h3>
+<section id="on-age-standardized-relative-survival" class="level5">
+<h5 class="anchored" data-anchor-id="on-age-standardized-relative-survival">On age-standardized Relative Survival:</h5>
 <p>Age-standardized relative survival takes observed survival by adjusting for the expected survival rate (LIFE TABLES) of a comparable group in the general population (matched by age, sex, and sometimes other variables). It allows to isolate the effect of the cancer from other causes of death that would affect anyone in the general population. By comparing the observed survival to the expected survival rates of a standard population, age-standardized relative survival removes the confounding impact of differing mortality risks that are unrelated to the condition being studied.</p>
-<section id="icss" class="level4">
-<h4 class="anchored" data-anchor-id="icss">ICSS</h4>
+</section>
+<section id="icss" class="level5">
+<h5 class="anchored" data-anchor-id="icss">ICSS</h5>
 <p>SEER uses ICSS standard population. ICSS was created based on EUROCARE project. https://seer.cancer.gov/stdpopulations/survival.html</p>
 </section>
-<section id="who-world-standard" class="level4">
-<h4 class="anchored" data-anchor-id="who-world-standard">WHO world standard</h4>
+<section id="who-world-standard" class="level5">
+<h5 class="anchored" data-anchor-id="who-world-standard">WHO world standard</h5>
 <p>This is my personal contribution to the topic. We developed the World Cancer Population based on a global cancer patient-based standard population that adjusts for the expected age structure of different cancers. This is an alternative to ICCS (which presents lots of limitations). WHO pop can be found here:<a href="https://www.sciencedirect.com/science/article/pii/S1877782120301363?via%3Dihub">Cancer Epidemiology</a></p>
-</section>
-</section>
 </section>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
