@@ -65,7 +65,7 @@ Survival files are available in a .zip file: [Survival.zip](https://github.com/f
   - The dashed line represents a value of 1.
 
 ## Incidence analysis SEER22
-View the Quarto version of the analysis [here](https://filhoalm.github.io/Breast_cancer/Incidence/seer22/incidence_seer22.html).
+View the Quarto version of the analysis [here](https://filhoalm.github.io/Breast_cancer/Incidence/seer22/Incidence_seer22.html).
 
 ## Relative Survival analysis
 View the Quarto version of the analysis [here](https://filhoalm.github.io/Breast_cancer/Survival_snapshot/survival.html).
