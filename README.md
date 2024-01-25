@@ -1,4 +1,4 @@
-# Breast Cancer Research - SEER Data Analysis
+# ITEB Breast Cancer Research working group - SEER Data Analysis
 
 ## Data Source
 National Cancer Institute. Surveillance, Epidemiology, and End Results (SEER) Program Populations (1975-2020). Available at: [www.seer.cancer.gov/popdata](https://www.seer.cancer.gov/popdata). Released May 2023. National Cancer Institute, DCCPS, Surveillance Research Program, February 2022S ed.
@@ -64,10 +64,10 @@ Survival files are available in a .zip file: [Survival.zip](https://github.com/f
 - **C**: Trends in older women
   - The dashed line represents a value of 1.
 
-## Incidence analysis
-View the Quarto version of the analysis [here](https://filhoalm.github.io/Breast_cancer/SEER8/gitfiles/seer8.html).
+## Incidence analysis SEER22
+View the Quarto version of the analysis [here](https://filhoalm.github.io/Breast_cancer/Incidence/seer22/incidence_seer22.html).
 
-## Survival analysis
+## Relative Survival analysis
 View the Quarto version of the analysis [here](https://filhoalm.github.io/Breast_cancer/Survival_snapshot/survival.html).
 
 ## WerR Live Version
