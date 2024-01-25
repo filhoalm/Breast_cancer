@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="AMF">
+<meta name="dcterms.date" content="2024-01-24">
 
-<title>Malignant Breast Cancer by Molecular Subtype, Race and Ethnicity(SEER22)</title>
+<title>IDC and DCIS Breast Cancer by Race and Ethnicity(SEER22)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -104,15 +105,33 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </head>
 
-<body class="fullcontent">
+<body>
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
-
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#methods" id="toc-methods" class="nav-link active" data-scroll-target="#methods">Methods</a>
+  <ul class="collapse">
+  <li><a href="#morphology" id="toc-morphology" class="nav-link" data-scroll-target="#morphology">Morphology</a>
+  <ul class="collapse">
+  <li><a href="#apc-parameters-and-functions" id="toc-apc-parameters-and-functions" class="nav-link" data-scroll-target="#apc-parameters-and-functions">APC Parameters and Functions</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#preliminarly-results" id="toc-preliminarly-results" class="nav-link" data-scroll-target="#preliminarly-results">Preliminarly Results</a>
+  <ul class="collapse">
+  <li><a href="#local-drifts" id="toc-local-drifts" class="nav-link" data-scroll-target="#local-drifts">Local Drifts</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Malignant Breast Cancer by Molecular Subtype, Race and Ethnicity(SEER22)</h1>
+<h1 class="title">IDC and DCIS Breast Cancer by Race and Ethnicity(SEER22)</h1>
 </div>
 
 
@@ -126,28 +145,100 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
   </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">January 24, 2024</p>
+    </div>
+  </div>
   
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">January 25, 2024</p>
+    </div>
+  </div>
     
   </div>
   
 
 </header>
 
-<section id="overview" class="level2">
-<h2 class="anchored" data-anchor-id="overview">Overview</h2>
-<p>This report provides a comprehensive analysis of malignant breast cancer incidence rates by molecular subtype, race and ethnicity, using data from the SEER12 registries.</p>
+<section id="methods" class="level1">
+<h1>Methods</h1>
+<section id="data-source" class="level4">
+<h4 class="anchored" data-anchor-id="data-source">Data Source</h4>
+<p>National Cancer Institute. Surveillance, Epidemiology, and End Results (SEER) Program Populations (1975-2020). Available at: <a href="https://www.seer.cancer.gov/popdata">www.seer.cancer.gov/popdata</a>. Released May 2023. National Cancer Institute, DCCPS, Surveillance Research Program, February 2022S ed.</p>
+</section>
+<section id="morphology" class="level2">
+<h2 class="anchored" data-anchor-id="morphology">Morphology</h2>
+<section id="ductal-carcinoma-in-situ-dcis" class="level4">
+<h4 class="anchored" data-anchor-id="ductal-carcinoma-in-situ-dcis">Ductal Carcinoma In Situ (DCIS)</h4>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>8201/2</strong>: Cribriform carcinoma in situ</li>
+<li><strong>8500/2</strong>: Intraductal carcinoma, noninfiltrating, NOS</li>
+<li><strong>8501/2</strong>: Comedocarcinoma, noninfiltrating</li>
+<li><strong>8503/2</strong>: Noninfiltrating intraductal papillary adenocarcinoma</li>
+<li><strong>8507/2</strong>: Intraductal micropapillary carcinoma</li>
+<li><strong>8523/2</strong>: Intraductal with other types of carcinoma in situ</li>
+</ul>
+</div>
+</div>
+<p>’</p>
+</section>
+<section id="infiltrating-ductal-carcinoma-idc" class="level4">
+<h4 class="anchored" data-anchor-id="infiltrating-ductal-carcinoma-idc">Infiltrating Ductal Carcinoma (IDC)</h4>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>8500/3</strong>: Infiltrating duct carcinoma, NOS’</li>
+<li><strong>8523/3</strong>: Infiltrating duct mixed with other types of carcinoma’</li>
+</ul>
+</div>
+</div>
+<p>ER Status Recode for Breast Cancer (1990+): ‘Positive’, ‘Negative’, ‘Borderline/Unknown’, ’Recode not available</p>
+</section>
+<section id="breast-cancer-subtype" class="level4">
+<h4 class="anchored" data-anchor-id="breast-cancer-subtype">Breast cancer subtype</h4>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <ul>
 <li><strong>HR-positive/HER2-negative (HR+/HER2-)</strong>: HR+/HER2-</li>
 <li><strong>HR-negative/HER2-negative (HR-/HER2-)</strong>: HR-/HER2-</li>
 <li><strong>HR-positive/HER2-positive (HR+/HER2+)</strong>: HR+/HER2+</li>
 <li><strong>HR-negative/HER2-positive (HR-/HER2+)</strong>: HR-/HER2+</li>
 </ul>
+</div>
+</div>
 </section>
-<section id="methods" class="level2">
-<h2 class="anchored" data-anchor-id="methods">Methods</h2>
-<p>Data from SEER12 is available below.</p>
-<section id="transforming-seer22-data-into-a-rate-object" class="level3">
-<h3 class="anchored" data-anchor-id="transforming-seer22-data-into-a-rate-object">Transforming SEER22 Data into a ‘rate’ Object</h3>
+<section id="transforming-seer22-data-into-a-rate-object" class="level4">
+<h4 class="anchored" data-anchor-id="transforming-seer22-data-into-a-rate-object">Transforming SEER22 Data into a ‘rate’ Object</h4>
 <p>The SEER22 database provides data in a long format, which is not directly compatible with the WebTool for analysis. Our primary task involves transforming these datasets into a ‘rate’ object format. This format is requisite to ensure that the data can be efficiently processed using WebTool.</p>
 <p>For more detailed information on the structures and functionalities of ‘rate’ objects and best practices for analyzing SEER data, please consult the following research article:</p>
 <p>You can access the repository and download the rate files using the following link:</p>
@@ -248,12 +339,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#write.csv(combined_data_nhw_positive, "C:/Users/filhoam/Desktop/Breast/Incidence/seer22/nhw_positive.csv", row.names = FALSE)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="breast-cancer-rate-objects" class="level3">
-<h3 class="anchored" data-anchor-id="breast-cancer-rate-objects">Breast Cancer Rate Objects</h3>
+<section id="breast-cancer-rate-objects" class="level4">
+<h4 class="anchored" data-anchor-id="breast-cancer-rate-objects">Breast Cancer Rate Objects</h4>
 <p>To ensureaccess to pertinent data, a dedicated GitHub folder has been created, containing all rate files segmented by race, ethnicity, and ER (Estrogen Receptor).</p>
 </section>
-<section id="r-webtool-functions" class="level3">
-<h3 class="anchored" data-anchor-id="r-webtool-functions">R Webtool functions</h3>
+<section id="r-webtool-functions" class="level4">
+<h4 class="anchored" data-anchor-id="r-webtool-functions">R Webtool functions</h4>
 <p>Repository that content all the functional components of WebTool. This central repository provides an array of functions designed for streamlining the analysis of epidemiological data.</p>
 <p>For more detailed insights into the capabilities and applications of the WebTool functions, you are encouraged to consult the following reference:</p>
 <p><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4221491/">“A Web Tool for Age-Period-Cohort Analysis of Cancer Incidence and Mortality Rates”</a></p>
@@ -284,6 +375,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="co"># library(tools)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Webtool provides specialized function designed to facilitate the execution of core operations. Two of the most essential functions:</p>
+</section>
 <section id="csv2rates-function" class="level4">
 <h4 class="anchored" data-anchor-id="csv2rates-function">csv2rates Function</h4>
 <p>The <code>csv2rates</code> function is a data transformation utility that converts data from CSV (Comma-Separated Values) files into the standardized ‘rate’ object format required by WebTool:</p>
@@ -299,10 +391,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h4 class="anchored" data-anchor-id="apc2fit-function">apc2fit Function</h4>
 <p>The <code>apc2fit</code> function implements the Age-Period-Cohort (APC) model fitting on the ‘rate’ objects. The APC model is widely used in epidemiology to examine how particular outcomes change over time and across different cohorts. This function allows researchers to:</p>
 </section>
-</section>
-</section>
-<section id="apc-parameters-and-functions" class="level2">
-<h2 class="anchored" data-anchor-id="apc-parameters-and-functions">APC Parameters and Functions</h2>
+<section id="apc-parameters-and-functions" class="level3">
+<h3 class="anchored" data-anchor-id="apc-parameters-and-functions">APC Parameters and Functions</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># df1&lt;-csv2rates("combined_data_nhw_positive")</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># names(df1)</span></span>
@@ -446,10 +536,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="preliminarly-results" class="level2">
-<h2 class="anchored" data-anchor-id="preliminarly-results">Preliminarly Results</h2>
-<section id="fitted-temporal-trends-ftt" class="level3">
-<h3 class="anchored" data-anchor-id="fitted-temporal-trends-ftt">Fitted Temporal Trends (FTT)</h3>
+</section>
+</section>
+<section id="preliminarly-results" class="level1">
+<h1>Preliminarly Results</h1>
+<section id="fitted-temporal-trends-ftt" class="level4">
+<h4 class="anchored" data-anchor-id="fitted-temporal-trends-ftt">Fitted Temporal Trends (FTT)</h4>
 <p>Breast Cancer Incidence Trends by Race, Ethnicity and ER Status. Analysis of SEER22 data reveals trends in the incidence rates of malignant breast cancer from 2010 to 2020. The following figure illustrates these trends segmented by race, ethnicity, and estrogen receptor (ER) status.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
@@ -534,8 +626,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <p>Figure 2. Fitted Temporal Trends (FTT) in incidence rates of malignant breast cancer by race and ethnicity, and ER status, 2010 - 2019. SEER22</p>
 </section>
-<section id="net-drift" class="level3">
-<h3 class="anchored" data-anchor-id="net-drift">Net Drift</h3>
+<section id="net-drift" class="level4">
+<h4 class="anchored" data-anchor-id="net-drift">Net Drift</h4>
 <p>APC analogue of the estimated annual percentage change (EAPC) in the age-standardized rate (ASR); log-linear component of FTT(p | a0), PRR(p | p0) and CRR(c | c0)</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># URL to the CSV file hosted on GitHub</span></span>
@@ -580,9 +672,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-</section>
-<section id="molecular-subtype" class="level2">
-<h2 class="anchored" data-anchor-id="molecular-subtype">Molecular subtype</h2>
+<section id="molecular-subtype" class="level4">
+<h4 class="anchored" data-anchor-id="molecular-subtype">Molecular subtype</h4>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># # Load the data from the GitHub repository</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co"># file_url &lt;- "https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/Incidence/seer22/subtype/seer22_race_subtype.csv"</span></span>
@@ -599,8 +690,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <p>Figure 3. Fitted Temporal Trends (FTT) in incidence rates of malignant breast cancer by race and ethnicity, and subtype status, 2010 - 2019. SEER22</p>
 </section>
-<section id="net-drifts---molecular-subtypes" class="level2">
-<h2 class="anchored" data-anchor-id="net-drifts---molecular-subtypes">Net Drifts - molecular subtypes</h2>
+<section id="net-drifts---molecular-subtypes" class="level4">
+<h4 class="anchored" data-anchor-id="net-drifts---molecular-subtypes">Net Drifts - molecular subtypes</h4>
 <div class="cell">
 <div class="cell-output-display">
 <p><img src="Incidence_seer22_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
@@ -621,6 +712,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 <p>Figure 4. Local Drifts in Age-Specific Incidence Rates Stratified by Race and ER Status</p>
+</section>
 </section>
 
 </main>
