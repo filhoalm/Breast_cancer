@@ -13,7 +13,7 @@ date-modified: last-modified
 #### Data Source
 National Cancer Institute. Surveillance, Epidemiology, and End Results (SEER) Program Populations (1975-2020). Available at: [www.seer.cancer.gov/popdata](https://www.seer.cancer.gov/popdata). Released May 2023. National Cancer Institute, DCCPS, Surveillance Research Program, February 2022S ed.
 
-## Morphology
+#### Morphology
 #### Infiltrating Ductal Carcinoma (IDC)
 :::{.callout-note}
 -   **8500/3**: Infiltrating duct carcinoma, NOS'
@@ -24,7 +24,7 @@ ER Status Recode for Breast Cancer (1990+): 'Positive', 'Negative', 'Borderline/
 
 
 #### load required libraries
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
 # Load necessary library for data fetching
 library(readr)
 library(ggplot2)
@@ -94,11 +94,12 @@ df_unknown_er <- df4 %>%
 df_unknown_er<-subset(df_unknown_er, df_unknown_er$year>=1992)
 
 # Create a line plot in Lance style
-a<-ggplot(df_unknown_er, aes(x = year, y = prop, group = 1)) +
+
+a <- ggplot(df_unknown_er, aes(x = year, y = prop, group = 1)) +
   geom_line(color = "black", size = 1) +  # Change line color and size as needed
-  ylim(0,0.5)+
+  ylim(0,0.5) +
   geom_point(color = "black", size = 2) + # Add points and customize their color and size as needed
-  theme_minimal() + # Lance style typically implies a minimalistic theme
+  theme_minimal() +
   labs(
     title = "Year at diagnosis",
     x = "Year",
@@ -106,7 +107,8 @@ a<-ggplot(df_unknown_er, aes(x = year, y = prop, group = 1)) +
   ) +
   theme(
     plot.title = element_text(hjust = 0.5), # Center the plot title
-    text = element_text(size = 12) # Change text size as needed
+    text = element_text(size = 12),
+    aspect.ratio = 2.5 # Example aspect ratio, adjust as needed
   )
 
 
@@ -133,22 +135,21 @@ df_age <- df4a %>%
   filter(er == "Negative")
 
 # Create a line plot in Lance style
-b<-ggplot(df_age, aes(x = age, y = prop, group = 1)) +
+b <- ggplot(df_age, aes(x = age, y = prop, group = 1)) +
   geom_line(color = "black", size = 1) +  # Change line color and size as needed
-  ylim(0,0.5)+
+  ylim(0,0.5) +
   geom_point(color = "black", size = 2) + # Add points and customize their color and size as needed
-  theme_minimal() + # Lance style typically implies a minimalistic theme
+  theme_minimal() +
   labs(
     title = "Age at diagnosis",
     x = "Age",
     y = "% ER Negative"
   ) +
   theme(
-    plot.title = element_text(hjust = 0.5), # Center the plot title
-    text = element_text(size = 12) # Change text size as needed
+    plot.title = element_text(hjust = 0.5),
+    text = element_text(size = 12),
+    aspect.ratio = 2.5 # Set a specific aspect ratio to make the plot 'skinny'
   )
-
-
 
 
 grid.arrange(a,b,
@@ -160,10 +161,206 @@ grid.arrange(a,b,
 
 
 
-
-
-
-
 ##### Simple imputation for malignant breast cancer by ER
 
 A simple imputation method to correct the rates of ER-positive and ER-negative was based on the method proposed by[Anderson at al., 2011](https://pubmed.ncbi.nlm.nih.gov/21753181/)
+
+in brief:
+
+
+
+:::{.callout-tip}
+
+
+We developed a simple imputation model to correct the apparent rates of ER-positive and ER-negative breast cancer for missing ER data. For each age `a` and year `t`, we partitioned the observed total number of incident breast cancers $0^I_{at}$ according to ER status. Hence
+
+$$
+I^I_{at} = P^0_{at} + N^0_{at} + U^0_{at} \tag{1}
+$$
+
+in which $P^0_{at}$, $N^0_{at}$, and $U^0_{at}$ are the observed ER-positive, ER-negative, and unknown counts, respectively. Prior studies have analyzed $P^0_{at}$ and $N^0_{at}$, but if $U^0_{at}$ varies by either `a` or `t` these results may be biased. Our imputation method estimates the unobserved complete data
+
+$$
+I^0_{at} = P^C_{at} + N^C_{at} \tag{2}
+$$
+
+in which $P^C_{at}$ and $N^C_{at}$ are the true numbers of ER-positive and ER-negative counts, respectively.
+
+Our model assumes that unknown ER status is missing at random within a single year of age `a` and calendar year `t` of diagnosis. Under this model, the observed probability $\pi_{at} = \dfrac{P^0_{at}}{P^0_{at} + N^0_{at}}$ on the basis of patients for whom we have complete information is an unbiased estimator of the true probability at the population level that an incident breast cancer diagnosed among women age `a` and calendar year `t` is ER positive. The equations
+
+$$
+P^C_{at} = \hat{\pi}_{at} \times I^0_{at} \tag{3}
+$$
+$$
+N^C_{at} = (1 - \hat{\pi}_{at}) \times I^0_{at} \tag{4}
+$$
+
+provide unbiased estimators of the true numbers of ER-positive and ER-negative breast cancers in the population.
+:::
+
+
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+
+# Read the dataset from the provided URL
+url <- "https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/Incidence/see12/seer12_er.csv"
+df <- read_csv(url)
+
+names(df)<-c("age", "year", "er", "rate", "cases", "py")
+df$er[df$er==3]<-2 
+
+# Aggregate cases by age, year, and er
+df_a <- df %>%
+  group_by(age, year, er, py) %>%
+  summarise(total_cases = sum(cases), .groups = 'drop')
+
+# Recode the race and stage values
+df_a$er <- factor(df_a$er, levels = c(0, 1, 2),
+                  labels = c("Positive", "Negative", "Unknown"))
+
+# Filter out rows with "Year of diagnosis" in the 'year' column and convert to numeric
+#df <- subset(df, df$year != "Year of diagnosis")
+df_a$year <- as.numeric(df_a$year) + 1991
+
+df1<-df_a
+
+df2<-subset(df1, df1$age >=40)
+
+
+#
+# Display the first few rows of the data to understand what we are working with
+
+
+# Group data by age and year to calculate observed counts and probabilities
+library(dplyr)
+
+df2_summary <- df2 %>%
+  group_by(age, year) %>%
+  summarise(
+    total_positive = sum(total_cases[er == "Positive"]),
+    total_negative = sum(total_cases[er == "Negative"]),
+    total_known = total_positive + total_negative,
+    total_cases = sum(total_cases)
+  ) %>%
+  ungroup()
+
+# Calculate the observed probabilities for known ER status
+df2_summary <- df2_summary %>%
+  mutate(
+    Observed_Probability_Positive = total_positive / total_known,
+    Observed_Probability_Negative = total_negative / total_known
+  )
+
+# Estimate the true counts for ER-positive and ER-negative cases using the observed probabilities
+df2_summary <- df2_summary %>%
+  mutate(
+    Estimated_Positive = Observed_Probability_Positive * total_cases,
+    Estimated_Negative = Observed_Probability_Negative * total_cases
+  )
+
+# Display the resulting estimates
+df2_summary$Estimated_Positive<-round(df2_summary$Estimated_Positive, 0)
+df2_summary$Estimated_Negative<-round(df2_summary$Estimated_Negative, 0)
+
+# You may want to save the updated summary dataframe with estimations
+#write.csv(df2_summary, 'df2_summary_with_estimations.csv', row.names = FALSE)
+
+
+
+# Create a long format
+
+df2_summary$Estimated_Positive<-as.numeric(df2_summary$Estimated_Positive)
+df2_summary$Estimated_Negative<-as.numeric(df2_summary$Estimated_Negative)
+
+
+
+
+#write.csv(df2_summary, "C:/Users/filhoam/Desktop/Breast/Incidence/imputation/imputed.csv")
+
+# Read the dataset from the provided URL
+url <- "https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/Incidence/imputation/imputed.csv"
+dat <- read_csv(url)
+
+# Assuming your data frame is named df2_summary
+df2_aggregated_by_year <- dat %>%
+  group_by(year) %>%
+  summarise(
+    total_positive = sum(total_positive),
+    total_negative = sum(total_negative),
+    Estimated_Positive = sum(Estimated_Positive, na.rm = TRUE), # Replace with actual column name
+    Estimated_Negative = sum(Estimated_Negative, na.rm = TRUE)  # Replace with actual column name
+  )
+
+
+#head(df2_aggregated_by_year)
+
+
+# Population
+url <- "https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/Incidence/imputation/py.csv"
+py <- read_csv(url)
+names(py)<-c("year", "rate", "counts", "py")
+py$year <- as.numeric(py$year) + 1991
+py1<-py[c(1,4)]
+
+## Merge
+df2_aggregated<-merge(df2_aggregated_by_year, py1, by=c("year"))
+
+#
+
+df2_aggregatedA<-df2_aggregated[c(1,2,6)]
+df2_aggregatedA$index<-"total_positive"
+
+df2_aggregatedB<-df2_aggregated[c(1,3,6)]
+df2_aggregatedB$index<-"total_negative"
+names(df2_aggregatedB)[2]<-c("total_positive")
+
+df2_aggregatedC<-df2_aggregated[c(1,4,6)]
+df2_aggregatedC$index<-"Estimated_Positive"
+names(df2_aggregatedC)[2]<-c("total_positive")
+
+df2_aggregatedD<-df2_aggregated[c(1,5,6)]
+df2_aggregatedD$index<-"Estimated_Negative"
+names(df2_aggregatedD)[2]<-c("total_positive")
+
+
+
+df2_long<-rbind(df2_aggregatedA, df2_aggregatedB, df2_aggregatedC, df2_aggregatedD)
+names(df2_long)[2]<-c("cases")
+
+
+# rates
+
+df2_long$rate<-(df2_long$cases / df2_long$py)*100000
+
+## plot
+
+long<-subset(df2_long, df2_long$year>=1992)
+
+library(ggplot2)
+
+# Create a line plot in a skinny Lance style
+ggplot(long, aes(x = year, y = rate, group = index, color = index)) +
+  geom_line(aes(linetype=index, color=index)) +
+  geom_point(aes(shape = index)) + # Point size
+  scale_color_manual(values = c("darkblue", "darkblue", "darkred", "darkred")) + # Replace with desired colors
+  theme_minimal() + # Lance style typically implies a minimalistic theme
+  labs(
+    title = "",
+    x = "Year of diagnosis",
+    y = "Crude rates per 100,000"
+  ) +
+  theme(
+    plot.title = element_text(hjust = 0.5), # Center the plot title
+    text = element_text(size = 12), # Change text size as needed
+    aspect.ratio = 2.5 # Adjust this value to make the figure skinnier or wider
+  )
+
+head(dat)
+
+```
+
+
+
+
+
+

@@ -99,6 +99,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <link href="imputation_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="imputation_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -106,13 +107,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
 <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-  <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-  <li><a href="#morphology" id="toc-morphology" class="nav-link active" data-scroll-target="#morphology">Morphology</a></li>
-  </ul>
-</nav>
+  
 </div>
 <main class="content" id="quarto-document-content">
 
@@ -155,8 +150,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h4 class="anchored" data-anchor-id="data-source">Data Source</h4>
 <p>National Cancer Institute. Surveillance, Epidemiology, and End Results (SEER) Program Populations (1975-2020). Available at: <a href="https://www.seer.cancer.gov/popdata">www.seer.cancer.gov/popdata</a>. Released May 2023. National Cancer Institute, DCCPS, Surveillance Research Program, February 2022S ed.</p>
 </section>
-<section id="morphology" class="level2">
-<h2 class="anchored" data-anchor-id="morphology">Morphology</h2>
+<section id="morphology" class="level4">
+<h4 class="anchored" data-anchor-id="morphology">Morphology</h4>
+</section>
 <section id="infiltrating-ductal-carcinoma-idc" class="level4">
 <h4 class="anchored" data-anchor-id="infiltrating-ductal-carcinoma-idc">Infiltrating Ductal Carcinoma (IDC)</h4>
 <div class="callout-note callout callout-style-default callout-captioned">
@@ -180,19 +176,15 @@ Note
 <section id="load-required-libraries" class="level4">
 <h4 class="anchored" data-anchor-id="load-required-libraries">load required libraries</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load necessary library for data fetching</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
 </div>
 <section id="importing-encrypted-seer12-data-files-from-github-repository" class="level5">
 <h5 class="anchored" data-anchor-id="importing-encrypted-seer12-data-files-from-github-repository">Importing Encrypted SEER12 Data Files from GitHub Repository</h5>
 <p>Discuss the process involved in accessing locked data files from SEER12 that have been stored on GitHub.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the dataset from the provided URL</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">"https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/Incidence/see12/seer12_er.csv"</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(url)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the dataset from the provided URL</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">"https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/Incidence/see12/seer12_er.csv"</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(url)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
@@ -203,7 +195,54 @@ Note
 <section id="simple-imputation-for-malignant-breast-cancer-by-er" class="level5">
 <h5 class="anchored" data-anchor-id="simple-imputation-for-malignant-breast-cancer-by-er">Simple imputation for malignant breast cancer by ER</h5>
 <p>A simple imputation method to correct the rates of ER-positive and ER-negative was based on the method proposed by<a href="https://pubmed.ncbi.nlm.nih.gov/21753181/">Anderson at al., 2011</a></p>
-</section>
+<p>in brief:</p>
+<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We developed a simple imputation model to correct the apparent rates of ER-positive and ER-negative breast cancer for missing ER data. For each age <code>a</code> and year <code>t</code>, we partitioned the observed total number of incident breast cancers <span class="math inline">\(0^I_{at}\)</span> according to ER status. Hence</p>
+<p><span class="math display">\[
+I^I_{at} = P^0_{at} + N^0_{at} + U^0_{at} \tag{1}
+\]</span></p>
+<p>in which <span class="math inline">\(P^0_{at}\)</span>, <span class="math inline">\(N^0_{at}\)</span>, and <span class="math inline">\(U^0_{at}\)</span> are the observed ER-positive, ER-negative, and unknown counts, respectively. Prior studies have analyzed <span class="math inline">\(P^0_{at}\)</span> and <span class="math inline">\(N^0_{at}\)</span>, but if <span class="math inline">\(U^0_{at}\)</span> varies by either <code>a</code> or <code>t</code> these results may be biased. Our imputation method estimates the unobserved complete data</p>
+<p><span class="math display">\[
+I^0_{at} = P^C_{at} + N^C_{at} \tag{2}
+\]</span></p>
+<p>in which <span class="math inline">\(P^C_{at}\)</span> and <span class="math inline">\(N^C_{at}\)</span> are the true numbers of ER-positive and ER-negative counts, respectively.</p>
+<p>Our model assumes that unknown ER status is missing at random within a single year of age <code>a</code> and calendar year <code>t</code> of diagnosis. Under this model, the observed probability <span class="math inline">\(\pi_{at} = \dfrac{P^0_{at}}{P^0_{at} + N^0_{at}}\)</span> on the basis of patients for whom we have complete information is an unbiased estimator of the true probability at the population level that an incident breast cancer diagnosed among women age <code>a</code> and calendar year <code>t</code> is ER positive. The equations</p>
+<p><span class="math display">\[
+P^C_{at} = \hat{\pi}_{at} \times I^0_{at} \tag{3}
+\]</span> <span class="math display">\[
+N^C_{at} = (1 - \hat{\pi}_{at}) \times I^0_{at} \tag{4}
+\]</span></p>
+<p>provide unbiased estimators of the true numbers of ER-positive and ER-negative breast cancers in the population.</p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="imputation_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 10
+    age  year total_po…¹ total…² total…³ total…⁴ Obser…⁵ Obser…⁶ Estim…⁷ Estim…⁸
+  &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+1    40  1991       5487    1919    7406    8142   0.741   0.259    6032    2110
+2    40  1992        120      75     195     248   0.615   0.385     153      95
+3    40  1993        128      71     199     247   0.643   0.357     159      88
+4    40  1994        141      69     210     253   0.671   0.329     170      83
+5    40  1995        116      72     188     235   0.617   0.383     145      90
+6    40  1996        134      83     217     273   0.618   0.382     169     104
+# … with abbreviated variable names ¹​total_positive, ²​total_negative,
+#   ³​total_known, ⁴​total_cases, ⁵​Observed_Probability_Positive,
+#   ⁶​Observed_Probability_Negative, ⁷​Estimated_Positive, ⁸​Estimated_Negative</code></pre>
+</div>
+</div>
 </section>
 </section>
 
