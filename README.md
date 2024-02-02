@@ -56,6 +56,9 @@ Survival files are available in a .zip file: [Survival.zip](https://github.com/f
 #### Net Survival - Pohar-Perme Method
 - 5-year censored follow-up: [net_survival_5y_er_pr_her_seer12.csv](https://github.com/filhoalm/Breast_cancer/blob/main/Survival.zip)
 
+## Simple imputation
+https://filhoalm.github.io/Breast_cancer/Incidence/imputation/imputation.html
+
 ## Results
 
 **Figure 1**: Trends in the incidence of Infiltrating Ductal Cancer (IDC) and Ductal Carcinoma In Situ (DCIS) breast cancers relative to 1990, when ER status recording began.
