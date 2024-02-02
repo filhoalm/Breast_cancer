@@ -59,13 +59,7 @@ Survival files are available in a .zip file: [Survival.zip](https://github.com/f
 ## Simple imputation
 https://filhoalm.github.io/Breast_cancer/Incidence/imputation/imputation.html
 
-## Results
-
-**Figure 1**: Trends in the incidence of Infiltrating Ductal Cancer (IDC) and Ductal Carcinoma In Situ (DCIS) breast cancers relative to 1990, when ER status recording began.
-- **A**: Overall trends
-- **B**: Trends in younger women
-- **C**: Trends in older women
-  - The dashed line represents a value of 1.
+# Results
 
 ## Incidence analysis SEER22
 View the Quarto version of the analysis [here](https://filhoalm.github.io/Breast_cancer/Incidence/seer22/Incidence_seer22.html).
