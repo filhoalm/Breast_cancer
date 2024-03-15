@@ -1,0 +1,1848 @@
+---
+toc: true
+title: "Breast cancer - IDC vs DCIS"
+author: "AMF"
+format: html
+editor: visual
+date: "January 24, 2024"
+date-modified: last-modified
+---
+
+<!-- # Methods -->
+
+<!-- #### Data Source -->
+
+<!-- National Cancer Institute. Surveillance, Epidemiology, and End Results (SEER 8) Program Populations (1975-2020). Available at: [www.seer.cancer.gov/popdata](https://www.seer.cancer.gov/popdata). Released May 2023. National Cancer Institute, DCCPS, Surveillance Research Program, February 2022S ed. -->
+
+<!-- ## Morphology -->
+
+<!-- #### Ductal Carcinoma In Situ (DCIS) -->
+
+<!-- ::: callout-note -->
+<!-- -   **8201/2**: Cribriform carcinoma in situ -->
+<!-- -   **8500/2**: Intraductal carcinoma, noninfiltrating, NOS -->
+<!-- -   **8501/2**: Comedocarcinoma, noninfiltrating -->
+<!-- -   **8503/2**: Noninfiltrating intraductal papillary adenocarcinoma -->
+<!-- -   **8507/2**: Intraductal micropapillary carcinoma -->
+<!-- -   **8523/2**: Intraductal with other types of carcinoma in situ -->
+<!-- ::: -->
+
+<!-- ' -->
+
+<!-- #### Infiltrating Ductal Carcinoma (IDC) -->
+
+<!-- ::: callout-note -->
+<!-- -   **8500/3**: Infiltrating duct carcinoma, NOS' -->
+<!-- -   **8523/3**: Infiltrating duct mixed with other types of carcinoma' -->
+<!-- ::: -->
+
+<!-- ER Status Recode for Breast Cancer (1990+): 'Positive', 'Negative', 'Borderline/Unknown', 'Recode not available -->
+
+<!-- You can access the repository and download the rate files using the following link: -->
+
+<!-- [GitHub Repository for Breast Cancer Rate Files](https://github.com/filhoalm/ITEB-breast-cancer/blob/main/breast_seer8.zip) -->
+
+<!-- ## Results -->
+
+##### Figure 1. Trends in Age-Standardized Incidence Rates for Breast Cancer, by subtype.
+
+```{r, message=FALSE, warning=FALSE, echo=F}
+# Load required packages
+#install.packages(c("downloader", "readr", "utils"))
+library(downloader)
+library(readr)
+library(ggplot2)
+library(gridExtra)
+
+```
+
+```{r, message=FALSE, warning=FALSE, echo=F}
+
+# Specify URLs
+url <- "https://github.com/filhoalm/ITEB-breast-cancer/blob/main/breast_seer8.zip?raw=true"
+zip_file <- "breast_seer8.zip"
+
+# Download zip file
+download(url, zip_file, mode = "wb")
+
+# Unzip the file
+unzip(zip_file)
+```
+
+```{r, message=FALSE, warning=FALSE, echo=F}
+
+# Specify the CSV file name
+csv_file <- "breast_seer8/seer8_IDC_year.csv"
+
+# Read the CSV file
+data1 <- read_csv(csv_file)
+
+#data1 <- read_csv("C:/Users/filhoam/Desktop/Ismail/data/seer8_IDC_year.csv")
+names(data1)<-c("year", "rate", "cases", "py")
+data1 <- data1[data1$year > 0, ]
+data1$year <- data1$year + 1974  # Add 1974 to each value
+# Calculate the reference rate (1980)
+ref <- data1[data1$year == 1980, "rate"]
+data1$reference<-as.numeric(ref)
+# Calculate rate ratios using the reference year
+data1$ratio <- (data1$rate / data1$reference)
+data1$er <-"All"
+data1<-data1[c( "year", "er", "rate", "cases", "py", "reference", "ratio")]
+data<-data1
+data$index<-"IDC"
+
+#
+
+# DCIS
+csv_file <- "breast_seer8/seer8_DCIS_year.csv"
+
+# Read the CSV file
+data1 <- read_csv(csv_file)
+
+#data1 <- read_csv("C:/Users/filhoam/Desktop/Ismail/data/seer8_DCIS_year.csv")
+names(data1)<-c("year", "rate", "cases", "py")
+data1 <- data1[data1$year > 0, ]
+data1$year <- data1$year + 1974  # Add 1974 to each value
+# Calculate the reference rate (1980)
+ref <- data1[data1$year == 1980, "rate"]
+data1$reference<-as.numeric(ref)
+# Calculate rate ratios using the reference year
+data1$ratio <- (data1$rate / data1$reference)
+data1$er <-"All"
+data1<-data1[c( "year", "er", "rate", "cases", "py", "reference", "ratio")]
+data1$index<-"DCIS"
+
+#
+data3<-rbind(data, data1)
+
+# Create the scatterplot
+a1<-ggplot(data3, aes(x = year, y = rate, color = index)) +
+  geom_point(size = 1.5) +
+  geom_line() +
+  #geom_hline(yintercept = 1, linetype="dashed", color = "red") +
+  #geom_segment(aes(x = 2002, y = 1, xend = 2002, yend = 12), colour = "gray") + 
+  #annotate("text", x = 2002, y = 12, label = "Ref 2002", color = "black", size = 2) + # Add text annotation
+  
+  #geom_hline(yintercept = 1, linetype="dashed", color = "red") +
+  #geom_segment(aes(x = 1980, y = 1, xend = 1980, yend = 7.5), colour = "gray") +   # Add shortened vertical line at year 1990
+  #geom_vline(xintercept = 1990, color = "gray") +    # Add vertical line at year 1990
+  #annotate("text", x = 1980, y = 8, label = "Ref 1980", color = "black", size = 2) + # Add text annotation
+  
+  #geom_hline(yintercept = 1, linetype="dashed", color = "red") +
+  ylim(0,350)+
+  labs(
+    title = "35 - 84 yo",   # Figure title
+    x = "year",     # x-axis label
+    y = "ASR per 100,000")  +   # y-axis label
+  theme_classic() +  # Lancet style
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 10, face = "bold"),  # Center title and adjust its properties 
+    axis.text.x = element_text(size = 8, angle = 0),  # Adjust x-axis label properties
+    axis.text.y = element_text(size = 8), # Adjust y-axis label properties
+    axis.title.x = element_text(size = 10),  # Adjust x-axis title properties
+    axis.title.y = element_text(size = 10),  # Adjust y-axis title properties
+    plot.margin = margin(t = 15, b = 10, l = 15, r = 10),  # Adjust plot margins
+    panel.grid.major = element_blank(),  # Remove major grid
+    panel.grid.minor = element_blank(),  # Remove minor grid
+    panel.background = element_rect(fill = "white"),  # Background color is white
+    legend.background = element_rect(fill = "white"),
+    legend.position = "bottom",
+    legend.text = element_text(size = 5)
+  )+
+  scale_color_manual(values = c("IDC" = "#222f5b", "DCIS" = "#946b2d"))+
+  labs(color=NULL)
+
+```
+
+
+```{r, message=FALSE, warning=FALSE, echo=F}
+# 30-49
+csv_file <- "breast_seer8/seer8_IDC_year_3049.csv"
+
+# Read the CSV file
+data1 <- read_csv(csv_file)
+
+#data1 <- read_csv("C:/Users/filhoam/Desktop/Ismail/data/seer8_IDC_year_3049.csv")
+names(data1)<-c("year", "rate", "cases", "py")
+data1 <- data1[data1$year > 0, ]
+data1$year <- data1$year + 1974  # Add 1974 to each value
+# Calculate the reference rate (1980)
+ref <- data1[data1$year == 1980, "rate"]
+data1$reference<-as.numeric(ref)
+# Calculate rate ratios using the reference year
+data1$ratio <- (data1$rate / data1$reference)
+data1$er <-"All"
+data1<-data1[c( "year", "er", "rate", "cases", "py", "reference", "ratio")]
+data<-data1
+data$index<-"IDC"
+
+#
+
+# DCIS
+csv_file <- "breast_seer8/seer8_DCIS_year_3549.csv"
+
+# Read the CSV file
+data1 <- read_csv(csv_file)
+
+#data1 <- read_csv("C:/Users/filhoam/Desktop/Ismail/data/seer8_DCIS_year_3549.csv")
+names(data1)<-c("year", "rate", "cases", "py")
+data1 <- data1[data1$year > 0, ]
+data1$year <- data1$year + 1974  # Add 1974 to each value
+# Calculate the reference rate (1980)
+ref <- data1[data1$year == 1980, "rate"]
+data1$reference<-as.numeric(ref)
+# Calculate rate ratios using the reference year
+data1$ratio <- (data1$rate / data1$reference)
+data1$er <-"All"
+data1<-data1[c( "year", "er", "rate", "cases", "py", "reference", "ratio")]
+data1$index<-"DCIS"
+
+#
+data3<-rbind(data, data1)
+
+# Create the scatterplot
+a2<-ggplot(data3, aes(x = year, y = rate, color = index)) +
+  geom_point(size = 1.5) +
+  geom_line() +
+  #geom_hline(yintercept = 1, linetype="dashed", color = "red") +
+  #geom_segment(aes(x = 2002, y = 1, xend = 2002, yend = 12), colour = "gray") + 
+  #annotate("text", x = 2002, y = 12, label = "Ref 2002", color = "black", size = 2) + # Add text annotation
+  
+  #geom_hline(yintercept = 1, linetype="dashed", color = "red") +
+  #geom_segment(aes(x = 1980, y = 1, xend = 1980, yend = 7.5), colour = "gray") +   # Add shortened vertical line at year 1990
+  #geom_vline(xintercept = 1990, color = "gray") +    # Add vertical line at year 1990
+  #annotate("text", x = 1980, y = 8, label = "Ref 1980", color = "black", size = 2) + # Add text annotation
+  
+  #geom_hline(yintercept = 1, linetype="dashed", color = "red") +
+  ylim(0,350)+
+  labs(
+    title = "35 - 49 yo",   # Figure title
+    x = "year",     # x-axis label
+    y = "ASR per 100,000")  +   # y-axis label
+  theme_classic() +  # Lancet style
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 10, face = "bold"),  # Center title and adjust its properties 
+    axis.text.x = element_text(size = 8, angle = 0),  # Adjust x-axis label properties
+    axis.text.y = element_text(size = 8), # Adjust y-axis label properties
+    axis.title.x = element_text(size = 10),  # Adjust x-axis title properties
+    axis.title.y = element_text(size = 10),  # Adjust y-axis title properties
+    plot.margin = margin(t = 15, b = 10, l = 15, r = 10),  # Adjust plot margins
+    panel.grid.major = element_blank(),  # Remove major grid
+    panel.grid.minor = element_blank(),  # Remove minor grid
+    panel.background = element_rect(fill = "white"),  # Background color is white
+    legend.background = element_rect(fill = "white"),
+    legend.position = "bottom",
+    legend.text = element_text(size = 5)
+  )+
+  scale_color_manual(values = c("IDC" = "#222f5b", "DCIS" = "#946b2d"))+
+  labs(color=NULL)
+
+
+```
+
+```{r, message=FALSE, warning=FALSE, echo=F}
+#50-84
+csv_file <- "breast_seer8/seer8_IDC_year_5084.csv"
+
+# Read the CSV file
+data1 <- read_csv(csv_file)
+
+#data1 <- read_csv("C:/Users/filhoam/Desktop/Ismail/data/seer8_IDC_year_5084.csv")
+names(data1)<-c("year", "rate", "cases", "py")
+data1 <- data1[data1$year > 0, ]
+data1$year <- data1$year + 1974  # Add 1974 to each value
+# Calculate the reference rate (1980)
+ref <- data1[data1$year == 1980, "rate"]
+data1$reference<-as.numeric(ref)
+# Calculate rate ratios using the reference year
+data1$ratio <- (data1$rate / data1$reference)
+data1$er <-"All"
+data1<-data1[c( "year", "er", "rate", "cases", "py", "reference", "ratio")]
+data<-data1
+data$index<-"IDC"
+
+#
+
+# DCIS
+csv_file <- "breast_seer8/seer8_DCIS_year_5084.csv"
+
+# Read the CSV file
+data1 <- read_csv(csv_file)
+
+#data1 <- read_csv("C:/Users/filhoam/Desktop/Ismail/data/seer8_DCIS_year_5084.csv")
+names(data1)<-c("year", "rate", "cases", "py")
+data1 <- data1[data1$year > 0, ]
+data1$year <- data1$year + 1974  # Add 1974 to each value
+# Calculate the reference rate (1980)
+ref <- data1[data1$year == 1980, "rate"]
+data1$reference<-as.numeric(ref)
+# Calculate rate ratios using the reference year
+data1$ratio <- (data1$rate / data1$reference)
+data1$er <-"All"
+data1<-data1[c( "year", "er", "rate", "cases", "py", "reference", "ratio")]
+data1$index<-"DCIS"
+
+#
+data3<-rbind(data, data1)
+
+# Create the scatterplot
+a3<-ggplot(data3, aes(x = year, y = rate, color = index)) +
+  geom_point(size = 1.5) +
+  geom_line() +
+  geom_hline(yintercept = 1, linetype="dashed", color = "red") +
+  #geom_segment(aes(x = 2002, y = 1, xend = 2002, yend = 12), colour = "gray") + 
+  #annotate("text", x = 2002, y = 12, label = "Ref 2002", color = "black", size = 2) + # Add text annotation
+  
+  #geom_hline(yintercept = 1, linetype="dashed", color = "red") +
+  #geom_segment(aes(x = 1980, y = 1, xend = 1980, yend = 7.5), colour = "gray") +   # Add shortened vertical line at year 1990
+  #geom_vline(xintercept = 1990, color = "gray") +    # Add vertical line at year 1990
+  #annotate("text", x = 1980, y = 8, label = "Ref 1980", color = "black", size = 2) + # Add text annotation
+  
+  #geom_hline(yintercept = 1, linetype="dashed", color = "red") +
+  ylim(0,350)+
+  labs(
+    title = "50 - 84 yo",   # Figure title
+    x = "year",     # x-axis label
+    y = "ASR per 100,000")  +   # y-axis label
+  theme_classic() +  # Lancet style
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 10, face = "bold"),  # Center title and adjust its properties 
+    axis.text.x = element_text(size = 8, angle = 0),  # Adjust x-axis label properties
+    axis.text.y = element_text(size = 8), # Adjust y-axis label properties
+    axis.title.x = element_text(size = 10),  # Adjust x-axis title properties
+    axis.title.y = element_text(size = 10),  # Adjust y-axis title properties
+    plot.margin = margin(t = 15, b = 10, l = 15, r = 10),  # Adjust plot margins
+    panel.grid.major = element_blank(),  # Remove major grid
+    panel.grid.minor = element_blank(),  # Remove minor grid
+    panel.background = element_rect(fill = "white"),  # Background color is white
+    legend.background = element_rect(fill = "white"),
+    legend.position = "bottom",
+    legend.text = element_text(size = 5)
+  )+
+  scale_color_manual(values = c("IDC" = "#222f5b", "DCIS" = "#946b2d"))+
+  labs(color=NULL)
+
+##
+
+```
+
+```{r, message=FALSE, warning=FALSE, echo=F}
+
+#grid.arrange(a1,a2,a3,nrow = 1,top = "Breast cancer")
+
+#pdf(file=paste(MyPath,"Figure 19.pdf",sep=""),width=4.2,height=5.2)
+grid.arrange(a1, a2, a3, nrow=1, top = "Breast cancer", bottom = "SEER8")
+
+
+```
+
+##### Figure 2A and B. Trends in Age-Standardized Incidence Rates of Breast Cancer Infiltrating Ductal Carcinoma (IDC) Classified by ER Status and Age Group, From 1990 to 2020
+
+```{r, message=FALSE, warning=FALSE, echo=F}
+url <- "https://github.com/filhoalm/ITEB-breast-cancer/blob/main/breast_seer8.zip?raw=true"
+zip_file <- "breast_seer8.zip"
+
+# Download zip file
+download(url, zip_file, mode = "wb")
+
+# Unzip the file
+unzip(zip_file)
+csv_file <- "breast_seer8/seer8_IDC_year_er.csv"
+# Read the CSV file
+data <- read_csv(csv_file)
+
+#data <- read_csv("C:/Users/filhoam/Desktop/Ismail/data/seer8_IDC_year_er.csv")
+names(data)<-c("year", "er", "rate", "cases", "py")
+data <- data[data$year > 0, ]
+data$year <- data$year + 1974  # Add 1974 to each value
+
+data$er[data$er== 0]<-"Positive"
+data$er[data$er== 1]<-"Negative"
+data$er[data$er== 2]<-"Borderline/Unknown"
+data$er[data$er== 3]<-"Recode not available"
+
+data<-subset(data, data$er == "Positive" | data$er == "Negative" & data$year >= 1990)
+
+
+# Calculate the reference rate
+ref_pos <- data[data$year == 1990 & data$er == "Positive", "rate"]
+ref_neg <- data[data$year == 1990 & data$er == "Negative", "rate"]
+
+# Create 'reference' variable based on the 'er' value
+data$reference <- ifelse(data$er == "Positive", ref_pos, 
+                         ifelse(data$er == "Negative", ref_neg, NA))
+
+data$reference<-as.numeric(data$reference)
+# Now, calculate rate ratios
+data$ratio <- data$rate / data$reference
+
+#data2<-rbind(data, data1)
+dat<-subset(data, data$year>=1990)
+
+# Create the scatterplot
+b1<-ggplot(dat, aes(x = year, y = rate, color = er)) +
+  geom_point(size = 1.5) +
+  geom_line() +
+  #geom_hline(yintercept = 1, linetype="dashed", color = "red") +
+  ylim(0,350)+
+  xlim(1975, 2020)+
+  labs(
+    title = "35 - 84 yo",   # Figure title
+    x = "year",     # x-axis label
+    y = "ASR per 100,000")  +   # y-axis label
+  theme_classic() +  # Lancet style
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 10, face = "bold"),  # Center title and adjust its properties 
+    axis.text.x = element_text(size = 8, angle = 0),  # Adjust x-axis label properties
+    axis.text.y = element_text(size = 8), # Adjust y-axis label properties
+    axis.title.x = element_text(size = 10),  # Adjust x-axis title properties
+    axis.title.y = element_text(size = 10),  # Adjust y-axis title properties
+    plot.margin = margin(t = 15, b = 10, l = 15, r = 10),  # Adjust plot margins
+    panel.grid.major = element_blank(),  # Remove major grid
+    panel.grid.minor = element_blank(),  # Remove minor grid
+    panel.background = element_rect(fill = "white"),  # Background color is white
+    legend.background = element_rect(fill = "white"),
+    legend.position = "bottom",
+    legend.text = element_text(size = 5)# Legend background color is white
+  )+
+  scale_color_manual(values = c("Positive" = "#2675b1", "Negative" = "#ca6924", "All" = "#010101"))+
+  labs(color=NULL)
+
+
+```
+
+```{r, message=FALSE, warning=FALSE, echo=F}
+
+url <- "https://github.com/filhoalm/ITEB-breast-cancer/blob/main/breast_seer8.zip?raw=true"
+zip_file <- "breast_seer8.zip"
+
+# Download zip file
+download(url, zip_file, mode = "wb")
+
+# Unzip the file
+unzip(zip_file)
+csv_file <- "breast_seer8/seer8_IDC_year_er_3049.csv"
+# Read the CSV file
+data <- read_csv(csv_file)
+
+#data <- read_csv("C:/Users/filhoam/Desktop/Ismail/data/seer8_IDC_year_er.csv")
+names(data)<-c("year", "er", "rate", "cases", "py")
+data <- data[data$year > 0, ]
+data$year <- data$year + 1974  # Add 1974 to each value
+
+data$er[data$er== 0]<-"Positive"
+data$er[data$er== 1]<-"Negative"
+data$er[data$er== 2]<-"Borderline/Unknown"
+data$er[data$er== 3]<-"Recode not available"
+
+data<-subset(data, data$er == "Positive" | data$er == "Negative" & data$year >= 1990)
+
+
+# Calculate the reference rate
+ref_pos <- data[data$year == 1990 & data$er == "Positive", "rate"]
+ref_neg <- data[data$year == 1990 & data$er == "Negative", "rate"]
+
+# Create 'reference' variable based on the 'er' value
+data$reference <- ifelse(data$er == "Positive", ref_pos, 
+                         ifelse(data$er == "Negative", ref_neg, NA))
+
+data$reference<-as.numeric(data$reference)
+# Now, calculate rate ratios
+data$ratio <- data$rate / data$reference
+
+#data2<-rbind(data, data1)
+dat<-subset(data, data$year>=1990)
+
+# Create the scatterplot
+b2<-ggplot(dat, aes(x = year, y = rate, color = er)) +
+  geom_point(size = 1.5) +
+  geom_line() +
+  #geom_hline(yintercept = 1, linetype="dashed", color = "red") +
+  ylim(0,350)+
+  xlim(1975, 2020)+
+  labs(
+    title = "35 - 49 yo",   # Figure title
+    x = "year",     # x-axis label
+    y = "ASR per 100,000")  +   # y-axis label
+  theme_classic() +  # Lancet style
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 10, face = "bold"),  # Center title and adjust its properties 
+    axis.text.x = element_text(size = 8, angle = 0),  # Adjust x-axis label properties
+    axis.text.y = element_text(size = 8), # Adjust y-axis label properties
+    axis.title.x = element_text(size = 10),  # Adjust x-axis title properties
+    axis.title.y = element_text(size = 10),  # Adjust y-axis title properties
+    plot.margin = margin(t = 15, b = 10, l = 15, r = 10),  # Adjust plot margins
+    panel.grid.major = element_blank(),  # Remove major grid
+    panel.grid.minor = element_blank(),  # Remove minor grid
+    panel.background = element_rect(fill = "white"),  # Background color is white
+    legend.background = element_rect(fill = "white"),
+    legend.position = "bottom",
+    legend.text = element_text(size = 5)# Legend background color is white
+  )+
+  scale_color_manual(values = c("Positive" = "#2675b1", "Negative" = "#ca6924", "All" = "#010101"))+
+  labs(color=NULL)
+
+
+
+```
+
+```{r, message=FALSE, warning=FALSE, echo=F}
+url <- "https://github.com/filhoalm/ITEB-breast-cancer/blob/main/breast_seer8.zip?raw=true"
+zip_file <- "breast_seer8.zip"
+
+# Download zip file
+download(url, zip_file, mode = "wb")
+
+# Unzip the file
+unzip(zip_file)
+csv_file <- "breast_seer8/seer8_IDC_year_er_5084.csv"
+# Read the CSV file
+data <- read_csv(csv_file)
+
+#data <- read_csv("C:/Users/filhoam/Desktop/Ismail/data/seer8_IDC_year_er.csv")
+names(data)<-c("year", "er", "rate", "cases", "py")
+data <- data[data$year > 0, ]
+data$year <- data$year + 1974  # Add 1974 to each value
+
+data$er[data$er== 0]<-"Positive"
+data$er[data$er== 1]<-"Negative"
+data$er[data$er== 2]<-"Borderline/Unknown"
+data$er[data$er== 3]<-"Recode not available"
+
+data<-subset(data, data$er == "Positive" | data$er == "Negative" & data$year >= 1990)
+
+
+# Calculate the reference rate
+ref_pos <- data[data$year == 1990 & data$er == "Positive", "rate"]
+ref_neg <- data[data$year == 1990 & data$er == "Negative", "rate"]
+
+# Create 'reference' variable based on the 'er' value
+data$reference <- ifelse(data$er == "Positive", ref_pos, 
+                         ifelse(data$er == "Negative", ref_neg, NA))
+
+data$reference<-as.numeric(data$reference)
+# Now, calculate rate ratios
+data$ratio <- data$rate / data$reference
+
+#data2<-rbind(data, data1)
+dat<-subset(data, data$year>=1990)
+
+# Create the scatterplot
+b3<-ggplot(dat, aes(x = year, y = rate, color = er)) +
+  geom_point(size = 1.5) +
+  geom_line() +
+  #geom_hline(yintercept = 1, linetype="dashed", color = "red") +
+  ylim(0,350)+
+  xlim(1975, 2020)+
+  labs(
+    title = "50 - 84 yo",   # Figure title
+    x = "year",     # x-axis label
+    y = "ASR per 100,000")  +   # y-axis label
+  theme_classic() +  # Lancet style
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 10, face = "bold"),  # Center title and adjust its properties 
+    axis.text.x = element_text(size = 8, angle = 0),  # Adjust x-axis label properties
+    axis.text.y = element_text(size = 8), # Adjust y-axis label properties
+    axis.title.x = element_text(size = 10),  # Adjust x-axis title properties
+    axis.title.y = element_text(size = 10),  # Adjust y-axis title properties
+    plot.margin = margin(t = 15, b = 10, l = 15, r = 10),  # Adjust plot margins
+    panel.grid.major = element_blank(),  # Remove major grid
+    panel.grid.minor = element_blank(),  # Remove minor grid
+    panel.background = element_rect(fill = "white"),  # Background color is white
+    legend.background = element_rect(fill = "white"),
+    legend.position = "bottom",
+    legend.text = element_text(size = 5)# Legend background color is white
+  )+
+  scale_color_manual(values = c("Positive" = "#2675b1", "Negative" = "#ca6924", "All" = "#010101"))+
+  labs(color=NULL)
+
+
+```
+
+```{r, message=FALSE, warning=FALSE, echo=F}
+```
+
+```{r, message=FALSE, warning=FALSE, echo=F}
+
+#pdf(file=paste(MyPath,"Figure 19.pdf",sep=""),width=4.2,height=5.2)
+grid.arrange(b1, b2, b3, nrow=1, top = "Infiltrating Ductal Carcinoma (IDC)")
+
+
+```
+
+
+<!-- ### Figure 3 - ASR, DCIS by ER -->
+<!-- Figure 3. Trends in Age-Standardized Incidence Rates of Breast Cancer Ductal Carcinoma In Situ (DCIS) Classified by ER Status and Age Group, From 1990 to 2020 -->
+
+```{r, message=FALSE, warning=FALSE, echo=F}
+url <- "https://github.com/filhoalm/ITEB-breast-cancer/blob/main/breast_seer8.zip?raw=true"
+zip_file <- "breast_seer8.zip"
+
+# Download zip file
+download(url, zip_file, mode = "wb")
+
+# Unzip the file
+unzip(zip_file)
+csv_file <- "breast_seer8/seer8_DCIS_year_er.csv"
+# Read the CSV file
+data <- read_csv(csv_file)
+
+#data <- read_csv("C:/Users/filhoam/Desktop/Ismail/data/seer8_IDC_year_er.csv")
+names(data)<-c("year", "er", "rate", "cases", "py")
+data <- data[data$year > 0, ]
+data$year <- data$year + 1974  # Add 1974 to each value
+
+data$er[data$er== 0]<-"Positive"
+data$er[data$er== 1]<-"Negative"
+data$er[data$er== 2]<-"Borderline/Unknown"
+data$er[data$er== 3]<-"Recode not available"
+
+data<-subset(data, data$er == "Positive" | data$er == "Negative" & data$year >= 1990)
+
+
+# Calculate the reference rate
+ref_pos <- data[data$year == 1990 & data$er == "Positive", "rate"]
+ref_neg <- data[data$year == 1990 & data$er == "Negative", "rate"]
+
+# Create 'reference' variable based on the 'er' value
+data$reference <- ifelse(data$er == "Positive", ref_pos, 
+                         ifelse(data$er == "Negative", ref_neg, NA))
+
+data$reference<-as.numeric(data$reference)
+# Now, calculate rate ratios
+data$ratio <- data$rate / data$reference
+
+#data2<-rbind(data, data1)
+dat<-subset(data, data$year>=1990)
+
+# Create the scatterplot
+b1<-ggplot(dat, aes(x = year, y = rate, color = er)) +
+  geom_point(size = 1.5) +
+  geom_line() +
+  #geom_hline(yintercept = 1, linetype="dashed", color = "red") +
+  ylim(0,350)+
+  xlim(1975, 2020)+
+  labs(
+    title = "35 - 84 yo",   # Figure title
+    x = "year",     # x-axis label
+    y = "ASR per 100,000")  +   # y-axis label
+  theme_classic() +  # Lancet style
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 10, face = "bold"),  # Center title and adjust its properties 
+    axis.text.x = element_text(size = 8, angle = 0),  # Adjust x-axis label properties
+    axis.text.y = element_text(size = 8), # Adjust y-axis label properties
+    axis.title.x = element_text(size = 10),  # Adjust x-axis title properties
+    axis.title.y = element_text(size = 10),  # Adjust y-axis title properties
+    plot.margin = margin(t = 15, b = 10, l = 15, r = 10),  # Adjust plot margins
+    panel.grid.major = element_blank(),  # Remove major grid
+    panel.grid.minor = element_blank(),  # Remove minor grid
+    panel.background = element_rect(fill = "white"),  # Background color is white
+    legend.background = element_rect(fill = "white"),
+    legend.position = "bottom",
+    legend.text = element_text(size = 5)# Legend background color is white
+  )+
+  scale_color_manual(values = c("Positive" = "#2675b1", "Negative" = "#ca6924", "All" = "#010101"))+
+  labs(color=NULL)
+
+
+```
+
+```{r, message=FALSE, warning=FALSE, echo=F}
+
+url <- "https://github.com/filhoalm/ITEB-breast-cancer/blob/main/breast_seer8.zip?raw=true"
+zip_file <- "breast_seer8.zip"
+
+# Download zip file
+download(url, zip_file, mode = "wb")
+
+# Unzip the file
+unzip(zip_file)
+csv_file <- "breast_seer8/seer8_DCIS_year_er_3549.csv"
+# Read the CSV file
+data <- read_csv(csv_file)
+
+#data <- read_csv("C:/Users/filhoam/Desktop/Ismail/data/seer8_IDC_year_er.csv")
+names(data)<-c("year", "er", "rate", "cases", "py")
+data <- data[data$year > 0, ]
+data$year <- data$year + 1974  # Add 1974 to each value
+
+data$er[data$er== 0]<-"Positive"
+data$er[data$er== 1]<-"Negative"
+data$er[data$er== 2]<-"Borderline/Unknown"
+data$er[data$er== 3]<-"Recode not available"
+
+data<-subset(data, data$er == "Positive" | data$er == "Negative" & data$year >= 1990)
+
+
+# Calculate the reference rate
+ref_pos <- data[data$year == 1990 & data$er == "Positive", "rate"]
+ref_neg <- data[data$year == 1990 & data$er == "Negative", "rate"]
+
+# Create 'reference' variable based on the 'er' value
+data$reference <- ifelse(data$er == "Positive", ref_pos, 
+                         ifelse(data$er == "Negative", ref_neg, NA))
+
+data$reference<-as.numeric(data$reference)
+# Now, calculate rate ratios
+data$ratio <- data$rate / data$reference
+
+#data2<-rbind(data, data1)
+dat<-subset(data, data$year>=1990)
+
+# Create the scatterplot
+b2<-ggplot(dat, aes(x = year, y = rate, color = er)) +
+  geom_point(size = 1.5) +
+  geom_line() +
+  #geom_hline(yintercept = 1, linetype="dashed", color = "red") +
+  ylim(0,350)+
+  xlim(1975, 2020)+
+  labs(
+    title = "35 - 49 yo",   # Figure title
+    x = "year",     # x-axis label
+    y = "ASR per 100,000")  +   # y-axis label
+  theme_classic() +  # Lancet style
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 10, face = "bold"),  # Center title and adjust its properties 
+    axis.text.x = element_text(size = 8, angle = 0),  # Adjust x-axis label properties
+    axis.text.y = element_text(size = 8), # Adjust y-axis label properties
+    axis.title.x = element_text(size = 10),  # Adjust x-axis title properties
+    axis.title.y = element_text(size = 10),  # Adjust y-axis title properties
+    plot.margin = margin(t = 15, b = 10, l = 15, r = 10),  # Adjust plot margins
+    panel.grid.major = element_blank(),  # Remove major grid
+    panel.grid.minor = element_blank(),  # Remove minor grid
+    panel.background = element_rect(fill = "white"),  # Background color is white
+    legend.background = element_rect(fill = "white"),
+    legend.position = "bottom",
+    legend.text = element_text(size = 5)# Legend background color is white
+  )+
+  scale_color_manual(values = c("Positive" = "#2675b1", "Negative" = "#ca6924", "All" = "#010101"))+
+  labs(color=NULL)
+
+
+
+```
+
+```{r, message=FALSE, warning=FALSE, echo=F}
+url <- "https://github.com/filhoalm/ITEB-breast-cancer/blob/main/breast_seer8.zip?raw=true"
+zip_file <- "breast_seer8.zip"
+
+# Download zip file
+download(url, zip_file, mode = "wb")
+
+# Unzip the file
+unzip(zip_file)
+csv_file <- "breast_seer8/seer8_DCIS_year_er_5084.csv"
+# Read the CSV file
+data <- read_csv(csv_file)
+
+#data <- read_csv("C:/Users/filhoam/Desktop/Ismail/data/seer8_IDC_year_er.csv")
+names(data)<-c("year", "er", "rate", "cases", "py")
+data <- data[data$year > 0, ]
+data$year <- data$year + 1974  # Add 1974 to each value
+
+data$er[data$er== 0]<-"Positive"
+data$er[data$er== 1]<-"Negative"
+data$er[data$er== 2]<-"Borderline/Unknown"
+data$er[data$er== 3]<-"Recode not available"
+
+data<-subset(data, data$er == "Positive" | data$er == "Negative" & data$year >= 1990)
+
+
+# Calculate the reference rate
+ref_pos <- data[data$year == 1990 & data$er == "Positive", "rate"]
+ref_neg <- data[data$year == 1990 & data$er == "Negative", "rate"]
+
+# Create 'reference' variable based on the 'er' value
+data$reference <- ifelse(data$er == "Positive", ref_pos, 
+                         ifelse(data$er == "Negative", ref_neg, NA))
+
+data$reference<-as.numeric(data$reference)
+# Now, calculate rate ratios
+data$ratio <- data$rate / data$reference
+
+#data2<-rbind(data, data1)
+dat<-subset(data, data$year>=1990)
+
+# Create the scatterplot
+b3<-ggplot(dat, aes(x = year, y = rate, color = er)) +
+  geom_point(size = 1.5) +
+  geom_line() +
+  #geom_hline(yintercept = 1, linetype="dashed", color = "red") +
+  ylim(0,350)+
+  xlim(1975, 2020)+
+  labs(
+    title = "50 - 84 yo",   # Figure title
+    x = "year",     # x-axis label
+    y = "ASR per 100,000")  +   # y-axis label
+  theme_classic() +  # Lancet style
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 10, face = "bold"),  # Center title and adjust its properties 
+    axis.text.x = element_text(size = 8, angle = 0),  # Adjust x-axis label properties
+    axis.text.y = element_text(size = 8), # Adjust y-axis label properties
+    axis.title.x = element_text(size = 10),  # Adjust x-axis title properties
+    axis.title.y = element_text(size = 10),  # Adjust y-axis title properties
+    plot.margin = margin(t = 15, b = 10, l = 15, r = 10),  # Adjust plot margins
+    panel.grid.major = element_blank(),  # Remove major grid
+    panel.grid.minor = element_blank(),  # Remove minor grid
+    panel.background = element_rect(fill = "white"),  # Background color is white
+    legend.background = element_rect(fill = "white"),
+    legend.position = "bottom",
+    legend.text = element_text(size = 5)# Legend background color is white
+  )+
+  scale_color_manual(values = c("Positive" = "#2675b1", "Negative" = "#ca6924", "All" = "#010101"))+
+  labs(color=NULL)
+
+
+```
+
+```{r, message=FALSE, warning=FALSE, echo=F}
+```
+
+```{r, message=FALSE, warning=FALSE, echo=F}
+
+#pdf(file=paste(MyPath,"Figure 19.pdf",sep=""),width=4.2,height=5.2)
+grid.arrange(b1, b2, b3, nrow=1, top = "Ductal Carcinoma In Situ (DCIS)", bottom = "SEER8")
+
+
+```
+
+##### Figure 3. Proportion of Breast Cancer Subtypes with Unknown ER Status
+```{r, message=FALSE, warning=FALSE, echo=F}
+# Specify URLs
+url <- "https://github.com/filhoalm/ITEB-breast-cancer/blob/main/breast_seer8.zip?raw=true"
+
+# Download and unzip zip file
+download.file(url, destfile = "breast_seer8.zip", mode="wb")
+unzip("breast_seer8.zip")
+
+# Generate list for looping
+file_names <- c("seer8_IDC_year_er.csv", "seer8_DCIS_year_er.csv")
+index_values <- c("IDC", "DCIS")
+df_final <- data.frame()  
+
+# Loop over the files
+for(i in 1:length(file_names)) {
+  
+  # Read and preprocess data
+  data <- readr::read_csv(paste0("breast_seer8/", file_names[i]))
+  colnames(data) <- c("year", "er", "rate", "cases", "py")
+  data <- data[data$year > 0, ]
+  data$year <- data$year + 1974
+  data$er <- factor(data$er, labels = c("Positive", "Negative", "Unknown", "Unknown"))
+  
+  # Aggregate data and estimate cases
+  data1 <- aggregate(cbind(cases, py) ~ year + er, data = data, sum)
+  estimated_cases <- aggregate(cases ~ year, data = data1, sum)
+  names(estimated_cases) <- c("year", "total")
+  df1 <- merge(data1, estimated_cases, by = "year")
+  df1$prop <- (df1$cases / df1$total)
+  
+  # Filter and bind data
+  df_temp <- subset(df1, df1$er == "Unknown")
+  df_temp$index <- index_values[i]
+  df_final <- rbind(df_final, df_temp)
+}
+
+# Plot data
+c1<-ggplot(df_final, aes(x = year, y = prop, color = index)) +
+  geom_point(size = 1.5) +
+  geom_line() +
+  geom_hline(yintercept = 0.15, linetype="dashed", color = "red") +
+  ylim(0,0.9)+
+  xlim(1975, 2020)+
+  labs(
+    title = "35 - 84 yo",   # Figure title
+    x = "year",     # x-axis label
+    y = "% of Unknown ER")  +   # y-axis label
+  theme_classic() +  # Lancet style
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 10, face = "bold"),  # Center title and adjust its properties 
+    axis.text.x = element_text(size = 8, angle = 0),  # Adjust x-axis label properties
+    axis.text.y = element_text(size = 8), # Adjust y-axis label properties
+    axis.title.x = element_text(size = 10),  # Adjust x-axis title properties
+    axis.title.y = element_text(size = 10),  # Adjust y-axis title properties
+    plot.margin = margin(t = 15, b = 10, l = 15, r = 10),  # Adjust plot margins
+    panel.grid.major = element_blank(),  # Remove major grid
+    panel.grid.minor = element_blank(),  # Remove minor grid
+    panel.background = element_rect(fill = "white"),  # Background color is white
+    legend.background = element_rect(fill = "white"),
+    legend.position = "bottom",
+    legend.text = element_text(size = 5)# Legend background color is white
+  )+
+  scale_color_manual(values = c("IDC" = "black", "DCIS" = "gray"))+
+  labs(color=NULL)
+
+
+###
+
+# Generate list for looping
+file_names <- c("seer8_IDC_year_er_3049.csv", "seer8_DCIS_year_er_3549.csv")
+index_values <- c("IDC", "DCIS")
+df_final <- data.frame()  
+
+# Loop over the files
+for(i in 1:length(file_names)) {
+  
+  # Read and preprocess data
+  data <- readr::read_csv(paste0("breast_seer8/", file_names[i]))
+  colnames(data) <- c("year", "er", "rate", "cases", "py")
+  data <- data[data$year > 0, ]
+  data$year <- data$year + 1974
+  data$er <- factor(data$er, labels = c("Positive", "Negative", "Unknown", "Unknown"))
+  
+  # Aggregate data and estimate cases
+  data1 <- aggregate(cbind(cases, py) ~ year + er, data = data, sum)
+  estimated_cases <- aggregate(cases ~ year, data = data1, sum)
+  names(estimated_cases) <- c("year", "total")
+  df1 <- merge(data1, estimated_cases, by = "year")
+  df1$prop <- (df1$cases / df1$total)
+  
+  # Filter and bind data
+  df_temp <- subset(df1, df1$er == "Unknown")
+  df_temp$index <- index_values[i]
+  df_final <- rbind(df_final, df_temp)
+}
+
+# Plot data
+c2<-ggplot(df_final, aes(x = year, y = prop, color = index)) +
+  geom_point(size = 1.5) +
+  geom_line() +
+  geom_hline(yintercept = 0.15, linetype="dashed", color = "red") +
+  ylim(0,0.9)+
+  xlim(1975, 2020)+
+  labs(
+    title = "35 - 49 yo",   # Figure title
+    x = "year",     # x-axis label
+    y = "% of Unknown ER")  +   # y-axis label
+  theme_classic() +  # Lancet style
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 10, face = "bold"),  # Center title and adjust its properties 
+    axis.text.x = element_text(size = 8, angle = 0),  # Adjust x-axis label properties
+    axis.text.y = element_text(size = 8), # Adjust y-axis label properties
+    axis.title.x = element_text(size = 10),  # Adjust x-axis title properties
+    axis.title.y = element_text(size = 10),  # Adjust y-axis title properties
+    plot.margin = margin(t = 15, b = 10, l = 15, r = 10),  # Adjust plot margins
+    panel.grid.major = element_blank(),  # Remove major grid
+    panel.grid.minor = element_blank(),  # Remove minor grid
+    panel.background = element_rect(fill = "white"),  # Background color is white
+    legend.background = element_rect(fill = "white"),
+    legend.position = "bottom",
+    legend.text = element_text(size = 5)# Legend background color is white
+  )+
+  scale_color_manual(values = c("IDC" = "black", "DCIS" = "gray"))+
+  labs(color=NULL)
+
+
+
+
+####
+# Generate list for looping
+file_names <- c("seer8_IDC_year_er_5084.csv", "seer8_DCIS_year_er_5084.csv")
+index_values <- c("IDC", "DCIS")
+df_final <- data.frame()  
+
+# Loop over the files
+for(i in 1:length(file_names)) {
+  
+  # Read and preprocess data
+  data <- readr::read_csv(paste0("breast_seer8/", file_names[i]))
+  colnames(data) <- c("year", "er", "rate", "cases", "py")
+  data <- data[data$year > 0, ]
+  data$year <- data$year + 1974
+  data$er <- factor(data$er, labels = c("Positive", "Negative", "Unknown", "Unknown"))
+  
+  # Aggregate data and estimate cases
+  data1 <- aggregate(cbind(cases, py) ~ year + er, data = data, sum)
+  estimated_cases <- aggregate(cases ~ year, data = data1, sum)
+  names(estimated_cases) <- c("year", "total")
+  df1 <- merge(data1, estimated_cases, by = "year")
+  df1$prop <- (df1$cases / df1$total)
+  
+  # Filter and bind data
+  df_temp <- subset(df1, df1$er == "Unknown")
+  df_temp$index <- index_values[i]
+  df_final <- rbind(df_final, df_temp)
+}
+
+# Plot data
+c3<-ggplot(df_final, aes(x = year, y = prop, color = index)) +
+  geom_point(size = 1.5) +
+  geom_line() +
+  geom_hline(yintercept = 0.15, linetype="dashed", color = "red") +
+  ylim(0,0.9)+
+  xlim(1975, 2020)+
+  labs(
+    title = "50 - 84 yo",   # Figure title
+    x = "year",     # x-axis label
+    y = "% of Unknown ER")  +   # y-axis label
+  theme_classic() +  # Lancet style
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 10, face = "bold"),  # Center title and adjust its properties 
+    axis.text.x = element_text(size = 8, angle = 0),  # Adjust x-axis label properties
+    axis.text.y = element_text(size = 8), # Adjust y-axis label properties
+    axis.title.x = element_text(size = 10),  # Adjust x-axis title properties
+    axis.title.y = element_text(size = 10),  # Adjust y-axis title properties
+    plot.margin = margin(t = 15, b = 10, l = 15, r = 10),  # Adjust plot margins
+    panel.grid.major = element_blank(),  # Remove major grid
+    panel.grid.minor = element_blank(),  # Remove minor grid
+    panel.background = element_rect(fill = "white"),  # Background color is white
+    legend.background = element_rect(fill = "white"),
+    legend.position = "bottom",
+    legend.text = element_text(size = 5)# Legend background color is white
+  )+
+  scale_color_manual(values = c("IDC" = "black", "DCIS" = "gray"))+
+  labs(color=NULL)
+
+
+```
+```{r, message=FALSE, warning=FALSE, echo=F}
+
+grid.arrange(c1, c2, c3, nrow=1, top = "", bottom = "SEER8")
+```
+
+
+<!-- ### Figure 5 - Incidence rate ratio referent to 1980 -->
+
+<!-- ```{r, message=FALSE, warning=FALSE, echo=F} -->
+<!-- # 35-84 -->
+<!-- url <- "https://github.com/filhoalm/ITEB-breast-cancer/blob/main/breast_seer8.zip?raw=true" -->
+<!-- zip_file <- "breast_seer8.zip" -->
+
+<!-- # Download zip file -->
+<!-- download(url, zip_file, mode = "wb") -->
+
+<!-- # Unzip the file -->
+<!-- unzip(zip_file) -->
+<!-- csv_file <- "breast_seer8/seer8_IDC_year.csv" -->
+<!-- # Read the CSV file -->
+<!-- data1 <- read_csv(csv_file) -->
+
+<!-- #data1 <- read_csv("C:/Users/filhoam/Desktop/Ismail/data/seer8_IDC_year.csv") -->
+<!-- names(data1)<-c("year", "rate", "cases", "py") -->
+<!-- data1 <- data1[data1$year > 0, ] -->
+<!-- data1$year <- data1$year + 1974  # Add 1974 to each value -->
+<!-- # Calculate the reference rate (1980) -->
+<!-- ref <- data1[data1$year == 1980, "rate"] -->
+<!-- data1$reference<-as.numeric(ref) -->
+<!-- # Calculate rate ratios using the reference year -->
+<!-- data1$ratio <- (data1$rate / data1$reference) -->
+<!-- data1$er <-"All" -->
+<!-- data1<-data1[c( "year", "er", "rate", "cases", "py", "reference", "ratio")] -->
+<!-- data<-data1 -->
+<!-- data$index<-"IDC" -->
+
+
+<!-- # DCIS -->
+<!-- csv_file <- "breast_seer8/seer8_DCIS_year.csv" -->
+<!-- # Read the CSV file -->
+<!-- data1 <- read_csv(csv_file) -->
+
+<!-- #data1 <- read_csv("C:/Users/filhoam/Desktop/Ismail/data/seer8_DCIS_year.csv") -->
+<!-- names(data1)<-c("year", "rate", "cases", "py") -->
+<!-- data1 <- data1[data1$year > 0, ] -->
+<!-- data1$year <- data1$year + 1974  # Add 1974 to each value -->
+<!-- # Calculate the reference rate (1980) -->
+<!-- ref <- data1[data1$year == 1980, "rate"] -->
+<!-- data1$reference<-as.numeric(ref) -->
+<!-- # Calculate rate ratios using the reference year -->
+<!-- data1$ratio <- (data1$rate / data1$reference) -->
+<!-- data1$er <-"All" -->
+<!-- data1<-data1[c( "year", "er", "rate", "cases", "py", "reference", "ratio")] -->
+<!-- data1$index<-"DCIS" -->
+
+<!-- data3<-rbind(data, data1) -->
+
+
+<!-- # Create the scatterplot -->
+<!-- d1<-ggplot(data3, aes(x = year, y = ratio, color = index)) + -->
+<!--   geom_point(size = 1.5) + -->
+<!--   geom_line() + -->
+<!--   geom_hline(yintercept = 1, linetype="dashed", color = "red") + -->
+<!--   #geom_segment(aes(x = 2002, y = 1, xend = 2002, yend = 12), colour = "gray") +  -->
+<!--   #annotate("text", x = 2002, y = 12, label = "Ref 2002", color = "black", size = 2) + # Add text annotation -->
+
+<!--   geom_hline(yintercept = 1, linetype="dashed", color = "red") + -->
+<!--   #geom_segment(aes(x = 1980, y = 1, xend = 1980, yend = 7.5), colour = "gray") +   # Add shortened vertical line at year 1990 -->
+<!--   #geom_vline(xintercept = 1990, color = "gray") +    # Add vertical line at year 1990 -->
+<!--   #annotate("text", x = 1980, y = 8, label = "Ref 1980", color = "black", size = 2) + # Add text annotation -->
+
+<!--   geom_hline(yintercept = 1, linetype="dashed", color = "red") + -->
+<!--   ylim(0,12)+ -->
+<!--   labs( -->
+<!--     title = "35 - 84 yo",   # Figure title -->
+<!--     x = "year",     # x-axis label -->
+<!--     y = "Incidence relative to 1980")  +   # y-axis label -->
+<!--   theme_classic() +  # Lancet style -->
+<!--   theme( -->
+<!--     plot.title = element_text(hjust = 0.5, size = 10, face = "bold"),  # Center title and adjust its properties  -->
+<!--     axis.text.x = element_text(size = 8, angle = 0),  # Adjust x-axis label properties -->
+<!--     axis.text.y = element_text(size = 8), # Adjust y-axis label properties -->
+<!--     axis.title.x = element_text(size = 10),  # Adjust x-axis title properties -->
+<!--     axis.title.y = element_text(size = 10),  # Adjust y-axis title properties -->
+<!--     plot.margin = margin(t = 15, b = 10, l = 15, r = 10),  # Adjust plot margins -->
+<!--     panel.grid.major = element_blank(),  # Remove major grid -->
+<!--     panel.grid.minor = element_blank(),  # Remove minor grid -->
+<!--     panel.background = element_rect(fill = "white"),  # Background color is white -->
+<!--     legend.background = element_rect(fill = "white"), -->
+<!--     legend.position = "bottom", -->
+<!--     legend.text = element_text(size = 5) -->
+<!--   )+ -->
+<!--   scale_color_manual(values = c("IDC" = "black", "DCIS" = "gray"))+ -->
+<!--   labs(color=NULL) -->
+
+
+<!-- ## 35-49 -->
+
+<!-- url <- "https://github.com/filhoalm/ITEB-breast-cancer/blob/main/breast_seer8.zip?raw=true" -->
+<!-- zip_file <- "breast_seer8.zip" -->
+
+<!-- # Download zip file -->
+<!-- download(url, zip_file, mode = "wb") -->
+
+<!-- # Unzip the file -->
+<!-- unzip(zip_file) -->
+<!-- csv_file <- "breast_seer8/seer8_IDC_year_3049.csv" -->
+<!-- # Read the CSV file -->
+<!-- data1 <- read_csv(csv_file) -->
+
+<!-- #data1 <- read_csv("C:/Users/filhoam/Desktop/Ismail/data/seer8_IDC_year.csv") -->
+<!-- names(data1)<-c("year", "rate", "cases", "py") -->
+<!-- data1 <- data1[data1$year > 0, ] -->
+<!-- data1$year <- data1$year + 1974  # Add 1974 to each value -->
+<!-- # Calculate the reference rate (1980) -->
+<!-- ref <- data1[data1$year == 1980, "rate"] -->
+<!-- data1$reference<-as.numeric(ref) -->
+<!-- # Calculate rate ratios using the reference year -->
+<!-- data1$ratio <- (data1$rate / data1$reference) -->
+<!-- data1$er <-"All" -->
+<!-- data1<-data1[c( "year", "er", "rate", "cases", "py", "reference", "ratio")] -->
+<!-- data<-data1 -->
+<!-- data$index<-"IDC" -->
+
+
+<!-- # DCIS -->
+<!-- csv_file <- "breast_seer8/seer8_DCIS_year_3549.csv" -->
+<!-- # Read the CSV file -->
+<!-- data1 <- read_csv(csv_file) -->
+
+<!-- #data1 <- read_csv("C:/Users/filhoam/Desktop/Ismail/data/seer8_DCIS_year.csv") -->
+<!-- names(data1)<-c("year", "rate", "cases", "py") -->
+<!-- data1 <- data1[data1$year > 0, ] -->
+<!-- data1$year <- data1$year + 1974  # Add 1974 to each value -->
+<!-- # Calculate the reference rate (1980) -->
+<!-- ref <- data1[data1$year == 1980, "rate"] -->
+<!-- data1$reference<-as.numeric(ref) -->
+<!-- # Calculate rate ratios using the reference year -->
+<!-- data1$ratio <- (data1$rate / data1$reference) -->
+<!-- data1$er <-"All" -->
+<!-- data1<-data1[c( "year", "er", "rate", "cases", "py", "reference", "ratio")] -->
+<!-- data1$index<-"DCIS" -->
+
+<!-- data3<-rbind(data, data1) -->
+
+
+<!-- # Create the scatterplot -->
+<!-- d2<-ggplot(data3, aes(x = year, y = ratio, color = index)) + -->
+<!--   geom_point(size = 1.5) + -->
+<!--   geom_line() + -->
+<!--   geom_hline(yintercept = 1, linetype="dashed", color = "red") + -->
+<!--   #geom_segment(aes(x = 2002, y = 1, xend = 2002, yend = 12), colour = "gray") +  -->
+<!--   #annotate("text", x = 2002, y = 12, label = "Ref 2002", color = "black", size = 2) + # Add text annotation -->
+
+<!--   geom_hline(yintercept = 1, linetype="dashed", color = "red") + -->
+<!--   #geom_segment(aes(x = 1980, y = 1, xend = 1980, yend = 7.5), colour = "gray") +   # Add shortened vertical line at year 1990 -->
+<!--   #geom_vline(xintercept = 1990, color = "gray") +    # Add vertical line at year 1990 -->
+<!--   #annotate("text", x = 1980, y = 8, label = "Ref 1980", color = "black", size = 2) + # Add text annotation -->
+
+<!--   geom_hline(yintercept = 1, linetype="dashed", color = "red") + -->
+<!--   ylim(0,12)+ -->
+<!--   labs( -->
+<!--     title = "35 - 49 yo",   # Figure title -->
+<!--     x = "year",     # x-axis label -->
+<!--     y = "Incidence relative to 1980")  +   # y-axis label -->
+<!--   theme_classic() +  # Lancet style -->
+<!--   theme( -->
+<!--     plot.title = element_text(hjust = 0.5, size = 10, face = "bold"),  # Center title and adjust its properties  -->
+<!--     axis.text.x = element_text(size = 8, angle = 0),  # Adjust x-axis label properties -->
+<!--     axis.text.y = element_text(size = 8), # Adjust y-axis label properties -->
+<!--     axis.title.x = element_text(size = 10),  # Adjust x-axis title properties -->
+<!--     axis.title.y = element_text(size = 10),  # Adjust y-axis title properties -->
+<!--     plot.margin = margin(t = 15, b = 10, l = 15, r = 10),  # Adjust plot margins -->
+<!--     panel.grid.major = element_blank(),  # Remove major grid -->
+<!--     panel.grid.minor = element_blank(),  # Remove minor grid -->
+<!--     panel.background = element_rect(fill = "white"),  # Background color is white -->
+<!--     legend.background = element_rect(fill = "white"), -->
+<!--     legend.position = "bottom", -->
+<!--     legend.text = element_text(size = 5) -->
+<!--   )+ -->
+<!--   scale_color_manual(values = c("IDC" = "black", "DCIS" = "gray"))+ -->
+<!--   labs(color=NULL) -->
+
+
+<!-- # 50-84 -->
+
+<!-- url <- "https://github.com/filhoalm/ITEB-breast-cancer/blob/main/breast_seer8.zip?raw=true" -->
+<!-- zip_file <- "breast_seer8.zip" -->
+
+<!-- # Download zip file -->
+<!-- download(url, zip_file, mode = "wb") -->
+
+<!-- # Unzip the file -->
+<!-- unzip(zip_file) -->
+<!-- csv_file <- "breast_seer8/seer8_IDC_year_5084.csv" -->
+<!-- # Read the CSV file -->
+<!-- data1 <- read_csv(csv_file) -->
+
+<!-- #data1 <- read_csv("C:/Users/filhoam/Desktop/Ismail/data/seer8_IDC_year.csv") -->
+<!-- names(data1)<-c("year", "rate", "cases", "py") -->
+<!-- data1 <- data1[data1$year > 0, ] -->
+<!-- data1$year <- data1$year + 1974  # Add 1974 to each value -->
+<!-- # Calculate the reference rate (1980) -->
+<!-- ref <- data1[data1$year == 1980, "rate"] -->
+<!-- data1$reference<-as.numeric(ref) -->
+<!-- # Calculate rate ratios using the reference year -->
+<!-- data1$ratio <- (data1$rate / data1$reference) -->
+<!-- data1$er <-"All" -->
+<!-- data1<-data1[c( "year", "er", "rate", "cases", "py", "reference", "ratio")] -->
+<!-- data<-data1 -->
+<!-- data$index<-"IDC" -->
+
+
+<!-- # DCIS -->
+<!-- csv_file <- "breast_seer8/seer8_DCIS_year_5084.csv" -->
+<!-- # Read the CSV file -->
+<!-- data1 <- read_csv(csv_file) -->
+
+<!-- #data1 <- read_csv("C:/Users/filhoam/Desktop/Ismail/data/seer8_DCIS_year.csv") -->
+<!-- names(data1)<-c("year", "rate", "cases", "py") -->
+<!-- data1 <- data1[data1$year > 0, ] -->
+<!-- data1$year <- data1$year + 1974  # Add 1974 to each value -->
+<!-- # Calculate the reference rate (1980) -->
+<!-- ref <- data1[data1$year == 1980, "rate"] -->
+<!-- data1$reference<-as.numeric(ref) -->
+<!-- # Calculate rate ratios using the reference year -->
+<!-- data1$ratio <- (data1$rate / data1$reference) -->
+<!-- data1$er <-"All" -->
+<!-- data1<-data1[c( "year", "er", "rate", "cases", "py", "reference", "ratio")] -->
+<!-- data1$index<-"DCIS" -->
+
+<!-- data3<-rbind(data, data1) -->
+
+<!-- # Create the scatterplot -->
+<!-- d3<-ggplot(data3, aes(x = year, y = ratio, color = index)) + -->
+<!--   geom_point(size = 1.5) + -->
+<!--   geom_line() + -->
+<!--   geom_hline(yintercept = 1, linetype="dashed", color = "red") + -->
+<!--   #geom_segment(aes(x = 2002, y = 1, xend = 2002, yend = 12), colour = "gray") +  -->
+<!--   #annotate("text", x = 2002, y = 12, label = "Ref 2002", color = "black", size = 2) + # Add text annotation -->
+
+<!--   geom_hline(yintercept = 1, linetype="dashed", color = "red") + -->
+<!--   #geom_segment(aes(x = 1980, y = 1, xend = 1980, yend = 7.5), colour = "gray") +   # Add shortened vertical line at year 1990 -->
+<!--   #geom_vline(xintercept = 1990, color = "gray") +    # Add vertical line at year 1990 -->
+<!--   #annotate("text", x = 1980, y = 8, label = "Ref 1980", color = "black", size = 2) + # Add text annotation -->
+
+<!--   geom_hline(yintercept = 1, linetype="dashed", color = "red") + -->
+<!--   ylim(0,12)+ -->
+<!--   labs( -->
+<!--     title = "50 - 84 yo",   # Figure title -->
+<!--     x = "year",     # x-axis label -->
+<!--     y = "Incidence relative to 1980")  +   # y-axis label -->
+<!--   theme_classic() +  # Lancet style -->
+<!--   theme( -->
+<!--     plot.title = element_text(hjust = 0.5, size = 10, face = "bold"),  # Center title and adjust its properties  -->
+<!--     axis.text.x = element_text(size = 8, angle = 0),  # Adjust x-axis label properties -->
+<!--     axis.text.y = element_text(size = 8), # Adjust y-axis label properties -->
+<!--     axis.title.x = element_text(size = 10),  # Adjust x-axis title properties -->
+<!--     axis.title.y = element_text(size = 10),  # Adjust y-axis title properties -->
+<!--     plot.margin = margin(t = 15, b = 10, l = 15, r = 10),  # Adjust plot margins -->
+<!--     panel.grid.major = element_blank(),  # Remove major grid -->
+<!--     panel.grid.minor = element_blank(),  # Remove minor grid -->
+<!--     panel.background = element_rect(fill = "white"),  # Background color is white -->
+<!--     legend.background = element_rect(fill = "white"), -->
+<!--     legend.position = "bottom", -->
+<!--     legend.text = element_text(size = 5) -->
+<!--   )+ -->
+<!--   scale_color_manual(values = c("IDC" = "black", "DCIS" = "gray"))+ -->
+<!--   labs(color=NULL) -->
+
+
+
+
+<!-- ``` -->
+
+<!-- ```{r, message=FALSE, warning=FALSE, echo=F} -->
+<!-- grid.arrange(d1, d2, d3, nrow=1, top = "", bottom = "SEER8") -->
+<!-- ``` -->
+
+
+##### Figure 4A and B - Incidence rate ratio by ER status
+
+```{r, message=FALSE, warning=FALSE, echo=F}
+
+url <- "https://github.com/filhoalm/ITEB-breast-cancer/blob/main/breast_seer8.zip?raw=true"
+zip_file <- "breast_seer8.zip"
+
+# Download zip file
+download(url, zip_file, mode = "wb")
+
+# Unzip the file
+unzip(zip_file)
+csv_file <- "breast_seer8/seer8_IDC_year.csv"
+# Read the CSV file
+data1 <- read_csv(csv_file)
+
+
+# 35-84
+#data1 <- read_csv("C:/Users/filhoam/Desktop/Ismail/data/seer8_IDC_year.csv")
+names(data1)<-c("year", "rate", "cases", "py")
+data1 <- data1[data1$year > 0, ]
+data1$year <- data1$year + 1974  # Add 1974 to each value
+# Calculate the reference rate (1980)
+ref <- data1[data1$year == 1980, "rate"]
+data1$reference<-as.numeric(ref)
+# Calculate rate ratios using the reference year
+data1$ratio <- (data1$rate / data1$reference)
+data1$er <-"All"
+data1<-data1[c( "year", "er", "rate", "cases", "py", "reference", "ratio")]
+
+#
+csv_file <- "breast_seer8/seer8_IDC_year_er.csv"
+# Read the CSV file
+data <- read_csv(csv_file)
+
+#data <- read_csv("C:/Users/filhoam/Desktop/Ismail/data/seer8_IDC_year_er.csv")
+names(data)<-c("year", "er", "rate", "cases", "py")
+data <- data[data$year > 0, ]
+data$year <- data$year + 1974  # Add 1974 to each value
+data<-subset(data, data$year >= 2002)
+
+data$er[data$er== 0]<-"Positive"
+data$er[data$er== 1]<-"Negative"
+data$er[data$er== 2]<-"Borderline/Unknown"
+data$er[data$er== 3]<-"Recode not available"
+
+data<-subset(data, data$er == "Positive" | data$er == "Negative" & data$year >= 1990)
+
+
+# Calculate the reference rate
+ref_pos <- data[data$year == 2010 & data$er == "Positive", "rate"]
+ref_neg <- data[data$year == 2010 & data$er == "Negative", "rate"]
+
+# Create 'reference' variable based on the 'er' value
+data$reference <- ifelse(data$er == "Positive", ref_pos, 
+                         ifelse(data$er == "Negative", ref_neg, NA))
+
+data$reference<-as.numeric(data$reference)
+# Now, calculate rate ratios
+data$ratio <- data$rate / data$reference
+
+data2<-rbind(data, data1)
+
+# Create the scatterplot
+e1<-ggplot(data2, aes(x = year, y = ratio, color = er)) +
+  geom_point(size = 1.5) +
+  geom_line() +
+  geom_hline(yintercept = 1, linetype="dashed", color = "red") +
+  #geom_segment(aes(x = 2010, y = 1, xend = 2002, yend = 12), colour = "gray") + 
+  #annotate("text", x = 2002, y = 12, label = "Ref 2002", color = "black", size = 2) + # Add text annotation
+  
+  geom_hline(yintercept = 1, linetype="dashed", color = "red") +
+  #geom_segment(aes(x = 1980, y = 1, xend = 1980, yend = 7.5), colour = "gray") +   # Add shortened vertical line at year 1990
+  #geom_vline(xintercept = 1990, color = "gray") +    # Add vertical line at year 1990
+  #annotate("text", x = 1980, y = 8, label = "Ref 1980", color = "black", size = 2) + # Add text annotation
+  
+  geom_hline(yintercept = 1, linetype="dashed", color = "red") +
+  ylim(0,10)+
+  labs(
+    title = "35 - 84",   # Figure title
+    x = "year",     # x-axis label
+    y = "Incidence rate ratio")  +   # y-axis label
+  theme_classic() +  # Lancet style
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 10, face = "bold"),  # Center title and adjust its properties 
+    axis.text.x = element_text(size = 8, angle = 0),  # Adjust x-axis label properties
+    axis.text.y = element_text(size = 8), # Adjust y-axis label properties
+    axis.title.x = element_text(size = 10),  # Adjust x-axis title properties
+    axis.title.y = element_text(size = 10),  # Adjust y-axis title properties
+    plot.margin = margin(t = 15, b = 10, l = 15, r = 10),  # Adjust plot margins
+    panel.grid.major = element_blank(),  # Remove major grid
+    panel.grid.minor = element_blank(),  # Remove minor grid
+    panel.background = element_rect(fill = "white"),  # Background color is white
+    legend.background = element_rect(fill = "white"),
+    legend.position = "bottom",
+    legend.text = element_text(size = 3)
+  )+
+  scale_color_manual(values = c("Positive" = "#2675b1", "Negative" = "#ca6924", "All" = "#010101"))+
+  labs(color=NULL)
+
+
+# 35-49
+csv_file <- "breast_seer8/seer8_IDC_year_3049.csv"
+# Read the CSV file
+data1 <- read_csv(csv_file)
+
+#data1 <- read_csv("C:/Users/filhoam/Desktop/Ismail/data/seer8_IDC_year_3049.csv")
+names(data1)<-c("year", "rate", "cases", "py")
+data1 <- data1[data1$year > 0, ]
+data1$year <- data1$year + 1974  # Add 1974 to each value
+# Calculate the reference rate (1980)
+ref <- data1[data1$year == 1980, "rate"]
+data1$reference<-as.numeric(ref)
+# Calculate rate ratios using the reference year
+data1$ratio <- (data1$rate / data1$reference)
+data1$er <-"All"
+data1<-data1[c( "year", "er", "rate", "cases", "py", "reference", "ratio")]
+
+#
+csv_file <- "breast_seer8/seer8_IDC_year.csv"
+# Read the CSV file
+data <- read_csv(csv_file)
+
+data <- read_csv("C:/Users/filhoam/Desktop/Ismail/data/seer8_IDC_year_er_3049.csv")
+names(data)<-c("year", "er", "rate", "cases", "py")
+data <- data[data$year > 0, ]
+data$year <- data$year + 1974  # Add 1974 to each value
+data<-subset(data, data$year >= 2002)
+
+data$er[data$er== 0]<-"Positive"
+data$er[data$er== 1]<-"Negative"
+data$er[data$er== 2]<-"Borderline/Unknown"
+data$er[data$er== 3]<-"Recode not available"
+
+data<-subset(data, data$er == "Positive" | data$er == "Negative" & data$year >= 1990)
+
+
+# Calculate the reference rate
+ref_pos <- data[data$year == 2010 & data$er == "Positive", "rate"]
+ref_neg <- data[data$year == 2010 & data$er == "Negative", "rate"]
+
+# Create 'reference' variable based on the 'er' value
+data$reference <- ifelse(data$er == "Positive", ref_pos, 
+                         ifelse(data$er == "Negative", ref_neg, NA))
+
+data$reference<-as.numeric(data$reference)
+# Now, calculate rate ratios
+data$ratio <- data$rate / data$reference
+
+data2a<-rbind(data, data1)
+
+# Create the scatterplot
+e2<-ggplot(data2a, aes(x = year, y = ratio, color = er)) +
+  geom_point(size = 1.5) +
+  geom_line() +
+  geom_hline(yintercept = 1, linetype="dashed", color = "red") +
+  #geom_segment(aes(x = 2010, y = 1, xend = 2002, yend = 12), colour = "gray") + 
+  #annotate("text", x = 2002, y = 12, label = "Ref 2002", color = "black", size = 2) + # Add text annotation
+  
+  geom_hline(yintercept = 1, linetype="dashed", color = "red") +
+  #geom_segment(aes(x = 1980, y = 1, xend = 1980, yend = 7.5), colour = "gray") +   # Add shortened vertical line at year 1990
+  #geom_vline(xintercept = 1990, color = "gray") +    # Add vertical line at year 1990
+  #annotate("text", x = 1980, y = 8, label = "Ref 1980", color = "black", size = 2) + # Add text annotation
+  
+  geom_hline(yintercept = 1, linetype="dashed", color = "red") +
+  ylim(0,10)+
+  labs(
+    title = "35 - 49",   # Figure title
+    x = "year",     # x-axis label
+    y = "Incidence rate ratio")  +   # y-axis label
+  theme_classic() +  # Lancet style
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 10, face = "bold"),  # Center title and adjust its properties 
+    axis.text.x = element_text(size = 8, angle = 0),  # Adjust x-axis label properties
+    axis.text.y = element_text(size = 8), # Adjust y-axis label properties
+    axis.title.x = element_text(size = 10),  # Adjust x-axis title properties
+    axis.title.y = element_text(size = 10),  # Adjust y-axis title properties
+    plot.margin = margin(t = 15, b = 10, l = 15, r = 10),  # Adjust plot margins
+    panel.grid.major = element_blank(),  # Remove major grid
+    panel.grid.minor = element_blank(),  # Remove minor grid
+    panel.background = element_rect(fill = "white"),  # Background color is white
+    legend.background = element_rect(fill = "white"),
+    legend.position = "bottom",
+    legend.text = element_text(size = 3)
+  )+
+  scale_color_manual(values = c("Positive" = "#2675b1", "Negative" = "#ca6924", "All" = "#010101"))+
+  labs(color=NULL)
+
+
+# 50-84
+csv_file <- "breast_seer8/seer8_IDC_year_5084.csv"
+# Read the CSV file
+data1 <- read_csv(csv_file)
+
+#data1 <- read_csv("C:/Users/filhoam/Desktop/Ismail/data/seer8_IDC_year_5084.csv")
+names(data1)<-c("year", "rate", "cases", "py")
+data1 <- data1[data1$year > 0, ]
+data1$year <- data1$year + 1974  # Add 1974 to each value
+# Calculate the reference rate (1980)
+ref <- data1[data1$year == 1980, "rate"]
+data1$reference<-as.numeric(ref)
+# Calculate rate ratios using the reference year
+data1$ratio <- (data1$rate / data1$reference)
+data1$er <-"All"
+data1<-data1[c( "year", "er", "rate", "cases", "py", "reference", "ratio")]
+
+#
+csv_file <- "breast_seer8/seer8_IDC_year_er_5084.csv"
+# Read the CSV file
+data <- read_csv(csv_file)
+
+#data <- read_csv("C:/Users/filhoam/Desktop/Ismail/data/seer8_IDC_year_er_5084.csv")
+names(data)<-c("year", "er", "rate", "cases", "py")
+data <- data[data$year > 0, ]
+data$year <- data$year + 1974  # Add 1974 to each value
+data<-subset(data, data$year >= 2002)
+
+data$er[data$er== 0]<-"Positive"
+data$er[data$er== 1]<-"Negative"
+data$er[data$er== 2]<-"Borderline/Unknown"
+data$er[data$er== 3]<-"Recode not available"
+
+data<-subset(data, data$er == "Positive" | data$er == "Negative" & data$year >= 1990)
+
+
+# Calculate the reference rate
+ref_pos <- data[data$year == 2010 & data$er == "Positive", "rate"]
+ref_neg <- data[data$year == 2010 & data$er == "Negative", "rate"]
+
+# Create 'reference' variable based on the 'er' value
+data$reference <- ifelse(data$er == "Positive", ref_pos, 
+                         ifelse(data$er == "Negative", ref_neg, NA))
+
+data$reference<-as.numeric(data$reference)
+# Now, calculate rate ratios
+data$ratio <- data$rate / data$reference
+
+data2b<-rbind(data, data1)
+
+# Create the scatterplot
+e3<-ggplot(data2b, aes(x = year, y = ratio, color = er)) +
+  geom_point(size = 1.5) +
+  geom_line() +
+  geom_hline(yintercept = 1, linetype="dashed", color = "red") +
+  #geom_segment(aes(x = 2010, y = 1, xend = 2002, yend = 12), colour = "gray") + 
+  #annotate("text", x = 2002, y = 12, label = "Ref 2002", color = "black", size = 2) + # Add text annotation
+  
+  geom_hline(yintercept = 1, linetype="dashed", color = "red") +
+  #geom_segment(aes(x = 1980, y = 1, xend = 1980, yend = 7.5), colour = "gray") +   # Add shortened vertical line at year 1990
+  #geom_vline(xintercept = 1990, color = "gray") +    # Add vertical line at year 1990
+  #annotate("text", x = 1980, y = 8, label = "Ref 1980", color = "black", size = 2) + # Add text annotation
+  
+  geom_hline(yintercept = 1, linetype="dashed", color = "red") +
+  ylim(0,10)+
+  labs(
+    title = "50 - 84",   # Figure title
+    x = "year",     # x-axis label
+    y = "Incidence rate ratio")  +   # y-axis label
+  theme_classic() +  # Lancet style
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 10, face = "bold"),  # Center title and adjust its properties 
+    axis.text.x = element_text(size = 8, angle = 0),  # Adjust x-axis label properties
+    axis.text.y = element_text(size = 8), # Adjust y-axis label properties
+    axis.title.x = element_text(size = 10),  # Adjust x-axis title properties
+    axis.title.y = element_text(size = 10),  # Adjust y-axis title properties
+    plot.margin = margin(t = 15, b = 10, l = 15, r = 10),  # Adjust plot margins
+    panel.grid.major = element_blank(),  # Remove major grid
+    panel.grid.minor = element_blank(),  # Remove minor grid
+    panel.background = element_rect(fill = "white"),  # Background color is white
+    legend.background = element_rect(fill = "white"),
+    legend.position = "bottom",
+    legend.text = element_text(size = 3)
+  )+
+  scale_color_manual(values = c("Positive" = "#2675b1", "Negative" = "#ca6924", "All" = "#010101"))+
+  labs(color=NULL)
+
+```
+
+
+```{r, message=FALSE, warning=FALSE, echo=F}
+
+grid.arrange(e1, e2, e3, nrow=1, top = "Infiltrating Ductal Carcinoma (IDC)")
+
+```
+
+
+
+
+
+```{r, message=FALSE, warning=FALSE, echo=F}
+url <- "https://github.com/filhoalm/ITEB-breast-cancer/blob/main/breast_seer8.zip?raw=true"
+zip_file <- "breast_seer8.zip"
+
+# Download zip file
+download(url, zip_file, mode = "wb")
+
+# Unzip the file
+unzip(zip_file)
+csv_file <- "breast_seer8/seer8_DCIS_year.csv"
+# Read the CSV file
+data1 <- read_csv(csv_file)
+
+
+# 35-84
+#data1 <- read_csv("C:/Users/filhoam/Desktop/Ismail/data/seer8_DCIS_year.csv")
+names(data1)<-c("year", "rate", "cases", "py")
+data1 <- data1[data1$year > 0, ]
+data1$year <- data1$year + 1974  # Add 1974 to each value
+# Calculate the reference rate (1980)
+ref <- data1[data1$year == 1980, "rate"]
+data1$reference<-as.numeric(ref)
+# Calculate rate ratios using the reference year
+data1$ratio <- (data1$rate / data1$reference)
+data1$er <-"All"
+data1<-data1[c( "year", "er", "rate", "cases", "py", "reference", "ratio")]
+
+#
+csv_file <- "breast_seer8/seer8_DCIS_year_er.csv"
+# Read the CSV file
+data <- read_csv(csv_file)
+
+#data <- read_csv("C:/Users/filhoam/Desktop/Ismail/data/seer8_DCIS_year_er.csv")
+names(data)<-c("year", "er", "rate", "cases", "py")
+data <- data[data$year > 0, ]
+data$year <- data$year + 1974  # Add 1974 to each value
+data<-subset(data, data$year >= 2002)
+
+data$er[data$er== 0]<-"Positive"
+data$er[data$er== 1]<-"Negative"
+data$er[data$er== 2]<-"Borderline/Unknown"
+data$er[data$er== 3]<-"Recode not available"
+
+data<-subset(data, data$er == "Positive" | data$er == "Negative" & data$year >= 1990)
+
+
+# Calculate the reference rate
+ref_pos <- data[data$year == 2010 & data$er == "Positive", "rate"]
+ref_neg <- data[data$year == 2010 & data$er == "Negative", "rate"]
+
+# Create 'reference' variable based on the 'er' value
+data$reference <- ifelse(data$er == "Positive", ref_pos, 
+                         ifelse(data$er == "Negative", ref_neg, NA))
+
+data$reference<-as.numeric(data$reference)
+# Now, calculate rate ratios
+data$ratio <- data$rate / data$reference
+
+data2<-rbind(data, data1)
+
+# Create the scatterplot
+f1<-ggplot(data2, aes(x = year, y = ratio, color = er)) +
+  geom_point(size = 1.5) +
+  geom_line() +
+  geom_hline(yintercept = 1, linetype="dashed", color = "red") +
+  #geom_segment(aes(x = 2010, y = 1, xend = 2002, yend = 12), colour = "gray") + 
+  #annotate("text", x = 2002, y = 12, label = "Ref 2002", color = "black", size = 2) + # Add text annotation
+  
+  geom_hline(yintercept = 1, linetype="dashed", color = "red") +
+  #geom_segment(aes(x = 1980, y = 1, xend = 1980, yend = 7.5), colour = "gray") +   # Add shortened vertical line at year 1990
+  #geom_vline(xintercept = 1990, color = "gray") +    # Add vertical line at year 1990
+  #annotate("text", x = 1980, y = 8, label = "Ref 1980", color = "black", size = 2) + # Add text annotation
+  
+  geom_hline(yintercept = 1, linetype="dashed", color = "red") +
+  ylim(0,10)+
+  labs(
+    title = "35 - 84",   # Figure title
+    x = "year",     # x-axis label
+    y = "Incidence rate ratio")  +   # y-axis label
+  theme_classic() +  # Lancet style
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 10, face = "bold"),  # Center title and adjust its properties 
+    axis.text.x = element_text(size = 8, angle = 0),  # Adjust x-axis label properties
+    axis.text.y = element_text(size = 8), # Adjust y-axis label properties
+    axis.title.x = element_text(size = 10),  # Adjust x-axis title properties
+    axis.title.y = element_text(size = 10),  # Adjust y-axis title properties
+    plot.margin = margin(t = 15, b = 10, l = 15, r = 10),  # Adjust plot margins
+    panel.grid.major = element_blank(),  # Remove major grid
+    panel.grid.minor = element_blank(),  # Remove minor grid
+    panel.background = element_rect(fill = "white"),  # Background color is white
+    legend.background = element_rect(fill = "white"),
+    legend.position = "bottom",
+    legend.text = element_text(size = 3)
+  )+
+  scale_color_manual(values = c("Positive" = "#2675b1", "Negative" = "#ca6924", "All" = "#010101"))+
+  labs(color=NULL)
+
+
+# 35-49
+csv_file <- "breast_seer8/seer8_DCIS_year_3549.csv"
+# Read the CSV file
+data1 <- read_csv(csv_file)
+
+#data1 <- read_csv("C:/Users/filhoam/Desktop/Ismail/data/seer8_DCIS_year_3049.csv")
+names(data1)<-c("year", "rate", "cases", "py")
+data1 <- data1[data1$year > 0, ]
+data1$year <- data1$year + 1974  # Add 1974 to each value
+# Calculate the reference rate (1980)
+ref <- data1[data1$year == 1980, "rate"]
+data1$reference<-as.numeric(ref)
+# Calculate rate ratios using the reference year
+data1$ratio <- (data1$rate / data1$reference)
+data1$er <-"All"
+data1<-data1[c( "year", "er", "rate", "cases", "py", "reference", "ratio")]
+
+#
+csv_file <- "breast_seer8/seer8_DCIS_year.csv"
+# Read the CSV file
+data <- read_csv(csv_file)
+
+data <- read_csv("C:/Users/filhoam/Desktop/Ismail/data/seer8_DCIS_year_er_3549.csv")
+names(data)<-c("year", "er", "rate", "cases", "py")
+data <- data[data$year > 0, ]
+data$year <- data$year + 1974  # Add 1974 to each value
+data<-subset(data, data$year >= 2002)
+
+data$er[data$er== 0]<-"Positive"
+data$er[data$er== 1]<-"Negative"
+data$er[data$er== 2]<-"Borderline/Unknown"
+data$er[data$er== 3]<-"Recode not available"
+
+data<-subset(data, data$er == "Positive" | data$er == "Negative" & data$year >= 1990)
+
+
+# Calculate the reference rate
+ref_pos <- data[data$year == 2010 & data$er == "Positive", "rate"]
+ref_neg <- data[data$year == 2010 & data$er == "Negative", "rate"]
+
+# Create 'reference' variable based on the 'er' value
+data$reference <- ifelse(data$er == "Positive", ref_pos, 
+                         ifelse(data$er == "Negative", ref_neg, NA))
+
+data$reference<-as.numeric(data$reference)
+# Now, calculate rate ratios
+data$ratio <- data$rate / data$reference
+
+data2a<-rbind(data, data1)
+
+# Create the scatterplot
+f2<-ggplot(data2a, aes(x = year, y = ratio, color = er)) +
+  geom_point(size = 1.5) +
+  geom_line() +
+  geom_hline(yintercept = 1, linetype="dashed", color = "red") +
+  #geom_segment(aes(x = 2010, y = 1, xend = 2002, yend = 12), colour = "gray") + 
+  #annotate("text", x = 2002, y = 12, label = "Ref 2002", color = "black", size = 2) + # Add text annotation
+  
+  geom_hline(yintercept = 1, linetype="dashed", color = "red") +
+  #geom_segment(aes(x = 1980, y = 1, xend = 1980, yend = 7.5), colour = "gray") +   # Add shortened vertical line at year 1990
+  #geom_vline(xintercept = 1990, color = "gray") +    # Add vertical line at year 1990
+  #annotate("text", x = 1980, y = 8, label = "Ref 1980", color = "black", size = 2) + # Add text annotation
+  
+  geom_hline(yintercept = 1, linetype="dashed", color = "red") +
+  ylim(0,10)+
+  labs(
+    title = "35 - 49",   # Figure title
+    x = "year",     # x-axis label
+    y = "Incidence rate ratio")  +   # y-axis label
+  theme_classic() +  # Lancet style
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 10, face = "bold"),  # Center title and adjust its properties 
+    axis.text.x = element_text(size = 8, angle = 0),  # Adjust x-axis label properties
+    axis.text.y = element_text(size = 8), # Adjust y-axis label properties
+    axis.title.x = element_text(size = 10),  # Adjust x-axis title properties
+    axis.title.y = element_text(size = 10),  # Adjust y-axis title properties
+    plot.margin = margin(t = 15, b = 10, l = 15, r = 10),  # Adjust plot margins
+    panel.grid.major = element_blank(),  # Remove major grid
+    panel.grid.minor = element_blank(),  # Remove minor grid
+    panel.background = element_rect(fill = "white"),  # Background color is white
+    legend.background = element_rect(fill = "white"),
+    legend.position = "bottom",
+    legend.text = element_text(size = 3)
+  )+
+  scale_color_manual(values = c("Positive" = "#2675b1", "Negative" = "#ca6924", "All" = "#010101"))+
+  labs(color=NULL)
+
+
+# 50-84
+csv_file <- "breast_seer8/seer8_DCIS_year_5084.csv"
+# Read the CSV file
+data1 <- read_csv(csv_file)
+
+#data1 <- read_csv("C:/Users/filhoam/Desktop/Ismail/data/seer8_DCIS_year_5084.csv")
+names(data1)<-c("year", "rate", "cases", "py")
+data1 <- data1[data1$year > 0, ]
+data1$year <- data1$year + 1974  # Add 1974 to each value
+# Calculate the reference rate (1980)
+ref <- data1[data1$year == 1980, "rate"]
+data1$reference<-as.numeric(ref)
+# Calculate rate ratios using the reference year
+data1$ratio <- (data1$rate / data1$reference)
+data1$er <-"All"
+data1<-data1[c( "year", "er", "rate", "cases", "py", "reference", "ratio")]
+
+#
+csv_file <- "breast_seer8/seer8_DCIS_year_er_5084.csv"
+# Read the CSV file
+data <- read_csv(csv_file)
+
+#data <- read_csv("C:/Users/filhoam/Desktop/Ismail/data/seer8_DCIS_year_er_5084.csv")
+names(data)<-c("year", "er", "rate", "cases", "py")
+data <- data[data$year > 0, ]
+data$year <- data$year + 1974  # Add 1974 to each value
+data<-subset(data, data$year >= 2002)
+
+data$er[data$er== 0]<-"Positive"
+data$er[data$er== 1]<-"Negative"
+data$er[data$er== 2]<-"Borderline/Unknown"
+data$er[data$er== 3]<-"Recode not available"
+
+data<-subset(data, data$er == "Positive" | data$er == "Negative" & data$year >= 1990)
+
+
+# Calculate the reference rate
+ref_pos <- data[data$year == 2010 & data$er == "Positive", "rate"]
+ref_neg <- data[data$year == 2010 & data$er == "Negative", "rate"]
+
+# Create 'reference' variable based on the 'er' value
+data$reference <- ifelse(data$er == "Positive", ref_pos, 
+                         ifelse(data$er == "Negative", ref_neg, NA))
+
+data$reference<-as.numeric(data$reference)
+# Now, calculate rate ratios
+data$ratio <- data$rate / data$reference
+
+data2b<-rbind(data, data1)
+
+# Create the scatterplot
+f3<-ggplot(data2b, aes(x = year, y = ratio, color = er)) +
+  geom_point(size = 1.5) +
+  geom_line() +
+  geom_hline(yintercept = 1, linetype="dashed", color = "red") +
+  #geom_segment(aes(x = 2010, y = 1, xend = 2002, yend = 12), colour = "gray") + 
+  #annotate("text", x = 2002, y = 12, label = "Ref 2002", color = "black", size = 2) + # Add text annotation
+  
+  geom_hline(yintercept = 1, linetype="dashed", color = "red") +
+  #geom_segment(aes(x = 1980, y = 1, xend = 1980, yend = 7.5), colour = "gray") +   # Add shortened vertical line at year 1990
+  #geom_vline(xintercept = 1990, color = "gray") +    # Add vertical line at year 1990
+  #annotate("text", x = 1980, y = 8, label = "Ref 1980", color = "black", size = 2) + # Add text annotation
+  
+  geom_hline(yintercept = 1, linetype="dashed", color = "red") +
+  ylim(0,12)+
+  labs(
+    title = "50 - 84",   # Figure title
+    x = "year",     # x-axis label
+    y = "Incidence rate ratio")  +   # y-axis label
+  theme_classic() +  # Lancet style
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 10, face = "bold"),  # Center title and adjust its properties 
+    axis.text.x = element_text(size = 8, angle = 0),  # Adjust x-axis label properties
+    axis.text.y = element_text(size = 8), # Adjust y-axis label properties
+    axis.title.x = element_text(size = 10),  # Adjust x-axis title properties
+    axis.title.y = element_text(size = 10),  # Adjust y-axis title properties
+    plot.margin = margin(t = 15, b = 10, l = 15, r = 10),  # Adjust plot margins
+    panel.grid.major = element_blank(),  # Remove major grid
+    panel.grid.minor = element_blank(),  # Remove minor grid
+    panel.background = element_rect(fill = "white"),  # Background color is white
+    legend.background = element_rect(fill = "white"),
+    legend.position = "bottom",
+    legend.text = element_text(size = 3)
+  )+
+  scale_color_manual(values = c("Positive" = "#2675b1", "Negative" = "#ca6924", "All" = "#010101"))+
+  labs(color=NULL)
+```
+
+```{r, message=FALSE, warning=FALSE, echo=F}
+grid.arrange(f1, f2, f3, nrow=1, top = "Ductal Carcinoma In Situ (DCIS)", bottom = "All = referent to 1980; ER status = referent to 2010")
+
+
+
+
+```
+
