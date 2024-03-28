@@ -101,14 +101,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<section id="methods" class="level2">
-<h2 class="anchored" data-anchor-id="methods">Methods</h2>
-</section>
-<section id="results" class="level2">
-<h2 class="anchored" data-anchor-id="results">Results</h2>
-<p>A visual inspection of the rates in this cohort has shown an “unrealistic drop” in mortality rates from 1992 to 2002 and in 2018 to 2019. [To investigate], a cut point was decided from 2003 to 2017.</p>
-<p>** Ascertainment incomplete? ** incoplete follow-up?</p>
-<p>All-cause mortality rates per 1000 PYs from 2003 to 2017.</p>
+<p>A visual examination of the mortality rates within this cohort revealed a significant reduction from 1992 to 2002 and again from 2018 to 2019, described as an “unrealistic drop.” Subsequently, a decision was made to delineate the period of analysis from 2003 to 2017.</p>
+<p>Possible issues identified:</p>
+<p>Is the ascertainment incomplete? Is the follow-up incomplete? The all-cause mortality rates per 1000 person-years were assessed for the period spanning from 2003 to 2017.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Arrange the plots in a grid</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(plot_a, plot_b, plot_c, <span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">3</span>), <span class="at">ncol =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -116,16 +111,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><img src="breast_seer12_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>Survival probability (Kaplan-Maier) for malignant breast cancer by er, stage and race and ethnicity.</p>
+<p>Survival probability (Kaplan-Meier) analysis of malignant breast cancer stratified by ER status, stage, and race/ethnicity.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(a1<span class="sc">$</span>plot, a2<span class="sc">$</span>plot, a3<span class="sc">$</span>plot, <span class="at">ncol =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="breast_seer12_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-</section>
-<section id="ph-cox-model" class="level2">
-<h2 class="anchored" data-anchor-id="ph-cox-model">PH Cox model</h2>
+<section id="proportional-hazards-cox-model" class="level2">
+<h2 class="anchored" data-anchor-id="proportional-hazards-cox-model">Proportional Hazards Cox Model</h2>
 <div class="cell">
 <div class="cell-output-display">
 <table class="table table-sm table-striped small">
@@ -220,8 +214,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="cumulative-hazard-function-of-death" class="level2">
-<h2 class="anchored" data-anchor-id="cumulative-hazard-function-of-death">Cumulative Hazard function of death</h2>
+<section id="cumulative-hazard-function-for-mortality" class="level2">
+<h2 class="anchored" data-anchor-id="cumulative-hazard-function-for-mortality">Cumulative hazard function for mortality</h2>
 <div class="cell">
 <div class="cell-output-display">
 <p><img src="breast_seer12_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>

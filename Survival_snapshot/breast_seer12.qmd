@@ -5,15 +5,14 @@ format: html
 editor: visual
 ---
 
-## Methods
+A visual examination of the mortality rates within this cohort revealed a significant reduction from 1992 to 2002 and again from 2018 to 2019, described as an "unrealistic drop." Subsequently, a decision was made to delineate the period of analysis from 2003 to 2017.
 
-## Results
-A visual inspection of the rates in this cohort has shown an "unrealistic drop" in mortality rates from 1992 to 2002 and in 2018 to 2019. [To investigate], a cut point was decided from 2003 to 2017.
+Possible issues identified:
 
-** Ascertainment incomplete?
-** incoplete follow-up?
+Is the ascertainment incomplete?
+Is the follow-up incomplete?
+The all-cause mortality rates per 1000 person-years were assessed for the period spanning from 2003 to 2017.
 
-All-cause mortality rates per 1000 PYs from 2003 to 2017.
 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
 # Install required packages
@@ -157,7 +156,7 @@ grid.arrange(plot_a, plot_b, plot_c, widths = c(3, 3, 3), ncol = 3)
 
 
 
-Survival probability (Kaplan-Maier) for malignant breast cancer by er, stage and race and ethnicity.
+Survival probability (Kaplan-Meier) analysis of malignant breast cancer stratified by ER status, stage, and race/ethnicity.
 
 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
@@ -253,7 +252,7 @@ grid.arrange(a1$plot, a2$plot, a3$plot, ncol = 3)
 ```
 
 
-## PH Cox model
+## Proportional Hazards Cox Model
 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
 
@@ -337,7 +336,7 @@ ggplot(df_mortality_er, aes(x = year_follow_up, y = mortality_rate_per_100k, col
 
 
 ```
-## Cumulative Hazard function of death
+## Cumulative hazard function for mortality
 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
 # Download the file directly into R
