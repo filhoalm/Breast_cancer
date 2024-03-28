@@ -1,0 +1,700 @@
+---
+title: "Malignant breast cancer survival in the United States, 2002 - 2017"
+author: "AMF"
+format: html
+editor: visual
+---
+
+## Methods
+
+## Results
+A visual inspection of the rates in this cohort has shown an "unrealistic drop" in mortality rates from 1992 to 2002 and in 2018 to 2019. [To investigate], a cut point was decided from 2003 to 2017.
+
+** Ascertainment incomplete?
+** incoplete follow-up?
+
+All-cause mortality rates per 1000 PYs from 2003 to 2017.
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+# Install required packages
+library(survminer)
+library(haven)
+library(dplyr)
+library(survival)
+library(gridExtra)
+
+# Define the URL of the .dta file
+file_url <- "https://github.com/filhoalm/ITEB-breast-cancer/raw/main/survival_article/seer12_breast_race_er_stage_case_listing_clear.dta"
+
+# Define the destination path on your local machine
+dest_file <- "seer12_breast_race_er_stage_case_listing_clear.dta"
+
+# Use download.file() to download the data
+download.file(file_url, destfile = dest_file, mode="wb")
+
+# Read the .dta file into R
+data <- read_dta(dest_file)
+
+# Assign data to df4
+df4 <- data
+
+```
+
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+
+# ER status
+
+# Calculate death counts and person years for each ER status and year of diagnosis
+df_mortality_er <- df4 %>%
+  group_by(er, year_follow_up) %>%
+  summarise(death_count = sum(status == 2),
+            person_years = sum(time / 12))
+
+# Calculate mortality rate per 100,000 per ER status
+df_mortality_er <- df_mortality_er %>%
+  mutate(mortality_rate_per_100k = (death_count / person_years) * 1000)
+
+# Subset data for years >= 2000
+df_mortality_er <- subset(df_mortality_er, year_follow_up >= 2003 & year_follow_up <= 2017 )
+
+# Create labels for ER status
+df_mortality_er$er_lab[df_mortality_er$er == 1] <- "Negative"
+df_mortality_er$er_lab[df_mortality_er$er == 2] <- "Positive"
+
+# Create a ggplot with mortality rates over years, color by ER status
+plot_a <- ggplot(df_mortality_er, aes(x = year_follow_up, y = mortality_rate_per_100k, color = er_lab)) +
+  geom_line(size = 0.9) +
+  xlim(2000, 2020)+
+  labs(title = "ER status",
+       x = "Year of Follow-up",
+       y = "Mortality Rate per 1000 PYs",
+       color = "ER status") +
+  theme(text = element_text(size = 12),
+        legend.title = element_text(size = 12, face = "bold"),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "bottom",
+        legend.text = element_text(size = 5)) +
+  scale_color_manual(values = c("#2675b1", "#ca6924")) +
+  labs(color = NULL)
+
+# Stage
+
+# Calculate death counts and person years for each stage and year of diagnosis
+df_mortality_stage <- df4 %>%
+  group_by(stage, year_follow_up) %>%
+  summarise(death_count = sum(status == 2),
+            person_years = sum(time / 12))
+
+# Calculate mortality rate per 100,000 per stage
+df_mortality_stage <- df_mortality_stage %>%
+  mutate(mortality_rate_per_100k = (death_count / person_years) * 1000)
+
+# Subset data for years >= 2000
+df_mortality_stage <- subset(df_mortality_stage, year_follow_up >= 2003 & year_follow_up <= 2017 )
+
+# Create labels for stage
+df_mortality_stage$stage_lab[df_mortality_stage$stage == 1] <- "Localized"
+df_mortality_stage$stage_lab[df_mortality_stage$stage == 2] <- "Regional"
+df_mortality_stage$stage_lab[df_mortality_stage$stage == 3] <- "Distant"
+
+# Create a ggplot with mortality rates over years, color by stage
+plot_b <- ggplot(df_mortality_stage, aes(x = year_follow_up, y = mortality_rate_per_100k, color = stage_lab)) +
+  geom_line(size = 0.9) +
+  xlim(2000, 2020)+
+  labs(title = "Staging at diagnosis",
+       x = "Year of Follow-up",
+       y = "Mortality Rate per 1000 PYs",
+       color = "Stage") +
+  theme(text = element_text(size = 12),
+        legend.title = element_text(size = 12, face = "bold"),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "bottom",
+        legend.text = element_text(size = 5)) +
+  scale_color_manual(values = c("darkred", "darkblue", "darkgreen")) +
+  labs(color = NULL)
+
+# Race and Ethnicity
+
+# Calculate death counts and person years for each race and year of diagnosis
+df_mortality_race <- df4 %>%
+  group_by(race, year_follow_up) %>%
+  summarise(death_count = sum(status == 2),
+            person_years = sum(time / 12))
+
+# Calculate mortality rate per 100,000 per race
+df_mortality_race <- df_mortality_race %>%
+  mutate(mortality_rate_per_100k = (death_count / person_years) * 1000)
+
+
+# Subset data for years >= 2000
+df_mortality_race <- subset(df_mortality_race, year_follow_up >= 2003 & year_follow_up <= 2017 )
+
+# Create a ggplot with mortality rates over years, color by race
+plot_c <- ggplot(df_mortality_race, aes(x = year_follow_up, y = mortality_rate_per_100k, color = race)) +
+ geom_line(size = 0.9) +
+  xlim(2000, 2020)+
+  labs(title = "Race and Ethnicity",
+       x = "Year of Follow-up",
+       y = "Mortality Rate per 1000 PYs",
+       color = "Race") +
+  theme(text = element_text(size = 12),
+        legend.title = element_text(size = 12, face = "bold"),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "bottom",
+        legend.text = element_text(size = 5)) +
+  scale_color_manual(values = c("red", "blue", "green", "purple")) +
+  labs(color = NULL)
+
+
+```
+
+```{r}
+# Arrange the plots in a grid
+grid.arrange(plot_a, plot_b, plot_c, widths = c(3, 3, 3), ncol = 3)
+
+```
+
+
+
+Survival probability (Kaplan-Maier) for malignant breast cancer by er, stage and race and ethnicity.
+
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+
+# ER status
+
+df5 <- subset(df4, year_follow_up >= 2003 & year_follow_up <= 2017 & df4$time <=60 )
+surv_obj <- Surv(time = df5$time / 12, event = df5$status == 2)
+# Fit a survival curve, stratified by 'stage'
+fit <- survfit(surv_obj ~ er, data = df5)
+
+# Plot the survival curves with the title and legend at the bottom
+a1<-ggsurvplot(
+  fit,
+  data = df5,
+  pval = TRUE,
+  conf.int = FALSE,
+  ggtheme = theme(
+    text = element_text(size = 12),
+    legend.title = element_blank(),  # remove legend title
+    plot.title = element_text(hjust = 0.5),
+    legend.position = "bottom",
+    legend.text = element_text(size = 5),
+    plot.margin = margin(t = 1, r = 1, b = 2, l = 1, unit = "lines")  # Adjust bottom margin
+  ),
+  palette = c("#2675b1", "#ca6924"),  # Here you specify your custom colors
+  title = "ER status",  # Title
+  legend = "bottom"  # Legend position
+)
+
+
+
+# Stage
+
+df5 <- subset(df4, year_follow_up >= 2003 & year_follow_up <= 2017 & df4$time <=60 )
+surv_obj <- Surv(time = df5$time / 12, event = df5$status == 2)
+# Fit a survival curve, stratified by 'stage'
+fit <- survfit(surv_obj ~ stage, data = df5)
+
+# Plot the survival curves with the title and legend at the bottom
+a2<-ggsurvplot(
+  fit,
+  data = df5,
+  pval = TRUE,
+  conf.int = FALSE,
+  ggtheme = theme(
+    text = element_text(size = 12),
+    legend.title = element_blank(),  # remove legend title
+    plot.title = element_text(hjust = 0.5),
+    legend.position = "bottom",
+    legend.text = element_text(size = 5),
+    plot.margin = margin(t = 1, r = 1, b = 2, l = 1, unit = "lines")  # Adjust bottom margin
+  ),
+  palette = c("darkred", "darkblue", "darkgreen"),  # Here you specify your custom colors
+  title = "Staging at diagnosis",  # Title
+  legend = "bottom"  # Legend position
+)
+
+
+# Race and Ethnicity
+
+df5 <- subset(df4, year_follow_up >= 2003 & year_follow_up <= 2017 & df4$time <=60 )
+surv_obj <- Surv(time = df5$time / 12, event = df5$status == 2)
+# Fit a survival curve, stratified by 'stage'
+fit <- survfit(surv_obj ~ race, data = df5)
+
+# Plot the survival curves with the title and legend at the bottom
+a3<-ggsurvplot(
+  fit,
+  data = df5,
+  pval = TRUE,
+  conf.int = FALSE,
+  size = 0.1, # added this line to reduce line size
+  ggtheme = theme(
+    text = element_text(size = 12),
+    legend.title = element_blank(),  # remove legend title
+    plot.title = element_text(hjust = 0.5),
+    legend.position = "bottom",
+    legend.text = element_text(size = 5),
+    plot.margin = margin(t = 1, r = 1, b = 2, l = 1, unit = "lines")  # Adjust bottom margin
+  ),
+  palette = c("red", "blue", "green", "purple"),  # Here you specify your custom colors
+  title = "Race",  # Title
+  legend = "bottom"  # Legend position
+)
+
+
+```
+
+```{r}
+grid.arrange(a1$plot, a2$plot, a3$plot, ncol = 3)
+
+```
+
+
+## PH Cox model
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+
+library(kableExtra)
+
+
+df5 <- subset(df4, year_follow_up >= 2003 & year_follow_up <= 2017 & df4$time <=60 )
+surv_obj <- Surv(time = df5$time / 12, event = df5$status == 2)
+# Fit a survival curve, stratified by 'stage'
+fit <- survfit(surv_obj ~ race, data = df5)
+
+# Fit Cox PH model
+df5$race<-as.factor(df5$race)
+df5$race <- relevel(df5$race, "NHW")
+df5$stage<-as.factor(df5$stage)
+
+df5$age<-as.numeric(df5$age)
+cox_model <- coxph(surv_obj ~ age + er + stage + race, data = df5) 
+summary_cox <- summary(cox_model)
+df <- as.data.frame(summary_cox$coefficients)
+
+knitr::kable(df, caption = "Summary of Cox model")
+
+
+```
+
+*er (Positive): Represents the effect of ER (Positive) on the hazard ratio
+
+*stage2 (Regional); stage3(Distant)
+
+## Breast cancer by subtype:
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+# Download the file directly into R
+url <- "https://raw.githubusercontent.com/filhoalm/ITEB-breast-cancer/main/survival_article/data/seer12_breast_race_subtype_stage_case_listing_clear.csv"
+download.file(url, destfile = "seer12_data.csv")
+
+# Read the downloaded CSV file into a data frame
+seer12_data <- read.csv("seer12_data.csv")
+
+# View the data
+df4<-seer12_data
+
+```
+
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+# Mortality rates
+
+df_mortality_er <- seer12_data %>%
+  group_by(subtype, year_follow_up) %>%
+  summarise(death_count = sum(status == "Dead"),
+            person_years = sum(time / 12))
+
+# Calculate mortality rate per 100,000 per ER status
+df_mortality_er <- df_mortality_er %>%
+  mutate(mortality_rate_per_100k = (death_count / person_years) * 1000)
+
+# Subset data for years >= 2000
+df_mortality_er <- subset(df_mortality_er, year_follow_up >= 2003 & year_follow_up <= 2019 )
+
+# Create labels for ER status
+#df_mortality_er$er_lab[df_mortality_er$er == 1] <- "Negative"
+#df_mortality_er$er_lab[df_mortality_er$er == 2] <- "Positive"
+
+# Create a ggplot with mortality rates over years, color by ER status
+ggplot(df_mortality_er, aes(x = year_follow_up, y = mortality_rate_per_100k, color = subtype)) +
+  geom_line(size = 0.9) +
+  xlim(2000, 2020)+
+  labs(title = "Subtype",
+       x = "Year",
+       y = "Mortality Rate per 1000 PYs",
+       color = "Subtype") +
+  theme(text = element_text(size = 12),
+        legend.title = element_text(size = 12, face = "bold"),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "bottom",
+        legend.text = element_text(size = 5)) +
+  #scale_color_manual(values = c("#2675b1", "#ca6924")) +
+  labs(color = NULL)
+
+
+```
+## Cumulative Hazard function of death
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+# Download the file directly into R
+url <- "https://raw.githubusercontent.com/filhoalm/ITEB-breast-cancer/main/survival_article/data/seer12_breast_race_subtype_stage_case_listing_clear.csv"
+download.file(url, destfile = "seer12_data.csv")
+
+# Read the downloaded CSV file into a data frame
+seer12_data <- read.csv("seer12_data.csv")
+
+# View the data
+df4<-seer12_data
+```
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+# "HR+/HER2+"
+df5 <- subset(df4, year_follow_up >= 2003 & year_follow_up <= 2017 & df4$time <=60 & df4$subtype == "HR+/HER2+")
+surv_obj <- Surv(time = df5$time / 12, event = df5$status == "Dead")
+# Fit a survival curve, stratified by 'stage'
+fit <- survfit(surv_obj ~ race, data = df5)
+
+# Assuming 'fit' is your survfit object
+# Tidy the survfit object to get a nicely formatted data frame
+tidy_fit <- broom::tidy(fit)
+
+# Check if the tidy operation includes cumhaz, otherwise fall back to manual extraction
+
+# If you see cumhaz in the tidy_fit data frame, proceed
+# Otherwise, consider manual extraction as demonstrated previously
+
+# Assuming the tidy operation doesn't provide cumhaz directly and we proceed manually
+df_cumhaz <- tidy_fit %>%
+  select(time, strata, estimate) %>%
+  group_by(strata) %>%
+  mutate(cumhaz = cumsum(estimate)) %>%
+  ungroup() %>%
+  rename(race = strata)
+
+# Ensure the race column is correctly labeled (if needed based on the structure)
+df_cumhaz$race <- sub("race=", "", df_cumhaz$race)
+
+# Assuming 'tidy_fit' is already created as shown in your print statement
+df_cumhaz <- tidy_fit %>%
+  mutate(cumhaz = -log(estimate)) %>%
+  select(time, strata, cumhaz)
+
+# Ensure the race column has meaningful values (removing prefix "race=" if present)
+df_cumhaz$strata <- sub("race=", "", df_cumhaz$strata)
+
+### Plotting Cumulative Hazard
+
+# Since we've transformed the 'estimate' to 'cumhaz', we can now plot it against 'time' for each 'race'
+c1<-ggplot(df_cumhaz, aes(x = time, y = cumhaz, color = strata, group = strata)) +
+  geom_step() +
+  labs(
+    title = "HR+/HER2+",
+    x = "Time",
+    y = "Cumulative Hazard",
+    color = "Race"
+  ) +
+  theme(text = element_text(size = 12),
+        legend.title = element_text(size = 12, face = "bold"),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "bottom",
+        legend.text = element_text(size = 5)) +
+  #scale_color_manual(values = c("#2675b1", "#ca6924")) +
+  labs(color = NULL)
+
+
+##
+# "HR+/HER2-"
+df5 <- subset(df4, year_follow_up >= 2003 & year_follow_up <= 2017 & df4$time <=60 & df4$subtype == "HR+/HER2-")
+surv_obj <- Surv(time = df5$time / 12, event = df5$status == "Dead")
+# Fit a survival curve, stratified by 'stage'
+fit <- survfit(surv_obj ~ race, data = df5)
+
+# Assuming 'fit' is your survfit object
+# Tidy the survfit object to get a nicely formatted data frame
+tidy_fit <- broom::tidy(fit)
+
+# Check if the tidy operation includes cumhaz, otherwise fall back to manual extraction
+
+# If you see cumhaz in the tidy_fit data frame, proceed
+# Otherwise, consider manual extraction as demonstrated previously
+
+# Assuming the tidy operation doesn't provide cumhaz directly and we proceed manually
+df_cumhaz <- tidy_fit %>%
+  select(time, strata, estimate) %>%
+  group_by(strata) %>%
+  mutate(cumhaz = cumsum(estimate)) %>%
+  ungroup() %>%
+  rename(race = strata)
+
+# Ensure the race column is correctly labeled (if needed based on the structure)
+df_cumhaz$race <- sub("race=", "", df_cumhaz$race)
+
+# Assuming 'tidy_fit' is already created as shown in your print statement
+df_cumhaz <- tidy_fit %>%
+  mutate(cumhaz = -log(estimate)) %>%
+  select(time, strata, cumhaz)
+
+# Ensure the race column has meaningful values (removing prefix "race=" if present)
+df_cumhaz$strata <- sub("race=", "", df_cumhaz$strata)
+
+### Plotting Cumulative Hazard
+
+# Since we've transformed the 'estimate' to 'cumhaz', we can now plot it against 'time' for each 'race'
+c2<-ggplot(df_cumhaz, aes(x = time, y = cumhaz, color = strata, group = strata)) +
+  geom_step() +
+  labs(
+    title = "HR+/HER2-",
+    x = "Time",
+    y = "Cumulative Hazard",
+    color = "Race"
+  ) +
+  theme(text = element_text(size = 12),
+        legend.title = element_text(size = 12, face = "bold"),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "bottom",
+        legend.text = element_text(size = 5)) +
+  #scale_color_manual(values = c("#2675b1", "#ca6924")) +
+  labs(color = NULL)
+
+##
+# "HR-/HER2+"
+df5 <- subset(df4, year_follow_up >= 2003 & year_follow_up <= 2017 & df4$time <=60 & df4$subtype == "HR-/HER2+")
+surv_obj <- Surv(time = df5$time / 12, event = df5$status == "Dead")
+# Fit a survival curve, stratified by 'stage'
+fit <- survfit(surv_obj ~ race, data = df5)
+
+# Assuming 'fit' is your survfit object
+# Tidy the survfit object to get a nicely formatted data frame
+tidy_fit <- broom::tidy(fit)
+
+# Check if the tidy operation includes cumhaz, otherwise fall back to manual extraction
+
+# If you see cumhaz in the tidy_fit data frame, proceed
+# Otherwise, consider manual extraction as demonstrated previously
+
+# Assuming the tidy operation doesn't provide cumhaz directly and we proceed manually
+df_cumhaz <- tidy_fit %>%
+  select(time, strata, estimate) %>%
+  group_by(strata) %>%
+  mutate(cumhaz = cumsum(estimate)) %>%
+  ungroup() %>%
+  rename(race = strata)
+
+# Ensure the race column is correctly labeled (if needed based on the structure)
+df_cumhaz$race <- sub("race=", "", df_cumhaz$race)
+
+# Assuming 'tidy_fit' is already created as shown in your print statement
+df_cumhaz <- tidy_fit %>%
+  mutate(cumhaz = -log(estimate)) %>%
+  select(time, strata, cumhaz)
+
+# Ensure the race column has meaningful values (removing prefix "race=" if present)
+df_cumhaz$strata <- sub("race=", "", df_cumhaz$strata)
+
+### Plotting Cumulative Hazard
+
+# Since we've transformed the 'estimate' to 'cumhaz', we can now plot it against 'time' for each 'race'
+c3<-ggplot(df_cumhaz, aes(x = time, y = cumhaz, color = strata, group = strata)) +
+  geom_step() +
+  labs(
+    title = "HR-/HER2+",
+    x = "Time",
+    y = "Cumulative Hazard",
+    color = "Race"
+  ) +
+  theme(text = element_text(size = 12),
+        legend.title = element_text(size = 12, face = "bold"),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "bottom",
+        legend.text = element_text(size = 5)) +
+  #scale_color_manual(values = c("#2675b1", "#ca6924")) +
+  labs(color = NULL)
+
+##
+# "HR-/HER2-"
+df5 <- subset(df4, year_follow_up >= 2003 & year_follow_up <= 2017 & df4$time <=60 & df4$subtype == "HR-/HER2-")
+surv_obj <- Surv(time = df5$time / 12, event = df5$status == "Dead")
+# Fit a survival curve, stratified by 'stage'
+fit <- survfit(surv_obj ~ race, data = df5)
+
+# Assuming 'fit' is your survfit object
+# Tidy the survfit object to get a nicely formatted data frame
+tidy_fit <- broom::tidy(fit)
+
+# Check if the tidy operation includes cumhaz, otherwise fall back to manual extraction
+
+# If you see cumhaz in the tidy_fit data frame, proceed
+# Otherwise, consider manual extraction as demonstrated previously
+
+# Assuming the tidy operation doesn't provide cumhaz directly and we proceed manually
+df_cumhaz <- tidy_fit %>%
+  select(time, strata, estimate) %>%
+  group_by(strata) %>%
+  mutate(cumhaz = cumsum(estimate)) %>%
+  ungroup() %>%
+  rename(race = strata)
+
+# Ensure the race column is correctly labeled (if needed based on the structure)
+df_cumhaz$race <- sub("race=", "", df_cumhaz$race)
+
+# Assuming 'tidy_fit' is already created as shown in your print statement
+df_cumhaz <- tidy_fit %>%
+  mutate(cumhaz = -log(estimate)) %>%
+  select(time, strata, cumhaz)
+
+# Ensure the race column has meaningful values (removing prefix "race=" if present)
+df_cumhaz$strata <- sub("race=", "", df_cumhaz$strata)
+
+### Plotting Cumulative Hazard
+
+# Since we've transformed the 'estimate' to 'cumhaz', we can now plot it against 'time' for each 'race'
+c4<-ggplot(df_cumhaz, aes(x = time, y = cumhaz, color = strata, group = strata)) +
+  geom_step() +
+  labs(
+    title = "HR-/HER2-",
+    x = "Time",
+    y = "Cumulative Hazard",
+    color = "Race"
+  ) +
+  theme(text = element_text(size = 12),
+        legend.title = element_text(size = 12, face = "bold"),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "bottom",
+        legend.text = element_text(size = 5)) +
+  #scale_color_manual(values = c("#2675b1", "#ca6924")) +
+  labs(color = NULL)
+```
+
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+grid.arrange(c1, c2, c3, c4, ncol = 4)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- # KM by subtype -->
+<!-- ```{r, message=FALSE, warning=FALSE, echo=FALSE} -->
+
+<!-- #"HR+/HER2+" -->
+<!-- df5 <- subset(df4, year_follow_up >= 2003 & year_follow_up <= 2017 & df4$time <=60 & df4$subtype == "HR+/HER2+") -->
+<!-- surv_obj <- Surv(time = df5$time / 12, event = df5$status == "Dead") -->
+<!-- # Fit a survival curve, stratified by 'stage' -->
+<!-- fit <- survfit(surv_obj ~ race, data = df5) -->
+
+<!-- # Plot the survival curves with the title and legend at the bottom -->
+<!-- b1<-ggsurvplot( -->
+<!--   fit, -->
+<!--   data = df5, -->
+<!--   pval = TRUE, -->
+<!--   conf.int = FALSE, -->
+<!--   ggtheme = theme( -->
+<!--     text = element_text(size = 12), -->
+<!--     legend.title = element_blank(),  # remove legend title -->
+<!--     plot.title = element_text(hjust = 0.5), -->
+<!--     legend.position = "bottom", -->
+<!--     legend.text = element_text(size = 5), -->
+<!--     plot.margin = margin(t = 1, r = 1, b = 2, l = 1, unit = "lines")  # Adjust bottom margin -->
+<!--   ), -->
+<!--   #palette = c("darkred", "darkblue", "darkgreen"),  # Here you specify your custom colors -->
+<!--   title = "HR+/HER2+",  # Title -->
+<!--   legend = "bottom"  # Legend position -->
+<!-- ) -->
+
+<!-- #"HR+/HER2-" -->
+<!-- df5 <- subset(df4, year_follow_up >= 2003 & year_follow_up <= 2017 & df4$time <=60 & df4$subtype == "HR+/HER2-") -->
+<!-- surv_obj <- Surv(time = df5$time / 12, event = df5$status == "Dead") -->
+<!-- # Fit a survival curve, stratified by 'stage' -->
+<!-- fit <- survfit(surv_obj ~ race, data = df5) -->
+
+<!-- # Plot the survival curves with the title and legend at the bottom -->
+<!-- b2<-ggsurvplot( -->
+<!--   fit, -->
+<!--   data = df5, -->
+<!--   pval = TRUE, -->
+<!--   conf.int = FALSE, -->
+<!--   ggtheme = theme( -->
+<!--     text = element_text(size = 12), -->
+<!--     legend.title = element_blank(),  # remove legend title -->
+<!--     plot.title = element_text(hjust = 0.5), -->
+<!--     legend.position = "bottom", -->
+<!--     legend.text = element_text(size = 5), -->
+<!--     plot.margin = margin(t = 1, r = 1, b = 2, l = 1, unit = "lines")  # Adjust bottom margin -->
+<!--   ), -->
+<!--   #palette = c("darkred", "darkblue", "darkgreen"),  # Here you specify your custom colors -->
+<!--   title = "HR+/HER2-",  # Title -->
+<!--   legend = "bottom"  # Legend position -->
+<!-- ) -->
+
+<!-- # "HR-/HER2+" -->
+<!-- df5 <- subset(df4, year_follow_up >= 2003 & year_follow_up <= 2017 & df4$time <=60 & df4$subtype == "HR-/HER2+") -->
+<!-- surv_obj <- Surv(time = df5$time / 12, event = df5$status == "Dead") -->
+<!-- # Fit a survival curve, stratified by 'stage' -->
+<!-- fit <- survfit(surv_obj ~ race, data = df5) -->
+
+<!-- # Plot the survival curves with the title and legend at the bottom -->
+<!-- b3<-ggsurvplot( -->
+<!--   fit, -->
+<!--   data = df5, -->
+<!--   pval = TRUE, -->
+<!--   conf.int = FALSE, -->
+<!--   ggtheme = theme( -->
+<!--     text = element_text(size = 12), -->
+<!--     legend.title = element_blank(),  # remove legend title -->
+<!--     plot.title = element_text(hjust = 0.5), -->
+<!--     legend.position = "bottom", -->
+<!--     legend.text = element_text(size = 5), -->
+<!--     plot.margin = margin(t = 1, r = 1, b = 2, l = 1, unit = "lines")  # Adjust bottom margin -->
+<!--   ), -->
+<!--   #palette = c("darkred", "darkblue", "darkgreen"),  # Here you specify your custom colors -->
+<!--   title = "HR-/HER2+",  # Title -->
+<!--   legend = "bottom"  # Legend position -->
+<!-- ) -->
+
+<!-- # "HR-/HER2-" -->
+<!-- df5 <- subset(df4, year_follow_up >= 2003 & year_follow_up <= 2017 & df4$time <=60 & df4$subtype == "HR-/HER2-") -->
+<!-- surv_obj <- Surv(time = df5$time / 12, event = df5$status == "Dead") -->
+<!-- # Fit a survival curve, stratified by 'stage' -->
+<!-- fit <- survfit(surv_obj ~ race, data = df5) -->
+
+<!-- # Plot the survival curves with the title and legend at the bottom -->
+<!-- b4<-ggsurvplot( -->
+<!--   fit, -->
+<!--   data = df5, -->
+<!--   pval = TRUE, -->
+<!--   conf.int = FALSE, -->
+<!--   ggtheme = theme( -->
+<!--     text = element_text(size = 12), -->
+<!--     legend.title = element_blank(),  # remove legend title -->
+<!--     plot.title = element_text(hjust = 0.5), -->
+<!--     legend.position = "bottom", -->
+<!--     legend.text = element_text(size = 5), -->
+<!--     plot.margin = margin(t = 1, r = 1, b = 2, l = 1, unit = "lines")  # Adjust bottom margin -->
+<!--   ), -->
+<!--   #palette = c("darkred", "darkblue", "darkgreen"),  # Here you specify your custom colors -->
+<!--   title = "HR-/HER2-",  # Title -->
+<!--   legend = "bottom"  # Legend position -->
+<!-- ) -->
+
+<!-- ``` -->
+
+
+<!-- ```{r, message=FALSE, warning=FALSE, echo=FALSE} -->
+<!-- grid.arrange(b1$plot, b2$plot,ncol = 2) -->
+<!-- grid.arrange(b3$plot, b4$plot, ncol = 2) -->
+<!-- #grid.arrange(b1$plot, b2$plot, b3$plot, b4$plot, widths = c(3, 3, 3), ncol = 4) -->
+
+<!-- ``` -->
