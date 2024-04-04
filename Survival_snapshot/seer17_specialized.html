@@ -52,6 +52,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a>
   <ul class="collapse">
   <li><a href="#unspecified-er" id="toc-unspecified-er" class="nav-link" data-scroll-target="#unspecified-er">Unspecified ER</a></li>
+  <li><a href="#exclusions" id="toc-exclusions" class="nav-link" data-scroll-target="#exclusions">Exclusions</a></li>
   <li><a href="#characteristic-of-the-breast-cancer-patients-cohort" id="toc-characteristic-of-the-breast-cancer-patients-cohort" class="nav-link" data-scroll-target="#characteristic-of-the-breast-cancer-patients-cohort">Characteristic of the breast cancer patients cohort</a></li>
   <li><a href="#mortality-rates-per-1000-py" id="toc-mortality-rates-per-1000-py" class="nav-link" data-scroll-target="#mortality-rates-per-1000-py">Mortality rates per 1000 PY</a></li>
   <li><a href="#kaplan-meier-survival-curves" id="toc-kaplan-meier-survival-curves" class="nav-link" data-scroll-target="#kaplan-meier-survival-curves">Kaplan-Meier survival curves</a></li>
@@ -90,7 +91,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">April 2, 2024</p>
+      <p class="date-modified">April 3, 2024</p>
     </div>
   </div>
     
@@ -131,6 +132,119 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <p>Figure 1B presents the annual proportions of breast cancer cases with unknown ER status by race and ethnicity</p>
 </section>
+</section>
+<section id="exclusions" class="level3">
+<h3 class="anchored" data-anchor-id="exclusions">Exclusions</h3>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 89%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Number Selected</th>
+<th style="text-align: right;">Number Excluded</th>
+<th style="text-align: left;">Statement</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1047045</td>
+<td style="text-align: right;">5885860</td>
+<td style="text-align: left;">{Age at Diagnosis.Age recode with &lt;1 year olds} = ‘35-39 years’,‘40-44 years’,‘45-49 years’,‘50-54 years’,‘55-59 years’,‘60-64 years’,‘65-69 years’,‘70-74 years’,‘75-79 years’,‘80-84 years’ AND {Race, Sex, Year Dx, Registry, County.Sex} = ’ Female’ … (see Session Printout)</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1045243</td>
+<td style="text-align: right;">1802</td>
+<td style="text-align: left;">Exclude death certificate or autopsy cases</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">835584</td>
+<td style="text-align: right;">209659</td>
+<td style="text-align: left;">Select only malignant cancers</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">835584</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Select only known age</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">835584</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Exclude age values not in table</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">835584</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Exclude Race and origin recode (NHW, NHB, NHAIAN, NHAPI, Hispanic) values not in table</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">835584</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Exclude Sex values not in table</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">835584</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Exclude State values not in table</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">835584</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Exclude County values not in table</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">679362</td>
+<td style="text-align: right;">156222</td>
+<td style="text-align: left;">First Primary Only (Sequence Number 0 or 1)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">679362</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Invalid vital status</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">679362</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Unknown survival duration</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">679362</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Calculation dates invalid</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">679362</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Coded survival duration conflicts with associated begin and end dates</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">679362</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Begin Date beyond Study Cutoff Date</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">678208</td>
+<td style="text-align: right;">1154</td>
+<td style="text-align: left;">Begin Date plus Survival Duration beyond Database Study Cutoff Date</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Alive with no survival time</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </section>
 <section id="characteristic-of-the-breast-cancer-patients-cohort" class="level3">
 <h3 class="anchored" data-anchor-id="characteristic-of-the-breast-cancer-patients-cohort">Characteristic of the breast cancer patients cohort</h3>
@@ -517,7 +631,7 @@ ul.task-list li input[type="checkbox"] {
 <h4 class="anchored" data-anchor-id="figure-2a">Figure 2A</h4>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="seer17_specialized_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+<p><img src="seer17_specialized_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
@@ -525,7 +639,7 @@ ul.task-list li input[type="checkbox"] {
 <h4 class="anchored" data-anchor-id="figure-2b">Figure 2B</h4>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="seer17_specialized_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+<p><img src="seer17_specialized_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
@@ -536,7 +650,7 @@ ul.task-list li input[type="checkbox"] {
 <h4 class="anchored" data-anchor-id="figure-3a">Figure 3A</h4>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="seer17_specialized_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+<p><img src="seer17_specialized_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
@@ -544,7 +658,7 @@ ul.task-list li input[type="checkbox"] {
 <h4 class="anchored" data-anchor-id="figure-3b">Figure 3B</h4>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="seer17_specialized_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+<p><img src="seer17_specialized_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>

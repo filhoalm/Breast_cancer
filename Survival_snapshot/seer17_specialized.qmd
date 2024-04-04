@@ -28,9 +28,6 @@ The study assessed the proportions of ER status, breast cancer subtype, cancer s
 
 
 
-
-
-
 ## Results
 
 ### Unspecified ER
@@ -289,6 +286,19 @@ grid.arrange(a1,b1,
 
 ```
 Figure 1B presents the annual proportions of breast cancer cases with unknown ER status by race and ethnicity
+
+### Exclusions
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+library(knitr)
+data <- data.frame(
+  Selected = c(1047045, 1045243, 835584, 835584, 835584, 835584, 835584, 835584, 835584, 679362, 679362, 679362, 679362, 679362, 679362, 678208, 0, 0),
+  Excluded = c(5885860, 1802, 209659, 0, 0, 0, 0, 0, 0, 156222, 0, 0, 0, 0, 0, 1154, 0, 0),
+  Statement = c("{Age at Diagnosis.Age recode with <1 year olds} = '35-39 years','40-44 years','45-49 years','50-54 years','55-59 years','60-64 years','65-69 years','70-74 years','75-79 years','80-84 years' AND {Race, Sex, Year Dx, Registry, County.Sex} = ' Female' ... (see Session Printout)", "Exclude death certificate or autopsy cases", "Select only malignant cancers", "Select only known age", "Exclude age values not in table", "Exclude Race and origin recode (NHW, NHB, NHAIAN, NHAPI, Hispanic) values not in table", "Exclude Sex values not in table", "Exclude State values not in table", "Exclude County values not in table", "First Primary Only (Sequence Number 0 or 1)", "Invalid vital status", "Unknown survival duration", "Calculation dates invalid", "Coded survival duration conflicts with associated begin and end dates", "Begin Date beyond Study Cutoff Date", "Begin Date plus Survival Duration beyond Database Study Cutoff Date", "Alive with no survival time", "")
+)
+
+kable(data, col.names = c("Number Selected", "Number Excluded", "Statement"))
+
+```
 
 
 ### Characteristic of the breast cancer patients cohort
