@@ -1,4 +1,3 @@
-
 ---
 toc: true
 title: "Malignant breast cancer survival in the United States: seer17 (Specialized dataset)"
@@ -9,30 +8,24 @@ date: "January 24, 2024"
 date-modified: last-modified
 ---
 
-
-
-
 ## Introduction
 
-
-
 ## Methods
-*Data source* 
 
-Data was obtained from the Surveillance, Epidemiology, and End Results (SEER) Program's Seventeen Database (Specialized dataset), accessed through SEER*Stat version 8.4.0. The dataset comprises malignant breast cancer cases in females aged 35 to 84 years, spanning from 1992 to 2020 with follow-up until December 2020. Age at diagnosis was categorized into 5-year age groups (35 - 39, ..., 80-84) and one-year time spans. Census tract-level socioeconomic status (SES) is available in quintiles. Race and ethnicity definitions follow the criteria established by the SEER program, employing an algorithm to recode detailed race and origin variables into four groups: Non-Hispanic White (NHW), Non-Hispanic Black (NHB), Hispanic (HIS), and Asian and Pacific Islander (API). We also conducted analyses using census tract-level rurality variables to facilitate assessments of urban/rural differences and persistent poverty. For more information about the definitions and methodology used to create these specialized variables, refer to [SEER Census Tract-Level Variables](https://seer.cancer.gov/data/specialized/available-databases/census-tract-request/)."
+*Data source*
 
+Data was obtained from the Surveillance, Epidemiology, and End Results (SEER) Program's Seventeen Database (Specialized dataset), accessed through SEER\*Stat version 8.4.0. The dataset comprises malignant breast cancer cases in females aged 35 to 84 years, spanning from 1992 to 2020 with follow-up until December 2020. Age at diagnosis was categorized into 5-year age groups (35 - 39, ..., 80-84) and one-year time spans. Census tract-level socioeconomic status (SES) is available in quintiles. Race and ethnicity definitions follow the criteria established by the SEER program, employing an algorithm to recode detailed race and origin variables into four groups: Non-Hispanic White (NHW), Non-Hispanic Black (NHB), Hispanic (HIS), and Asian and Pacific Islander (API). We also conducted analyses using census tract-level rurality variables to facilitate assessments of urban/rural differences and persistent poverty. For more information about the definitions and methodology used to create these specialized variables, refer to [SEER Census Tract-Level Variables](https://seer.cancer.gov/data/specialized/available-databases/census-tract-request/)."
 
 *Statistical analysis* :
 
 The study assessed the proportions of ER status, breast cancer subtype, cancer staging, SES status, and persistent poverty within each race and ethnicity group. Mortality rates were calculated per 1000 person-years. Kaplan-Meier survival curves were generated, and differences between the curves were evaluated using the Log-Rank p-value. To quantify the Hazard ratios between the variables, a Cox proportional hazards model was applied. All statistical analyses were conducted using the R software platform.
-
-
 
 ## Results
 
 ### Unspecified ER
 
 #### Figure 1A
+
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
 
 library(readr)
@@ -166,6 +159,7 @@ grid.arrange(a,b,
 
 
 ```
+
 Figure 1A presents the annual proportions of breast cancer cases with unknown ER status. Figure B details the yearly proportions of breast cancers with ER-negative status."
 
 #### Figure 1B
@@ -285,9 +279,11 @@ grid.arrange(a1,b1,
 
 
 ```
+
 Figure 1B presents the annual proportions of breast cancer cases with unknown ER status by race and ethnicity
 
 ### Exclusions
+
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
 library(knitr)
 data <- data.frame(
@@ -300,20 +296,11 @@ kable(data, col.names = c("Number Selected", "Number Excluded", "Statement"))
 
 ```
 
-
 ### Characteristic of the breast cancer patients cohort
-
 
 Table 1 presents the characteristics of breast cancer cases and proportions by race and ethnicity. We observed heterogeneity among race and ethnicity groups in the proportions of ER status, cancer stage, subtype, SES, and poverty. The highest proportion of ER-negative status was found among Non-Hispanic Blacks (NHB, 28.10%) compared to Hispanics (18.82%), Non-Hispanic Whites (NHW, 14.66%), and Asians/Pacific Islanders (API). NHB and Hispanics presented highest proportion of regional(NHB 34.74%, Hispanics 34.75%) and distant stages (NHB 8.38%, Hispanics 5.63%) compared to NHW (regional 27.80%, distant 5.34%) and API. The difference in cancer subtypes is notably apparent in the HR-/HER- subtype, with NHB showing the highest percentage (14.79%) among the racial groups analyzed. SES status in NHB (34.64%) and Hispanics (20.31%) constituting a significantly larger proportion of Group 1, the lowest SES category, in contrast to NHW (9.57%) and API. When examining the impact of living in persistent poverty census tracts, NHB (21.28%) and Hispanics (12.45%) are disproportionately affected compared to NHW (4.26%) and API.
 
-
-
 <!-- In summary, these highlighted results underscore significant racial and ethnic disparities in cancer diagnosis and socioeconomic challenges. The disproportionately higher rates of ER-negative status, regional and distant stage cancers, and HR-/HER- subtypes among NHB, along with the pronounced socioeconomic disadvantages faced by NHB and Hispanic populations, call for urgent and tailored public health interventions to mitigate these disparities and improve cancer care outcomes for these communities. -->
-
-
-
-
-
 
 Table 1. Characteristics of the breast cancer cases and proportion by race and ethnicity, 2006 - 2020
 
@@ -845,8 +832,8 @@ grid.arrange(plot_a, plot_b, plot_c, widths = c(3, 3, 3), ncol = 3)
 
 ```
 
-
 #### Figure 2B
+
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
 
 df <- read_csv("C:/Users/miran/Desktop/Survival/Specialized/data/seer17_breast.csv")
@@ -990,7 +977,7 @@ grid.arrange(plot_d, plot_e, plot_f, widths = c(3, 3, 3), ncol = 3)
 
 ```
 
-###  Kaplan-Meier survival curves
+### Kaplan-Meier survival curves
 
 #### Figure 3A
 
@@ -1121,7 +1108,6 @@ grid.arrange(aa1$plot, aa2$plot, aa3$plot, ncol = 3)
 
 ```
 
-
 #### Figure 3B
 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
@@ -1251,8 +1237,7 @@ grid.arrange(aa4$plot, aa5$plot, aa6$plot, ncol = 3)
 
 ### Proportional Hazards Cox Model
 
-
-Age is associated with an incremental yearly increase in the hazard rate by 4% (HR 1.04, 95% CI, p<0.001). The analysis suggested protective effect of being ER-positive, which is associated with a 46% reduction in the hazard rate compared to ER-negative patients (HR 0.54, 95% CI, p<0.001). Distant stage cancers are associated with a 14.25-fold increase in the hazard rate (HR 14.25, 95% CI, p<0.001), and regional stage cancers are associated with a 2.37-fold increase (HR 2.37, 95% CI, p<0.001) compared to localized cancers. Regarding race and ethnicity, Asians/Pacific Islanders (API) exhibit a 16% reduction in the hazard rate (HR 0.84, 95% CI, p<0.001), whereas Non-Hispanic Blacks (NHB) showed a 31% increase in the hazard rate (HR 1.31, 95% CI, p<0.001). Additionally, significant gradients are observed across SES groups, with the lowest SES group experiencing a notable increase in the hazard rate (HR 1.66, 95% CI, p<0.001). Furthermore, residing in a persistent poverty census tract is associated with a modest but significant increase in the hazard rate (HR 1.09, 95% CI, p<0.001).
+Age is associated with an incremental yearly increase in the hazard rate by 4% (HR 1.04, 95% CI, p\<0.001). The analysis suggested protective effect of being ER-positive, which is associated with a 46% reduction in the hazard rate compared to ER-negative patients (HR 0.54, 95% CI, p\<0.001). Distant stage cancers are associated with a 14.25-fold increase in the hazard rate (HR 14.25, 95% CI, p\<0.001), and regional stage cancers are associated with a 2.37-fold increase (HR 2.37, 95% CI, p\<0.001) compared to localized cancers. Regarding race and ethnicity, Asians/Pacific Islanders (API) exhibit a 16% reduction in the hazard rate (HR 0.84, 95% CI, p\<0.001), whereas Non-Hispanic Blacks (NHB) showed a 31% increase in the hazard rate (HR 1.31, 95% CI, p\<0.001). Additionally, significant gradients are observed across SES groups, with the lowest SES group experiencing a notable increase in the hazard rate (HR 1.66, 95% CI, p\<0.001). Furthermore, residing in a persistent poverty census tract is associated with a modest but significant increase in the hazard rate (HR 1.09, 95% CI, p\<0.001).
 
 Analysis of proportionality, colinearity and Cox model residuals is provided in Supplemntary materia.
 
@@ -1321,6 +1306,438 @@ knitr::kable(tab, caption = "Summary of Cox model")
 
 
 ```
+
+## Deprivation and breast cancer subtype
+
+We want to understand whether the association of deprivation (yost) differs by breast cancer subtype:
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+
+library(dplyr)
+library(tidyr)
+library(scales)  # For using percent() function
+library(dplyr)
+library(tidyr)
+library(scales)  # For using percent() function
+library(dplyr)
+library(tidyr)
+
+df <- read_csv("C:/Users/miran/Desktop/Survival/Specialized/data/seer17_breast.csv")
+
+names(df)<-c("age", "year", "race", "stage", "subtype", "er", "tract", "registry_tract", "census2010",
+             "urban-area", "poverty", "ylost", "sex", "status", "year_rec", "end_calc", "time")
+
+
+df1<-subset(df, df$race == "Non-Hispanic White" | 
+              df$race == "Non-Hispanic Black"| df$race == "Non-Hispanic Asian or Pacific Islander" | 
+              df$race == "Hispanic (All Races)")
+
+df1$race_lab[df1$race == "Non-Hispanic White"]<-"NHW"
+df1$race_lab[df1$race == "Non-Hispanic Black"]<-"NHB"
+df1$race_lab[df1$race == "Non-Hispanic Asian or Pacific Islander"]<-"API"
+df1$race_lab[df1$race == "Hispanic (All Races)"]<-"HIS"
+
+
+#######
+
+# Assuming you've already prepared 'df' and 'race_lab' is in use
+# First, ensure we exclude 'In situ' stage from our calculations
+df_filtered <- df1 %>%
+  filter(stage != "In situ")
+
+# Calculate the counts and proportions for race_lab within each stage
+race_distribution_within_stage <- df_filtered %>%
+  count(stage, subtype) %>%
+  group_by(subtype) %>%
+  mutate(Total = sum(n),
+         Proportion = n / Total) %>%
+  ungroup()
+
+# Adding a 'Total Stage' summary row for each race_lab
+total_stage_summary <- race_distribution_within_stage %>%
+  group_by(subtype) %>%
+  summarise(stage = "Total Stage",
+            n = sum(n),
+            Total = sum(Total),
+            Proportion = n / Total) %>%
+  ungroup()
+
+# Combine the detailed distribution and total summaries
+race_distribution_combined <- bind_rows(race_distribution_within_stage, total_stage_summary) %>%
+  mutate(Percentage = percent(Proportion)) %>%
+  select(stage, subtype, n, Percentage)
+
+# Specify stages in the desired order, ensuring 'Total Stage' is included
+stage_order <- c("Localized", "Regional", "Distant", "Unknown/unstaged", "Total Stage")
+
+# Specify race_lab categories in the desired order
+race_lab_order <- c("NHW", "NHB", "HIS", "API")
+
+race_lab_order <- c("HR-/HER2-", "HR-/HER2+", "HR+/HER2+", "HR+/HER2-", "RNA*", "Unknown" )
+
+# Ordering stages and filtering out any stages not included in 'stage_order'
+race_distribution_combined <- race_distribution_combined %>%
+  filter(stage %in% stage_order) %>%
+  mutate(stage = factor(stage, levels = stage_order),
+         race_lab = factor(subtype, levels = race_lab_order)) %>%
+  arrange(stage)
+
+# Pivot wider to format for the desired column order
+wide_format_race_within_stage_with_totals <- race_distribution_combined %>%
+  pivot_wider(names_from = subtype, values_from = c(n, Percentage), names_glue = "{subtype}_{.value}")
+names(wide_format_race_within_stage_with_totals)
+# Manually specify the column order based on your requirement
+column_order <- c("stage",
+                  "HR-/HER2-_n", "HR-/HER2-_Percentage",
+                  "HR-/HER2+_n", "HR-/HER2+_Percentage",
+                  "HR+/HER2+_n", "HR+/HER2+_Percentage",
+                  "HR+/HER2-_n", "HR+/HER2-_Percentage",
+                  "Recode not available_n", "Recode not available_Percentage",
+                  "Unknown_n" , "Unknown_Percentage")
+
+# Ensure the wide format table only contains the columns in 'column_order', which matches your requested order
+wide_stage <- wide_format_race_within_stage_with_totals %>%
+  select(all_of(column_order))
+
+# View the final table
+
+#### Stage
+
+
+df_filtered <- df1 %>%
+  filter(stage != "In situ")
+
+# Assuming 'df' is your data frame and 'subtype' captures the race variable
+# Defining Stage order
+stage_order <- c("Localized", "Regional", "Distant", "Unknown/unstaged")
+
+# Calculate counts and proportions for each race within stage categories
+race_stage_distribution <- df_filtered %>%
+  filter(!stage %in% c("Blank(s)")) %>% # Optional: Exclude "Blank(s)" if it's not needed
+  count(subtype, stage) %>%
+  group_by(subtype) %>%
+  mutate(Total = sum(n),
+         Proportion = n / Total) %>%
+  ungroup() %>%
+  mutate(Percentage = percent(Proportion)) %>%
+  select(subtype, stage, n, Percentage)
+
+# Adding a 'Total' summary row for each race across all stage categories
+total_summary_race <- race_stage_distribution %>%
+  group_by(subtype) %>%
+  summarise(stage = "Total",
+            n = sum(n),
+            Percentage = "100%") %>% # In 'Total', all entries per race are considered, hence 100%
+  ungroup()
+
+# Combine the detailed distribution and 'Total' summaries
+race_stage_combined <- bind_rows(race_stage_distribution, total_summary_race) %>%
+  arrange(subtype, stage)
+
+# Pivot wider for the final summary, focusing on race and stage categories
+wide_stage <- race_stage_combined %>%
+  pivot_wider(names_from = subtype, values_from = c(n, Percentage), names_glue = "{subtype}_{.value}") %>%
+  arrange(match(stage, stage_order)) # Order rows based on stage categories
+
+# Print the final summary table
+
+
+
+
+#### SES groups
+
+# Assuming 'df' is your dataframe and 'subtype' captures the race variable
+# Defining SES groups order
+ses_order <- c("Group 1 (lowest SES)", "Group 2", "Group 3", "Group 4", "Group 5 (highest SES)", "Blank(s)")
+
+# Calculate counts and proportions for each race within SES groups
+race_ses_distribution <- df1 %>%
+  filter(!ylost %in% c("Blank(s)")) %>% # Optional: Exclude "Blank(s)" if it's not needed
+  count(subtype, ylost) %>%
+  group_by(subtype) %>%
+  mutate(Total = sum(n),
+         Proportion = n / Total) %>%
+  ungroup() %>%
+  mutate(Percentage = percent(Proportion)) %>%
+  select(subtype, ylost, n, Percentage)
+
+# Adding a 'Total' summary row for each race across all SES groups
+total_summary_race <- race_ses_distribution %>%
+  group_by(subtype) %>%
+  summarise(ylost = "Total",
+            n = sum(n),
+            Percentage = "100%") %>% # In 'Total', all entries per race are considered, hence 100%
+  ungroup()
+
+# Combine the detailed distribution and 'Total' summaries
+race_ses_combined <- bind_rows(race_ses_distribution, total_summary_race) %>%
+  arrange(subtype, ylost)
+
+# Pivot wider for the final summary, focusing on race and SES categories
+wide_ses <- race_ses_combined %>%
+  pivot_wider(names_from = subtype, values_from = c(n, Percentage), names_glue = "{subtype}_{.value}") %>%
+  arrange(match(ylost, ses_order)) # Order rows based on SES groups
+
+# Set the column order for races, if required
+# Column order can adhere to a specific race order if provided. Otherwise, adjust manually as needed.
+
+# Print the final summary table
+
+
+
+#### race_lab
+
+df1a<-subset(df1, df1$year >=2010)
+df_filtered <- df1a %>%
+  filter(race_lab != "In situ")
+
+# Assuming 'df' is your data frame and 'subtype' captures the race variable
+# Defining race_lab order
+race_lab_order <- c("HR+/HER2-","HR-/HER2-","not available", "HR-/HER2+", "Unknown", "HR+/HER2+")
+
+# Calculate counts and proportions for each race within race_lab categories
+race_race_lab_distribution <- df_filtered %>%
+  filter(!race_lab %in% c("Blank(s)")) %>% # Optional: Exclude "Blank(s)" if it's not needed
+  count(subtype, race_lab) %>%
+  group_by(subtype) %>%
+  mutate(Total = sum(n),
+         Proportion = n / Total) %>%
+  ungroup() %>%
+  mutate(Percentage = percent(Proportion)) %>%
+  select(subtype, race_lab, n, Percentage)
+
+# Adding a 'Total' summary row for each race across all race_lab categories
+total_summary_race <- race_race_lab_distribution %>%
+  group_by(subtype) %>%
+  summarise(race_lab = "Total",
+            n = sum(n),
+            Percentage = "100%") %>% # In 'Total', all entries per race are considered, hence 100%
+  ungroup()
+
+# Combine the detailed distribution and 'Total' summaries
+race_race_lab_combined <- bind_rows(race_race_lab_distribution, total_summary_race) %>%
+  arrange(subtype, race_lab)
+
+# Pivot wider for the final summary, focusing on race and race_lab categories
+wide_race_lab <- race_race_lab_combined %>%
+  pivot_wider(names_from = subtype, values_from = c(n, Percentage), names_glue = "{subtype}_{.value}") %>%
+  arrange(match(race_lab, race_lab_order)) # Order rows based on race_lab categories
+
+# Print the final summary table
+
+
+#### Subtype
+
+
+df_filtered <- df1 %>%
+  filter(subtype != "In situ")
+
+# Assuming 'df' is your data frame and 'race_lab' captures the race variable
+# Defining subtype order
+subtype_order <- c("HR+/HER2-","HR-/HER2-","not available", "HR-/HER2+", "Unknown", "HR+/HER2+")
+
+# Calculate counts and proportions for each race within subtype categories
+race_subtype_distribution <- df_filtered %>%
+  filter(!subtype %in% c("Blank(s)")) %>% # Optional: Exclude "Blank(s)" if it's not needed
+  count(race_lab, subtype) %>%
+  group_by(race_lab) %>%
+  mutate(Total = sum(n),
+         Proportion = n / Total) %>%
+  ungroup() %>%
+  mutate(Percentage = percent(Proportion)) %>%
+  select(race_lab, subtype, n, Percentage)
+
+# Adding a 'Total' summary row for each race across all subtype categories
+total_summary_race <- race_subtype_distribution %>%
+  group_by(race_lab) %>%
+  summarise(subtype = "Total",
+            n = sum(n),
+            Percentage = "100%") %>% # In 'Total', all entries per race are considered, hence 100%
+  ungroup()
+
+# Combine the detailed distribution and 'Total' summaries
+race_subtype_combined <- bind_rows(race_subtype_distribution, total_summary_race) %>%
+  arrange(race_lab, subtype)
+
+# Pivot wider for the final summary, focusing on race and subtype categories
+wide_subtype <- race_subtype_combined %>%
+  pivot_wider(names_from = race_lab, values_from = c(n, Percentage), names_glue = "{race_lab}_{.value}") %>%
+  arrange(match(subtype, subtype_order)) # Order rows based on subtype categories
+
+# Print the final summary table
+
+
+##### Poverty
+
+
+df_filtered <- df1 %>%
+  filter(poverty != "In situ")
+
+# Assuming 'df' is your data frame and 'subtype' captures the race variable
+# Defining poverty order
+poverty_order <- c("Not persistent poverty census tract", "Persistent poverty census tract", "Blank(s)" )
+
+# Calculate counts and proportions for each race within poverty categories
+race_poverty_distribution <- df_filtered %>%
+  filter(!poverty %in% c("Blank(s)")) %>% # Optional: Exclude "Blank(s)" if it's not needed
+  count(subtype, poverty) %>%
+  group_by(subtype) %>%
+  mutate(Total = sum(n),
+         Proportion = n / Total) %>%
+  ungroup() %>%
+  mutate(Percentage = percent(Proportion)) %>%
+  select(subtype, poverty, n, Percentage)
+
+# Adding a 'Total' summary row for each race across all poverty categories
+total_summary_race <- race_poverty_distribution %>%
+  group_by(subtype) %>%
+  summarise(poverty = "Total",
+            n = sum(n),
+            Percentage = "100%") %>% # In 'Total', all entries per race are considered, hence 100%
+  ungroup()
+
+# Combine the detailed distribution and 'Total' summaries
+race_poverty_combined <- bind_rows(race_poverty_distribution, total_summary_race) %>%
+  arrange(subtype, poverty)
+
+# Pivot wider for the final summary, focusing on race and poverty categories
+wide_poverty <- race_poverty_combined %>%
+  pivot_wider(names_from = subtype, values_from = c(n, Percentage), names_glue = "{subtype}_{.value}") %>%
+  arrange(match(poverty, poverty_order)) # Order rows based on poverty categories
+
+# Print the final summary table
+
+### ER
+
+df_filtereerdf_filtered <- df1 %>%
+  filter(er != "In situ")
+
+# Assuming 'df' is your data frame and 'subtype' captures the race variable
+# Defining er order
+er_order <- c("Positive", "Negative", "Recode not available", "Borderline/Unknown")
+
+# Calculate counts and proportions for each race within er categories
+race_er_distribution <- df_filtered %>%
+  filter(!er %in% c("Blank(s)")) %>% # Optional: Exclude "Blank(s)" if it's not needed
+  count(subtype, er) %>%
+  group_by(subtype) %>%
+  mutate(Total = sum(n),
+         Proportion = n / Total) %>%
+  ungroup() %>%
+  mutate(Percentage = percent(Proportion)) %>%
+  select(subtype, er, n, Percentage)
+
+# Adding a 'Total' summary row for each race across all er categories
+total_summary_race <- race_er_distribution %>%
+  group_by(subtype) %>%
+  summarise(er = "Total",
+            n = sum(n),
+            Percentage = "100%") %>% # In 'Total', all entries per race are considered, hence 100%
+  ungroup()
+
+# Combine the detailed distribution and 'Total' summaries
+race_er_combined <- bind_rows(race_er_distribution, total_summary_race) %>%
+  arrange(subtype, er)
+
+# Pivot wider for the final summary, focusing on race and er categories
+wide_er <- race_er_combined %>%
+  pivot_wider(names_from = subtype, values_from = c(n, Percentage), names_glue = "{subtype}_{.value}") %>%
+  arrange(match(er, er_order)) # Order rows based on er categories
+
+# Print the final summary table
+
+
+
+
+##
+
+names(wide_stage)[1]<-c("var")
+
+
+names(wide_er)[1]<-c("var")
+
+
+names(wide_race_lab)[1]<-c("var")
+
+
+names(wide_ses)[1]<-c("var")
+
+
+names(wide_poverty)[1]<-c("var")
+
+
+
+
+# Add the dplyr package for using slice function
+library(dplyr)
+
+# Create a data frame
+
+
+# Define new row values
+new_stage <- data.frame(var = "Stage", 
+                        `HR-/HER2-_n` = 0 , `HR-/HER2-_Percentage` = "==========", 
+                        `HR+/HER2-_n` = 0 , `HR+/HER2-_Percentage` = "==========", 
+                        `HR-/HER2-_n` = 0 , `HR-/HER2-_Percentage` = "==========", 
+                        `HR-/HER2+_n` = 0 , `HR-/HER2+_Percentage` = "==========", 
+                        `RNA_n` = 0 , `RNA_Percentage` = "==========", 
+                        `Unknown_n` = 0 , `Unknown_Percentage` = "==========")
+
+
+
+new_er <- data.frame(var = "ER status",`HR-/HER2-_n` = 0 , `HR-/HER2-_Percentage` = "==========", 
+                     `HR+/HER2-_n` = 0 , `HR+/HER2-_Percentage` = "==========", 
+                     `HR-/HER2-_n` = 0 , `HR-/HER2-_Percentage` = "==========", 
+                     `HR-/HER2+_n` = 0 , `HR-/HER2+_Percentage` = "==========", 
+                     `RNA_n` = 0 , `RNA_Percentage` = "==========", 
+                     `Unknown_n` = 0 , `Unknown_Percentage` = "==========")
+
+
+new_race <- data.frame(var = "Subtype", `HR-/HER2-_n` = 0 , `HR-/HER2-_Percentage` = "==========", 
+                       `HR+/HER2-_n` = 0 , `HR+/HER2-_Percentage` = "==========", 
+                       `HR-/HER2-_n` = 0 , `HR-/HER2-_Percentage` = "==========", 
+                       `HR-/HER2+_n` = 0 , `HR-/HER2+_Percentage` = "==========", 
+                       `RNA_n` = 0 , `RNA_Percentage` = "==========", 
+                       `Unknown_n` = 0 , `Unknown_Percentage` = "==========")
+new_ses <- data.frame(var = "SES status",`HR-/HER2-_n` = 0 , `HR-/HER2-_Percentage` = "==========", 
+                      `HR+/HER2-_n` = 0 , `HR+/HER2-_Percentage` = "==========", 
+                      `HR-/HER2-_n` = 0 , `HR-/HER2-_Percentage` = "==========", 
+                      `HR-/HER2+_n` = 0 , `HR-/HER2+_Percentage` = "==========", 
+                      `RNA_n` = 0 , `RNA_Percentage` = "==========", 
+                      `Unknown_n` = 0 , `Unknown_Percentage` = "==========")
+new_poverty <- data.frame(var = "Poverty", `HR-/HER2-_n` = 0 , `HR-/HER2-_Percentage` = "==========", 
+                          `HR+/HER2-_n` = 0 , `HR+/HER2-_Percentage` = "==========", 
+                          `HR-/HER2-_n` = 0 , `HR-/HER2-_Percentage` = "==========", 
+                          `HR-/HER2+_n` = 0 , `HR-/HER2+_Percentage` = "==========", 
+                          `RNA_n` = 0 , `RNA_Percentage` = "==========", 
+                          `Unknown_n` = 0 , `Unknown_Percentage` = "==========")
+
+# Specify the position (row number) where you want to add the new row
+position <- 0
+# Add the new row at the specified position
+df3 <- bind_rows(slice(wide_stage, 0:(position - 0)), new_stage, slice(wide_stage, position:nrow(wide_stage)))
+
+df4 <- bind_rows(slice(wide_er, 0:(position - 0)), new_er, slice(wide_er, position:nrow(wide_er)))
+
+df5 <- bind_rows(slice(wide_race_lab, 0:(position - 0)), new_race, slice(wide_race_lab, position:nrow(wide_race_lab)))
+
+df6 <- bind_rows(slice(wide_ses, 0:(position - 0)), new_ses, slice(wide_ses, position:nrow(wide_ses)))
+
+df7 <- bind_rows(slice(wide_poverty, 0:(position - 0)), new_poverty, slice(wide_poverty, position:nrow(wide_poverty)))
+
+
+df2<-rbind(df3,df4,df5,df6,df7)
+
+df2<-df2[c(1,2,8, 3, 9, 4, 10, 5, 11, 6, 12, 7, 13)]
+
+
+#kbl(df2) %>%
+# kable_styling(bootstrap_options = "striped", font_size = 1)
+
+knitr::kable(df2, col.names = gsub("[.]", " ", names(df2)))
+
+```
+
 ### Relative Survival and crude probability of death
 
 ## References
