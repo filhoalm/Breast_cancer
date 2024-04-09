@@ -15,11 +15,18 @@ We want to understand whether the association of deprivation (yost) differs by b
 
 *Data source*
 
-Data was obtained from the Surveillance, Epidemiology, and End Results (SEER) Program's Seventeen Database (Specialized dataset), accessed through SEER\*Stat version 8.4.0. The dataset comprises malignant breast cancer cases in females aged 35 to 84 years, spanning from 1992 to 2020 with follow-up until December 2020. Age at diagnosis was categorized into 5-year age groups (35 - 39, ..., 80-84) and one-year time spans. Census tract-level socioeconomic status (SES) is available in quintiles. Race and ethnicity definitions follow the criteria established by the SEER program, employing an algorithm to recode detailed race and origin variables into four groups: Non-Hispanic White (NHW), Non-Hispanic Black (NHB), Hispanic (HIS), and Asian and Pacific Islander (API). We also conducted analyses using census tract-level rurality variables to facilitate assessments of urban/rural differences and persistent poverty. For more information about the definitions and methodology used to create these specialized variables, refer to [SEER Census Tract-Level Variables](https://seer.cancer.gov/data/specialized/available-databases/census-tract-request/)."
+Data was obtained from the Surveillance, Epidemiology, and End Results (SEER) Program's Seventeen Database (Specialized dataset), accessed through SEER\*Stat version 8.4.0. The dataset comprises malignant breast cancer cases in females aged 35 to 84 years, spanning from 1992 to 2020 with follow-up until December 2020. Age at diagnosis was categorized into 5-year age groups (35 - 39, ..., 80-84) and one-year time spans. Census tract-level socioeconomic status (SES) is available in quintiles. Race and ethnicity definitions follow the criteria established by the SEER program, employing an algorithm to recode detailed race and origin variables into four groups: Non-Hispanic White (NHW), Non-Hispanic Black (NHB), Hispanic (HIS), and Asian and Pacific Islander (API). For more information about the definitions and methodology used to create these specialized variables, refer to [SEER Census Tract-Level Variables](https://seer.cancer.gov/data/specialized/available-databases/census-tract-request/)."
+
+Initially, 3,073,806 cases were included in the study. However, exclusions were made as follows: 17,792 cases were excluded because they were identified through death certificates or autopsy cases, 476,723 were non-malignant cases, 5,492 were cases alive with no survival time, and 508,959 were cases classified as multiple tumors (identified by Sequence Number 0 or 1). After these exclusions, the total number of records utilized for the analysis amounted to 2,082,632.
+
 
 *Statistical analysis* :
 
-The study assessed the proportions of ER status, breast cancer subtype, cancer staging, SES status, and persistent poverty within each race and ethnicity group. Mortality rates were calculated per 1000 person-years. Kaplan-Meier survival curves were generated, and differences between the curves were evaluated using the Log-Rank p-value. To quantify the Hazard ratios between the variables, a Cox proportional hazards model was applied. All statistical analyses were conducted using the R software platform.
+The study assessed the proportions of ER status, breast cancer subtype, cancer staging, SES status, and persistent poverty and race and ethnicity within each breast cancer subtype. Mortality rates were calculated per 1,000 person-years.  To quantify the hazard ratios between the variables, a Cox proportional hazards model was applied. All statistical analyses were conducted using the R software platform and relative survival estimates using SEER*stat software. The outcome was the time between the first breast cancer diagnosis and time to death.
+
+Five-year age-standardized net survival was estimated using [Pohar-Perme methods]("https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1541-0420.2011.01640.x"), stratified by subtype, stage, and SES status. Life tables by age, sex, race, ethnicity, and socioeconomic level (SES status) were constructed, validated, and provided by [SEER]("https://seer.cancer.gov/expsurvival/"), for detailsl see[ Mariotto et al., ]("https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0201034"). Differences in net survival estimates between the highest SES level and the lowest SES level were estimated using the standard error assuming that the variance of the sum (or difference) is the sum of the variances. To calculate the 95% Confidence Intervals (CIs) for the differences, the formula uses the standard error of the difference (se_diffs) multiplied by 1.96 for a 95% CI. 
+
+
 
 ## Results
 
@@ -48,14 +55,11 @@ library(forcats)
 ```
 
 
-The majority of patients across all subtypes presented with localized disease, with the highest proportion observed in the HR+/HER2- subtype (67.59%). Distant metastasis was more common in the HR-/HER2- subtype compared to the HR+/HER2+ subtype. Specifically, 10.99% of patients in the HR-/HER2- subtype presented with distant metastasis, while only 4.33% were HR+/HER2+.
+Most patients across all breast cancer subtypes had localized disease, notably in the HR+/HER2- subtype (67.59%). The HR-/HER2- subtype presented higher proportion of distant metastases (10.99%) compared to 4.33% in HR+/HER2+ patients.
 
-Non-Hispanic White (NHW) individuals showed the highest proportions across all breast cancer subtypes, with the greatest percentage for HR+/HER2- (68.69%). Non-Hispanic Black (NHB) individuals had higher proportion for HR-/HER2- subtype (20.60%).
+Non-Hispanic White (NHW) individuals were most common across subtypes, especially in HR+/HER2- (68.69%), while Non-Hispanic Black (NHB) individuals had a higher proportion in the HR-/HER2- subtype (20.60%).
 
-
-Across all subtypes, there is an overall gradient in SES groups, increasing from the lowest to highest SES. The highest SES group (Group 5) shows a significant percentage across all subtypes, most notably in the HR+/HER2- subtype (33.30%). The higher SES groups overall have a higher proportion in most subtypes, particularly in the HR+/HER2- subtype. The HR-/HER2- subtype shows a slightly different pattern, with a lower proportion of the highest SES group: Group 1 (Lowest SES) comprises 13.637% (6,890 cases) of HR+/HER2+, and 17.659% (8,935 cases) for the lowest SES quintile.
-
-Most of cases across all breast cancer subtypes did not come from persistent poverty census tracts, with the HR+/HER2- having the highest percentages (93.72%).
+Socioeconomic status (SES) showed a clear gradient across all subtypes, with the highest SES group (Group 5) being more pronaunced, particularly in the HR+/HER2- subtype (33.30%). Higher SES groups constituted a larger portion of most subtypes, with the HR-/HER2- subtype having a distinct distribution pattern: the lowest SES quintile encompassed 13.637% of HR+/HER2+ and 17.659% of cases.
 
 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
@@ -482,14 +486,10 @@ knitr::kable(df2, col.names = gsub("[.]", " ", names(df2)))
 
 #### Figure 1 - Hazard Ratios and 95% Confidence Intervals.
 
+Individuals with the HR-/HER2+ subtype exhibited the highest hazard ratio (HR) of 1.95 (95% CI 1.85-2.06), closely followed by the HR+/HER2+ subtype with an HR of 1.89 (95% CI 1.81-1.97). Localized stage cancer had an HR of 1.96 (95% CI 1.92-2.00), indicating a significant impact of early disease stages among lower socioeconomic status (SES) quintiles, while distant stage cancer reported a lower HR of 1.40 (95% CI 1.35-1.46).
 
-Individuals with the HR-/HER2+ subtype showed the highest hazard ratio (HR) of 1.95 (95% CI 1.85-2.06), followed by HR+/HER2+ with an HR of 1.89 (95% CI 1.81-1.97).
+In the highest SES quintile, both the HR-/HER2+ subtype and localized stage cancer showed notably low HRs of 0.51 (95% CI 0.41-0.62) and 0.51 (95% CI 0.47-0.55) respectively. Conversely, in the lowest SES quintile, those with HR+/HER2- subtype had an HR of 1.74 (95% CI 1.71-1.78), but this figure dropped to 0.57 (95% CI 0.54-0.61) for individuals in the highest SES quintile with the same cancer subtype.
 
-Localized stage cancer presented an HR of 1.96 (95% CI 1.92-2.00), highlighting the severity of early disease stage in individuals from lower SES quintiles. On the other hand, Distant stage cancer showed a lower HR of 1.40 (95% CI 1.35-1.46).
-
-In the highest SES quintile, low HRs were noted for the HR-/HER2+ subtype (HR 0.51, 95% CI 0.41-0.62) and Localized stage cancer (HR 0.51, 95% CI 0.47-0.55).
-
-Those with the HR+/HER2- subtype in the lowest SES quintile had an HR of 1.74 (95% CI 1.71-1.78), whereas individuals from the highest SES quintile with the same cancer subtype showed an HR of 0.57 (95% CI 0.54-0.61).
 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
 df <- read_csv("C:/Users/miran/Desktop/Survival/Specialized/data/seer17_breast.csv")
@@ -1541,3 +1541,9 @@ knitr::kable(df8, col.names = gsub("[.]", " ", names(df8)))
 ## References
 
 Breast cancer incidence and survival in Scotland by socio-economic deprivation and tumour subtype [Ref]("https://pubmed.ncbi.nlm.nih.gov/35648299/")
+
+On Estimation in Relative Survival[Ref]("https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1541-0420.2011.01640.x")
+
+Expected Survival Life Tables, Released March 2024[Ref]("https://seer.cancer.gov/expsurvival/"), for detaisl 
+
+Geographical, racial and socio-economic variation in life expectancy in the US and their impact on cancer relative survival[Ref]("https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0201034"). 
