@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="AMF">
+<meta name="dcterms.date" content="2024-01-24">
+
+<title>Malignant Breast Cancer Mortality and Socioeconomic Deprivation in the United States: SEER-17 (Specialized Dataset)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="seer17_specialized_ses_files/libs/clipboard/clipboard.min.js"></script>
+<script src="seer17_specialized_ses_files/libs/quarto-html/quarto.js"></script>
+<script src="seer17_specialized_ses_files/libs/quarto-html/popper.min.js"></script>
+<script src="seer17_specialized_ses_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="seer17_specialized_ses_files/libs/quarto-html/anchor.min.js"></script>
+<link href="seer17_specialized_ses_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="seer17_specialized_ses_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="seer17_specialized_ses_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="seer17_specialized_ses_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="seer17_specialized_ses_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Malignant Breast Cancer Mortality and Socioeconomic Deprivation in the United States: SEER-17 (Specialized Dataset)</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>AMF </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">January 24, 2024</p>
+    </div>
+  </div>
+  
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">April 8, 2024</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+</header>
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>We want to understand whether the association of deprivation (yost) differs by breast cancer subtype:</p>
+</section>
+<section id="methods" class="level2">
+<h2 class="anchored" data-anchor-id="methods">Methods</h2>
+<p><em>Data source</em></p>
+<p>Data was obtained from the Surveillance, Epidemiology, and End Results (SEER) Program’s Seventeen Database (Specialized dataset), accessed through SEER*Stat version 8.4.0. The dataset comprises malignant breast cancer cases in females aged 35 to 84 years, spanning from 1992 to 2020 with follow-up until December 2020. Age at diagnosis was categorized into 5-year age groups (35 - 39, …, 80-84) and one-year time spans. Census tract-level socioeconomic status (SES) is available in quintiles. Race and ethnicity definitions follow the criteria established by the SEER program, employing an algorithm to recode detailed race and origin variables into four groups: Non-Hispanic White (NHW), Non-Hispanic Black (NHB), Hispanic (HIS), and Asian and Pacific Islander (API). We also conducted analyses using census tract-level rurality variables to facilitate assessments of urban/rural differences and persistent poverty. For more information about the definitions and methodology used to create these specialized variables, refer to <a href="https://seer.cancer.gov/data/specialized/available-databases/census-tract-request/">SEER Census Tract-Level Variables</a>.”</p>
+<p><em>Statistical analysis</em> :</p>
+<p>The study assessed the proportions of ER status, breast cancer subtype, cancer staging, SES status, and persistent poverty within each race and ethnicity group. Mortality rates were calculated per 1000 person-years. Kaplan-Meier survival curves were generated, and differences between the curves were evaluated using the Log-Rank p-value. To quantify the Hazard ratios between the variables, a Cox proportional hazards model was applied. All statistical analyses were conducted using the R software platform.</p>
+</section>
+<section id="results" class="level2">
+<h2 class="anchored" data-anchor-id="results">Results</h2>
+<section id="table-1-characteristics-of-the-breast-cancer-cohort-from-2003---2020-by-breast-cancer-subtype" class="level4">
+<h4 class="anchored" data-anchor-id="table-1-characteristics-of-the-breast-cancer-cohort-from-2003---2020-by-breast-cancer-subtype">Table 1: Characteristics of the Breast Cancer Cohort from 2003 - 2020 by Breast Cancer Subtype</h4>
+<p>The majority of patients across all subtypes presented with localized disease, with the highest proportion observed in the HR+/HER2- subtype (67.59%). Distant metastasis was more common in the HR-/HER2- subtype compared to the HR+/HER2+ subtype. Specifically, 10.99% of patients in the HR-/HER2- subtype presented with distant metastasis, while only 4.33% were HR+/HER2+.</p>
+<p>Non-Hispanic White (NHW) individuals showed the highest proportions across all breast cancer subtypes, with the greatest percentage for HR+/HER2- (68.69%). Non-Hispanic Black (NHB) individuals had higher proportion for HR-/HER2- subtype (20.60%).</p>
+<p>Across all subtypes, there is an overall gradient in SES groups, increasing from the lowest to highest SES. The highest SES group (Group 5) shows a significant percentage across all subtypes, most notably in the HR+/HER2- subtype (33.30%). The higher SES groups overall have a higher proportion in most subtypes, particularly in the HR+/HER2- subtype. The HR-/HER2- subtype shows a slightly different pattern, with a lower proportion of the highest SES group: Group 1 (Lowest SES) comprises 13.637% (6,890 cases) of HR+/HER2+, and 17.659% (8,935 cases) for the lowest SES quintile.</p>
+<p>Most of cases across all breast cancer subtypes did not come from persistent poverty census tracts, with the HR+/HER2- having the highest percentages (93.72%).</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 24%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 4%">
+<col style="width: 6%">
+<col style="width: 5%">
+<col style="width: 7%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">var</th>
+<th style="text-align: right;">HR+/HER2+</th>
+<th style="text-align: left;">_p</th>
+<th style="text-align: right;">HR+/HER2-</th>
+<th style="text-align: left;">_p</th>
+<th style="text-align: right;">HR-/HER2+</th>
+<th style="text-align: left;">_p</th>
+<th style="text-align: right;">HR-/HER2-</th>
+<th style="text-align: left;">_p</th>
+<th style="text-align: right;">RNA_n</th>
+<th style="text-align: left;">_p</th>
+<th style="text-align: right;">Unknown</th>
+<th style="text-align: left;">_p</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Stage</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">==========</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Localized</td>
+<td style="text-align: right;">28432</td>
+<td style="text-align: left;">55.3421%</td>
+<td style="text-align: right;">236044</td>
+<td style="text-align: left;">67.5922%</td>
+<td style="text-align: right;">10707</td>
+<td style="text-align: left;">49.4367%</td>
+<td style="text-align: right;">30724</td>
+<td style="text-align: left;">59.8593%</td>
+<td style="text-align: right;">102071</td>
+<td style="text-align: left;">61.5427%</td>
+<td style="text-align: right;">17274</td>
+<td style="text-align: left;">54.9253%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Regional</td>
+<td style="text-align: right;">18319</td>
+<td style="text-align: left;">35.6574%</td>
+<td style="text-align: right;">96302</td>
+<td style="text-align: left;">27.5765%</td>
+<td style="text-align: right;">8417</td>
+<td style="text-align: left;">38.8632%</td>
+<td style="text-align: right;">16645</td>
+<td style="text-align: left;">32.4293%</td>
+<td style="text-align: right;">52639</td>
+<td style="text-align: left;">31.7382%</td>
+<td style="text-align: right;">6064</td>
+<td style="text-align: left;">19.2814%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Distant</td>
+<td style="text-align: right;">4266</td>
+<td style="text-align: left;">8.3036%</td>
+<td style="text-align: right;">15134</td>
+<td style="text-align: left;">4.3337%</td>
+<td style="text-align: right;">2381</td>
+<td style="text-align: left;">10.9936%</td>
+<td style="text-align: right;">3568</td>
+<td style="text-align: left;">6.9515%</td>
+<td style="text-align: right;">8657</td>
+<td style="text-align: left;">5.2197%</td>
+<td style="text-align: right;">3939</td>
+<td style="text-align: left;">12.5246%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Unknown/unstaged</td>
+<td style="text-align: right;">358</td>
+<td style="text-align: left;">0.6968%</td>
+<td style="text-align: right;">1738</td>
+<td style="text-align: left;">0.4977%</td>
+<td style="text-align: right;">153</td>
+<td style="text-align: left;">0.7064%</td>
+<td style="text-align: right;">390</td>
+<td style="text-align: left;">0.7598%</td>
+<td style="text-align: right;">2487</td>
+<td style="text-align: left;">1.4995%</td>
+<td style="text-align: right;">4173</td>
+<td style="text-align: left;">13.2687%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Total</td>
+<td style="text-align: right;">51375</td>
+<td style="text-align: left;">100%</td>
+<td style="text-align: right;">349218</td>
+<td style="text-align: left;">100%</td>
+<td style="text-align: right;">21658</td>
+<td style="text-align: left;">100%</td>
+<td style="text-align: right;">51327</td>
+<td style="text-align: left;">100%</td>
+<td style="text-align: right;">165854</td>
+<td style="text-align: left;">100%</td>
+<td style="text-align: right;">31450</td>
+<td style="text-align: left;">100%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ER status</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">==========</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Positive</td>
+<td style="text-align: right;">49860</td>
+<td style="text-align: left;">97.051%</td>
+<td style="text-align: right;">345792</td>
+<td style="text-align: left;">99.019%</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">122703</td>
+<td style="text-align: left;">73.983%</td>
+<td style="text-align: right;">14638</td>
+<td style="text-align: left;">46.542%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Negative</td>
+<td style="text-align: right;">1502</td>
+<td style="text-align: left;">2.924%</td>
+<td style="text-align: right;">3243</td>
+<td style="text-align: left;">0.929%</td>
+<td style="text-align: right;">21658</td>
+<td style="text-align: left;">100.000%</td>
+<td style="text-align: right;">51327</td>
+<td style="text-align: left;">100.000%</td>
+<td style="text-align: right;">31677</td>
+<td style="text-align: left;">19.099%</td>
+<td style="text-align: right;">3104</td>
+<td style="text-align: left;">9.869%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Recode not available</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">1846</td>
+<td style="text-align: left;">1.113%</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Borderline/Unknown</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: left;">0.025%</td>
+<td style="text-align: right;">184</td>
+<td style="text-align: left;">0.053%</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">9628</td>
+<td style="text-align: left;">5.805%</td>
+<td style="text-align: right;">13709</td>
+<td style="text-align: left;">43.588%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Total</td>
+<td style="text-align: right;">51375</td>
+<td style="text-align: left;">100%</td>
+<td style="text-align: right;">349219</td>
+<td style="text-align: left;">100%</td>
+<td style="text-align: right;">21658</td>
+<td style="text-align: left;">100%</td>
+<td style="text-align: right;">51327</td>
+<td style="text-align: left;">100%</td>
+<td style="text-align: right;">165854</td>
+<td style="text-align: left;">100%</td>
+<td style="text-align: right;">31451</td>
+<td style="text-align: left;">100%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Subtype</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">==========</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">API</td>
+<td style="text-align: right;">6010</td>
+<td style="text-align: left;">11.698%</td>
+<td style="text-align: right;">34457</td>
+<td style="text-align: left;">9.867%</td>
+<td style="text-align: right;">3055</td>
+<td style="text-align: left;">14.106%</td>
+<td style="text-align: right;">4073</td>
+<td style="text-align: left;">7.935%</td>
+<td style="text-align: right;">233</td>
+<td style="text-align: left;">17.388%</td>
+<td style="text-align: right;">3178</td>
+<td style="text-align: left;">10.105%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">HIS</td>
+<td style="text-align: right;">7796</td>
+<td style="text-align: left;">15.175%</td>
+<td style="text-align: right;">43406</td>
+<td style="text-align: left;">12.429%</td>
+<td style="text-align: right;">3496</td>
+<td style="text-align: left;">16.142%</td>
+<td style="text-align: right;">7420</td>
+<td style="text-align: left;">14.456%</td>
+<td style="text-align: right;">296</td>
+<td style="text-align: left;">22.090%</td>
+<td style="text-align: right;">5194</td>
+<td style="text-align: left;">16.515%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">NHB</td>
+<td style="text-align: right;">5894</td>
+<td style="text-align: left;">11.473%</td>
+<td style="text-align: right;">31487</td>
+<td style="text-align: left;">9.016%</td>
+<td style="text-align: right;">2947</td>
+<td style="text-align: left;">13.607%</td>
+<td style="text-align: right;">10572</td>
+<td style="text-align: left;">20.597%</td>
+<td style="text-align: right;">153</td>
+<td style="text-align: left;">11.418%</td>
+<td style="text-align: right;">3807</td>
+<td style="text-align: left;">12.105%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">NHW</td>
+<td style="text-align: right;">31675</td>
+<td style="text-align: left;">61.655%</td>
+<td style="text-align: right;">239869</td>
+<td style="text-align: left;">68.687%</td>
+<td style="text-align: right;">12160</td>
+<td style="text-align: left;">56.146%</td>
+<td style="text-align: right;">29262</td>
+<td style="text-align: left;">57.011%</td>
+<td style="text-align: right;">658</td>
+<td style="text-align: left;">49.104%</td>
+<td style="text-align: right;">19272</td>
+<td style="text-align: left;">61.276%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Total</td>
+<td style="text-align: right;">51375</td>
+<td style="text-align: left;">100%</td>
+<td style="text-align: right;">349219</td>
+<td style="text-align: left;">100%</td>
+<td style="text-align: right;">21658</td>
+<td style="text-align: left;">100%</td>
+<td style="text-align: right;">51327</td>
+<td style="text-align: left;">100%</td>
+<td style="text-align: right;">1340</td>
+<td style="text-align: left;">100%</td>
+<td style="text-align: right;">31451</td>
+<td style="text-align: left;">100%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SES status</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">==========</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Group 1 (lowest SES)</td>
+<td style="text-align: right;">6890</td>
+<td style="text-align: left;">13.637%</td>
+<td style="text-align: right;">41396</td>
+<td style="text-align: left;">12.048%</td>
+<td style="text-align: right;">3269</td>
+<td style="text-align: left;">15.324%</td>
+<td style="text-align: right;">8935</td>
+<td style="text-align: left;">17.659%</td>
+<td style="text-align: right;">21413</td>
+<td style="text-align: left;">13.061%</td>
+<td style="text-align: right;">5232</td>
+<td style="text-align: left;">16.925%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Group 2</td>
+<td style="text-align: right;">7871</td>
+<td style="text-align: left;">15.579%</td>
+<td style="text-align: right;">49152</td>
+<td style="text-align: left;">14.305%</td>
+<td style="text-align: right;">3377</td>
+<td style="text-align: left;">15.831%</td>
+<td style="text-align: right;">8302</td>
+<td style="text-align: left;">16.408%</td>
+<td style="text-align: right;">24275</td>
+<td style="text-align: left;">14.806%</td>
+<td style="text-align: right;">5306</td>
+<td style="text-align: left;">17.165%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Group 3</td>
+<td style="text-align: right;">8752</td>
+<td style="text-align: left;">17.323%</td>
+<td style="text-align: right;">59477</td>
+<td style="text-align: left;">17.310%</td>
+<td style="text-align: right;">3738</td>
+<td style="text-align: left;">17.523%</td>
+<td style="text-align: right;">9132</td>
+<td style="text-align: left;">18.049%</td>
+<td style="text-align: right;">27689</td>
+<td style="text-align: left;">16.889%</td>
+<td style="text-align: right;">5478</td>
+<td style="text-align: left;">17.721%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Group 4</td>
+<td style="text-align: right;">11434</td>
+<td style="text-align: left;">22.631%</td>
+<td style="text-align: right;">79150</td>
+<td style="text-align: left;">23.036%</td>
+<td style="text-align: right;">4778</td>
+<td style="text-align: left;">22.398%</td>
+<td style="text-align: right;">11059</td>
+<td style="text-align: left;">21.857%</td>
+<td style="text-align: right;">37262</td>
+<td style="text-align: left;">22.728%</td>
+<td style="text-align: right;">6651</td>
+<td style="text-align: left;">21.516%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Group 5 (highest SES)</td>
+<td style="text-align: right;">15576</td>
+<td style="text-align: left;">30.830%</td>
+<td style="text-align: right;">114415</td>
+<td style="text-align: left;">33.300%</td>
+<td style="text-align: right;">6170</td>
+<td style="text-align: left;">28.924%</td>
+<td style="text-align: right;">13168</td>
+<td style="text-align: left;">26.026%</td>
+<td style="text-align: right;">53310</td>
+<td style="text-align: left;">32.516%</td>
+<td style="text-align: right;">8245</td>
+<td style="text-align: left;">26.672%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Total</td>
+<td style="text-align: right;">50523</td>
+<td style="text-align: left;">100%</td>
+<td style="text-align: right;">343590</td>
+<td style="text-align: left;">100%</td>
+<td style="text-align: right;">21332</td>
+<td style="text-align: left;">100%</td>
+<td style="text-align: right;">50596</td>
+<td style="text-align: left;">100%</td>
+<td style="text-align: right;">163949</td>
+<td style="text-align: left;">100%</td>
+<td style="text-align: right;">30912</td>
+<td style="text-align: left;">100%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Poverty</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">==========</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Not persistent poverty census tract</td>
+<td style="text-align: right;">47655</td>
+<td style="text-align: left;">92.80%</td>
+<td style="text-align: right;">327165</td>
+<td style="text-align: left;">93.72%</td>
+<td style="text-align: right;">19864</td>
+<td style="text-align: left;">91.75%</td>
+<td style="text-align: right;">46408</td>
+<td style="text-align: left;">90.45%</td>
+<td style="text-align: right;">153572</td>
+<td style="text-align: left;">92.66%</td>
+<td style="text-align: right;">28584</td>
+<td style="text-align: left;">91.02%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Persistent poverty census tract</td>
+<td style="text-align: right;">3697</td>
+<td style="text-align: left;">7.20%</td>
+<td style="text-align: right;">21913</td>
+<td style="text-align: left;">6.28%</td>
+<td style="text-align: right;">1786</td>
+<td style="text-align: left;">8.25%</td>
+<td style="text-align: right;">4899</td>
+<td style="text-align: left;">9.55%</td>
+<td style="text-align: right;">12157</td>
+<td style="text-align: left;">7.34%</td>
+<td style="text-align: right;">2821</td>
+<td style="text-align: left;">8.98%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Total</td>
+<td style="text-align: right;">51352</td>
+<td style="text-align: left;">100%</td>
+<td style="text-align: right;">349078</td>
+<td style="text-align: left;">100%</td>
+<td style="text-align: right;">21650</td>
+<td style="text-align: left;">100%</td>
+<td style="text-align: right;">51307</td>
+<td style="text-align: left;">100%</td>
+<td style="text-align: right;">165729</td>
+<td style="text-align: left;">100%</td>
+<td style="text-align: right;">31405</td>
+<td style="text-align: left;">100%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="figure-1---hazard-ratios-and-95-confidence-intervals." class="level4">
+<h4 class="anchored" data-anchor-id="figure-1---hazard-ratios-and-95-confidence-intervals.">Figure 1 - Hazard Ratios and 95% Confidence Intervals.</h4>
+<p>Individuals with the HR-/HER2+ subtype showed the highest hazard ratio (HR) of 1.95 (95% CI 1.85-2.06), followed by HR+/HER2+ with an HR of 1.89 (95% CI 1.81-1.97).</p>
+<p>Localized stage cancer presented an HR of 1.96 (95% CI 1.92-2.00), highlighting the severity of early disease stage in individuals from lower SES quintiles. On the other hand, Distant stage cancer showed a lower HR of 1.40 (95% CI 1.35-1.46).</p>
+<p>In the highest SES quintile, low HRs were noted for the HR-/HER2+ subtype (HR 0.51, 95% CI 0.41-0.62) and Localized stage cancer (HR 0.51, 95% CI 0.47-0.55).</p>
+<p>Those with the HR+/HER2- subtype in the lowest SES quintile had an HR of 1.74 (95% CI 1.71-1.78), whereas individuals from the highest SES quintile with the same cancer subtype showed an HR of 0.57 (95% CI 0.54-0.61).</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="seer17_specialized_ses_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Note: Adjusted hazard ratios and 95% confidence intervals for the relative risk of death from malignant breast cancer in the most deprived quintile (red) and least deprived quintile (blue) by molecular subtype, ER status, and stage. The models are adjusted for age, stage, and race/ethnicity and poverty. The analysis accounts for potential confounding factors and is based on all-cause mortality.</p>
+</section>
+<section id="figure-2---exposure-response-hr-by-deprivation-ses-status" class="level4">
+<h4 class="anchored" data-anchor-id="figure-2---exposure-response-hr-by-deprivation-ses-status">Figure 2 - Exposure-response: HR by deprivation (SES status)</h4>
+<p>The figure below represents an exposure-response relationship between deprivation status (SES) and the hazard ratio for breast cancer mortality. Group 1, which has the lowest SES, shows the highest hazard ratio at 1.70, indicating the highest risk relative to the reference group (Group 5). As SES increases from Group 1 to Group 4, there is a consistent decrease in the hazard ratio, demonstrating a dose-response relationship between SES and breast cancer mortality.</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="seer17_specialized_ses_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Note: Adjusted hazard ratios and 95% confidence intervals for the relative risk of death from malignant breast cancer in the most deprived quintile (red) adjusted for age, stage, and race/ethnicity and poverty.</p>
+</section>
+<section id="table-2---5-year-relative-survival-and-differences-between-highest-and-lowest-ses-status" class="level4">
+<h4 class="anchored" data-anchor-id="table-2---5-year-relative-survival-and-differences-between-highest-and-lowest-ses-status">Table 2 - 5-year relative survival and differences between highest and lowest ses status</h4>
+<p>These results show differences in net survival rates between the highest and lowest SES (socioeconomic status) across various cancer subtypes and stages. The HR-/HER2+ subtype in the distant stage of cancer reported the most substantial differences in relative survival, with a difference of 20.4 percentage points between the highest and lowest SES groups (95% CI: 13.04 to 27.76). Similarly, the HR+/HER2- subtype in distant stages showed a notable difference in survival rates, with a 12.4 percentage point gap (95% CI: 9.34 to 15.46). HR+/HER2+ at Distant stages showed 18.3 points difference (95%CI 12.7 - 23.8).</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 7%">
+<col style="width: 8%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 11%">
+<col style="width: 12%">
+<col style="width: 12%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">subtype</th>
+<th style="text-align: left;">stage</th>
+<th style="text-align: right;">year x</th>
+<th style="text-align: left;">yost</th>
+<th style="text-align: right;">n</th>
+<th style="text-align: right;">net</th>
+<th style="text-align: right;">lower_CI</th>
+<th style="text-align: right;">Upper_CI</th>
+<th style="text-align: right;">Difference</th>
+<th style="text-align: right;">Lower_CI_95</th>
+<th style="text-align: right;">Upper_CI_95</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">HR-/HER2-</td>
+<td style="text-align: left;">Distant</td>
+<td style="text-align: right;">2005</td>
+<td style="text-align: left;">lowest</td>
+<td style="text-align: right;">782</td>
+<td style="text-align: right;">10.4</td>
+<td style="text-align: right;">7.9</td>
+<td style="text-align: right;">13.3</td>
+<td style="text-align: right;">2.6</td>
+<td style="text-align: right;">-1.716452</td>
+<td style="text-align: right;">6.916452</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">HR-/HER2-</td>
+<td style="text-align: left;">Distant</td>
+<td style="text-align: right;">2005</td>
+<td style="text-align: left;">highest</td>
+<td style="text-align: right;">710</td>
+<td style="text-align: right;">13.0</td>
+<td style="text-align: right;">9.9</td>
+<td style="text-align: right;">16.5</td>
+<td style="text-align: right;">2.6</td>
+<td style="text-align: right;">-1.716452</td>
+<td style="text-align: right;">6.916452</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">HR-/HER2-</td>
+<td style="text-align: left;">Localized</td>
+<td style="text-align: right;">2005</td>
+<td style="text-align: left;">lowest</td>
+<td style="text-align: right;">4976</td>
+<td style="text-align: right;">87.8</td>
+<td style="text-align: right;">86.3</td>
+<td style="text-align: right;">89.1</td>
+<td style="text-align: right;">6.5</td>
+<td style="text-align: right;">4.919797</td>
+<td style="text-align: right;">8.080203</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">HR-/HER2-</td>
+<td style="text-align: left;">Localized</td>
+<td style="text-align: right;">2005</td>
+<td style="text-align: left;">highest</td>
+<td style="text-align: right;">8416</td>
+<td style="text-align: right;">94.3</td>
+<td style="text-align: right;">93.4</td>
+<td style="text-align: right;">95.1</td>
+<td style="text-align: right;">6.5</td>
+<td style="text-align: right;">4.919797</td>
+<td style="text-align: right;">8.080203</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">HR-/HER2-</td>
+<td style="text-align: left;">Regional</td>
+<td style="text-align: right;">2005</td>
+<td style="text-align: left;">lowest</td>
+<td style="text-align: right;">3195</td>
+<td style="text-align: right;">61.1</td>
+<td style="text-align: right;">58.9</td>
+<td style="text-align: right;">63.3</td>
+<td style="text-align: right;">11.0</td>
+<td style="text-align: right;">8.214317</td>
+<td style="text-align: right;">13.785683</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">HR-/HER2-</td>
+<td style="text-align: left;">Regional</td>
+<td style="text-align: right;">2005</td>
+<td style="text-align: left;">highest</td>
+<td style="text-align: right;">4051</td>
+<td style="text-align: right;">72.1</td>
+<td style="text-align: right;">70.3</td>
+<td style="text-align: right;">73.8</td>
+<td style="text-align: right;">11.0</td>
+<td style="text-align: right;">8.214317</td>
+<td style="text-align: right;">13.785683</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">HR-/HER2+</td>
+<td style="text-align: left;">Distant</td>
+<td style="text-align: right;">2005</td>
+<td style="text-align: left;">lowest</td>
+<td style="text-align: right;">413</td>
+<td style="text-align: right;">29.1</td>
+<td style="text-align: right;">23.8</td>
+<td style="text-align: right;">34.6</td>
+<td style="text-align: right;">20.4</td>
+<td style="text-align: right;">13.042817</td>
+<td style="text-align: right;">27.757183</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">HR-/HER2+</td>
+<td style="text-align: left;">Distant</td>
+<td style="text-align: right;">2005</td>
+<td style="text-align: left;">highest</td>
+<td style="text-align: right;">586</td>
+<td style="text-align: right;">49.5</td>
+<td style="text-align: right;">44.5</td>
+<td style="text-align: right;">54.4</td>
+<td style="text-align: right;">20.4</td>
+<td style="text-align: right;">13.042817</td>
+<td style="text-align: right;">27.757183</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">HR-/HER2+</td>
+<td style="text-align: left;">Localized</td>
+<td style="text-align: right;">2005</td>
+<td style="text-align: left;">lowest</td>
+<td style="text-align: right;">1498</td>
+<td style="text-align: right;">91.5</td>
+<td style="text-align: right;">88.8</td>
+<td style="text-align: right;">93.5</td>
+<td style="text-align: right;">7.7</td>
+<td style="text-align: right;">5.220774</td>
+<td style="text-align: right;">10.179226</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">HR-/HER2+</td>
+<td style="text-align: left;">Localized</td>
+<td style="text-align: right;">2005</td>
+<td style="text-align: left;">highest</td>
+<td style="text-align: right;">3330</td>
+<td style="text-align: right;">99.2</td>
+<td style="text-align: right;">97.6</td>
+<td style="text-align: right;">99.7</td>
+<td style="text-align: right;">7.7</td>
+<td style="text-align: right;">5.220774</td>
+<td style="text-align: right;">10.179226</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">HR-/HER2+</td>
+<td style="text-align: left;">Regional</td>
+<td style="text-align: right;">2005</td>
+<td style="text-align: left;">lowest</td>
+<td style="text-align: right;">1374</td>
+<td style="text-align: right;">76.2</td>
+<td style="text-align: right;">73.1</td>
+<td style="text-align: right;">79.0</td>
+<td style="text-align: right;">12.5</td>
+<td style="text-align: right;">9.071400</td>
+<td style="text-align: right;">15.928600</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">HR-/HER2+</td>
+<td style="text-align: left;">Regional</td>
+<td style="text-align: right;">2005</td>
+<td style="text-align: left;">highest</td>
+<td style="text-align: right;">2283</td>
+<td style="text-align: right;">88.7</td>
+<td style="text-align: right;">86.8</td>
+<td style="text-align: right;">90.4</td>
+<td style="text-align: right;">12.5</td>
+<td style="text-align: right;">9.071400</td>
+<td style="text-align: right;">15.928600</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">HR+/HER2-</td>
+<td style="text-align: left;">Distant</td>
+<td style="text-align: right;">2005</td>
+<td style="text-align: left;">lowest</td>
+<td style="text-align: right;">2461</td>
+<td style="text-align: right;">27.4</td>
+<td style="text-align: right;">25.0</td>
+<td style="text-align: right;">29.7</td>
+<td style="text-align: right;">12.4</td>
+<td style="text-align: right;">9.338382</td>
+<td style="text-align: right;">15.461618</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">HR+/HER2-</td>
+<td style="text-align: left;">Distant</td>
+<td style="text-align: right;">2005</td>
+<td style="text-align: left;">highest</td>
+<td style="text-align: right;">3960</td>
+<td style="text-align: right;">39.8</td>
+<td style="text-align: right;">37.8</td>
+<td style="text-align: right;">41.8</td>
+<td style="text-align: right;">12.4</td>
+<td style="text-align: right;">9.338382</td>
+<td style="text-align: right;">15.461618</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">HR+/HER2-</td>
+<td style="text-align: left;">Localized</td>
+<td style="text-align: right;">2005</td>
+<td style="text-align: left;">lowest</td>
+<td style="text-align: right;">26363</td>
+<td style="text-align: right;">98.3</td>
+<td style="text-align: right;">97.7</td>
+<td style="text-align: right;">98.8</td>
+<td style="text-align: right;">1.7</td>
+<td style="text-align: right;">1.112000</td>
+<td style="text-align: right;">2.288000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">HR+/HER2-</td>
+<td style="text-align: left;">Localized</td>
+<td style="text-align: right;">2005</td>
+<td style="text-align: left;">highest</td>
+<td style="text-align: right;">81349</td>
+<td style="text-align: right;">100.0</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">1.7</td>
+<td style="text-align: right;">1.112000</td>
+<td style="text-align: right;">2.288000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">HR+/HER2-</td>
+<td style="text-align: left;">Regional</td>
+<td style="text-align: right;">2005</td>
+<td style="text-align: left;">lowest</td>
+<td style="text-align: right;">12818</td>
+<td style="text-align: right;">84.8</td>
+<td style="text-align: right;">83.8</td>
+<td style="text-align: right;">85.7</td>
+<td style="text-align: right;">9.8</td>
+<td style="text-align: right;">8.744508</td>
+<td style="text-align: right;">10.855492</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">HR+/HER2-</td>
+<td style="text-align: left;">Regional</td>
+<td style="text-align: right;">2005</td>
+<td style="text-align: left;">highest</td>
+<td style="text-align: right;">29616</td>
+<td style="text-align: right;">94.6</td>
+<td style="text-align: right;">94.2</td>
+<td style="text-align: right;">95.1</td>
+<td style="text-align: right;">9.8</td>
+<td style="text-align: right;">8.744508</td>
+<td style="text-align: right;">10.855492</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">HR+/HER2+</td>
+<td style="text-align: left;">Distant</td>
+<td style="text-align: right;">2005</td>
+<td style="text-align: left;">lowest</td>
+<td style="text-align: right;">763</td>
+<td style="text-align: right;">35.4</td>
+<td style="text-align: right;">31.3</td>
+<td style="text-align: right;">39.6</td>
+<td style="text-align: right;">18.3</td>
+<td style="text-align: right;">12.749358</td>
+<td style="text-align: right;">23.850642</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">HR+/HER2+</td>
+<td style="text-align: left;">Distant</td>
+<td style="text-align: right;">2005</td>
+<td style="text-align: left;">highest</td>
+<td style="text-align: right;">1106</td>
+<td style="text-align: right;">53.7</td>
+<td style="text-align: right;">50.0</td>
+<td style="text-align: right;">57.3</td>
+<td style="text-align: right;">18.3</td>
+<td style="text-align: right;">12.749358</td>
+<td style="text-align: right;">23.850642</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">HR+/HER2+</td>
+<td style="text-align: left;">Localized</td>
+<td style="text-align: right;">2005</td>
+<td style="text-align: left;">lowest</td>
+<td style="text-align: right;">3530</td>
+<td style="text-align: right;">96.8</td>
+<td style="text-align: right;">95.2</td>
+<td style="text-align: right;">97.8</td>
+<td style="text-align: right;">3.2</td>
+<td style="text-align: right;">1.707308</td>
+<td style="text-align: right;">4.692691</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">HR+/HER2+</td>
+<td style="text-align: left;">Localized</td>
+<td style="text-align: right;">2005</td>
+<td style="text-align: left;">highest</td>
+<td style="text-align: right;">9264</td>
+<td style="text-align: right;">100.0</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">3.2</td>
+<td style="text-align: right;">1.707308</td>
+<td style="text-align: right;">4.692691</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">HR+/HER2+</td>
+<td style="text-align: left;">Regional</td>
+<td style="text-align: right;">2005</td>
+<td style="text-align: left;">lowest</td>
+<td style="text-align: right;">2627</td>
+<td style="text-align: right;">84.4</td>
+<td style="text-align: right;">82.3</td>
+<td style="text-align: right;">86.3</td>
+<td style="text-align: right;">9.6</td>
+<td style="text-align: right;">7.408653</td>
+<td style="text-align: right;">11.791347</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">HR+/HER2+</td>
+<td style="text-align: left;">Regional</td>
+<td style="text-align: right;">2005</td>
+<td style="text-align: left;">highest</td>
+<td style="text-align: right;">5253</td>
+<td style="text-align: right;">94.0</td>
+<td style="text-align: right;">92.9</td>
+<td style="text-align: right;">94.9</td>
+<td style="text-align: right;">9.6</td>
+<td style="text-align: right;">7.408653</td>
+<td style="text-align: right;">11.791347</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<p>Breast cancer incidence and survival in Scotland by socio-economic deprivation and tumour subtype <a href="%22https://pubmed.ncbi.nlm.nih.gov/35648299/%22">Ref</a></p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
