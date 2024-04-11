@@ -38,6 +38,7 @@ library(haven)
 library(dplyr)
 library(survival)
 library(gridExtra)
+library(forcats)
 
 # Read the dataset from the provided URL
 #url <- "https://raw.githubusercontent.com/filhoalm/Breast_cancer/main/Incidence/see12/seer12_er.csv"
@@ -1311,6 +1312,7 @@ knitr::kable(tab, caption = "Summary of Cox model")
 
 We want to understand whether the association of deprivation (yost) differs by breast cancer subtype:
 
+#### Table 2 Characteristic of breast cancer cohort of patients from 2003 - 2020 by breast cancer subtype
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
 
 library(dplyr)
@@ -1730,6 +1732,9 @@ df2<-rbind(df3,df4,df5,df6,df7)
 
 df2<-df2[c(1,2,8, 3, 9, 4, 10, 5, 11, 6, 12, 7, 13)]
 
+names(df2)<-c("var", "HR+/HER2+", "_p", "HR+/HER2-", "_p"
+              , "HR-/HER2+", "_p", "HR-/HER2-", "_p",
+              "RNA_n", "_p", "Unknown" , "_p" )
 
 #kbl(df2) %>%
 # kable_styling(bootstrap_options = "striped", font_size = 1)
@@ -1737,6 +1742,941 @@ df2<-df2[c(1,2,8, 3, 9, 4, 10, 5, 11, 6, 12, 7, 13)]
 knitr::kable(df2, col.names = gsub("[.]", " ", names(df2)))
 
 ```
+
+
+
+
+
+#### Figure 4 Hazard ratio and 95% Confidence Interval 
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+df <- read_csv("C:/Users/miran/Desktop/Survival/Specialized/data/seer17_breast.csv")
+
+names(df)<-c("age1", "year_follow_up", "race", "stage", "subtype", "er", "tract", "registry_tract", "census2010",
+             "urban-area", "poverty", "ylost", "sex", "status", "year_rec", "end_calc", "time")
+
+df1<-subset(df, df$race == "Non-Hispanic White" | 
+              df$race == "Non-Hispanic Black"| df$race == "Non-Hispanic Asian or Pacific Islander" | 
+              df$race == "Hispanic (All Races)")
+
+df1$race_lab[df1$race == "Non-Hispanic White"]<-"NHW"
+df1$race_lab[df1$race == "Non-Hispanic Black"]<-"NHB"
+df1$race_lab[df1$race == "Non-Hispanic Asian or Pacific Islander"]<-"API"
+df1$race_lab[df1$race == "Hispanic (All Races)"]<-"HIS"
+
+df1$age[df1$age1 == "35-39 years"]<-37.5
+df1$age[df1$age1 == "40-44 years"]<-42.5
+df1$age[df1$age1 == "45-49 years"]<-47.5
+df1$age[df1$age1 == "50-54 years"]<-52.5
+df1$age[df1$age1 == "55-59 years"]<-57.5
+df1$age[df1$age1 == "60-64 years"]<-62.5
+df1$age[df1$age1 == "65-69 years"]<-67.5
+df1$age[df1$age1 == "70-74 years"]<-72.5
+df1$age[df1$age1 == "75-79 years"]<-77.5
+df1$age[df1$age1 == "80-84 years"]<-82.5
+
+df1$status_lab[df1$status == "Alive"]<-1
+df1$status_lab[df1$status == "Dead"]<-2
+
+df4<-df1[c("year_follow_up", "age","race_lab" ,"status_lab","time", "stage" ,"er", "subtype", "poverty", "ylost")]
+
+names(df4)[3:4]<-c("race", "status")
+
+
+## "HR+/HER2-"
+df4a<-subset(df4, df4$subtype == "HR+/HER2-")
+#df4a<-subset(df4, df4$subtype == "HR+/HER2-" | df4$subtype == "HR-/HER2-" | df4$subtype == "HR-/HER2+" | df4$subtype == "HR+/HER2+" )
+df4b<-subset(df4a, df4a$stage == "Localized" | df4a$stage == "Regional" | df4a$stage == "Distant" )
+df4c<-subset(df4b, df4b$er == "Positive" | df4b$er == "Negative" )
+df4d<-subset(df4c, df4c$poverty != "Blank(s)" )
+df4e<-subset(df4d, df4d$ylost != "Blank(s)" )
+
+
+df5 <- subset(df4e, year_follow_up >= 2003 & year_follow_up <= 2020 & df4e$time <=60 )
+surv_obj <- Surv(time = df5$time / 12, event = df5$status == 2)
+# Fit a survival curve, stratified by 'stage'
+fit <- survfit(surv_obj ~ race, data = df5)
+
+# Fit Cox PH model
+df5$race<-as.factor(df5$race)
+df5$race <- relevel(df5$race, "NHW")
+df5$stage<-as.factor(df5$stage)
+df5$stage <- relevel(df5$stage, "Localized")
+df5$ylost<-as.factor(df5$ylost)
+df5$ylost <- relevel(df5$ylost, "Group 5 (highest SES)")
+df5$poverty<-as.factor(df5$poverty)
+df5$poverty <- relevel(df5$poverty, "Not persistent poverty census tract")
+df5$age<-as.numeric(df5$age)
+
+
+cox_model <- coxph(surv_obj ~ age + stage + race +ylost, data = df5) 
+summary_cox <- summary(cox_model)
+tab1 <- as.data.frame(summary_cox$coefficients)
+
+#knitr::kable(tab1, caption = "Summary of Cox model")
+tab1 <- tab1[7, ]
+tab1$index<-"HR+/HER2-"
+
+
+## "HR+/HER2+"
+
+df4a<-subset(df4, df4$subtype == "HR+/HER2+")
+#df4a<-subset(df4, df4$subtype == "HR+/HER2-" | df4$subtype == "HR-/HER2-" | df4$subtype == "HR-/HER2+" | df4$subtype == "HR+/HER2+" )
+df4b<-subset(df4a, df4a$stage == "Localized" | df4a$stage == "Regional" | df4a$stage == "Distant" )
+df4c<-subset(df4b, df4b$er == "Positive" | df4b$er == "Negative" )
+df4d<-subset(df4c, df4c$poverty != "Blank(s)" )
+df4e<-subset(df4d, df4d$ylost != "Blank(s)" )
+
+
+df5 <- subset(df4e, year_follow_up >= 2003 & year_follow_up <= 2020 & df4e$time <=60 )
+surv_obj <- Surv(time = df5$time / 12, event = df5$status == 2)
+# Fit a survival curve, stratified by 'stage'
+fit <- survfit(surv_obj ~ race, data = df5)
+
+# Fit Cox PH model
+df5$race<-as.factor(df5$race)
+df5$race <- relevel(df5$race, "NHW")
+df5$stage<-as.factor(df5$stage)
+df5$stage <- relevel(df5$stage, "Localized")
+df5$ylost<-as.factor(df5$ylost)
+df5$ylost <- relevel(df5$ylost, "Group 5 (highest SES)")
+df5$poverty<-as.factor(df5$poverty)
+df5$poverty <- relevel(df5$poverty, "Not persistent poverty census tract")
+df5$age<-as.numeric(df5$age)
+
+
+cox_model <- coxph(surv_obj ~ age + stage + race +ylost, data = df5) 
+summary_cox <- summary(cox_model)
+tab2 <- as.data.frame(summary_cox$coefficients)
+
+#knitr::kable(tab2, caption = "Summary of Cox model")
+tab2 <- tab2[7, ]
+tab2$index<-"HR+/HER2+"
+
+## "HR-/HER2-"
+
+df4a<-subset(df4, df4$subtype == "HR-/HER2-")
+#df4a<-subset(df4, df4$subtype == "HR+/HER2-" | df4$subtype == "HR-/HER2-" | df4$subtype == "HR-/HER2+" | df4$subtype == "HR+/HER2+" )
+df4b<-subset(df4a, df4a$stage == "Localized" | df4a$stage == "Regional" | df4a$stage == "Distant" )
+df4c<-subset(df4b, df4b$er == "Positive" | df4b$er == "Negative" )
+df4d<-subset(df4c, df4c$poverty != "Blank(s)" )
+df4e<-subset(df4d, df4d$ylost != "Blank(s)" )
+
+
+df5 <- subset(df4e, year_follow_up >= 2003 & year_follow_up <= 2020 & df4e$time <=60 )
+surv_obj <- Surv(time = df5$time / 12, event = df5$status == 2)
+# Fit a survival curve, stratified by 'stage'
+fit <- survfit(surv_obj ~ race, data = df5)
+
+# Fit Cox PH model
+df5$race<-as.factor(df5$race)
+df5$race <- relevel(df5$race, "NHW")
+df5$stage<-as.factor(df5$stage)
+df5$stage <- relevel(df5$stage, "Localized")
+df5$ylost<-as.factor(df5$ylost)
+df5$ylost <- relevel(df5$ylost, "Group 5 (highest SES)")
+df5$poverty<-as.factor(df5$poverty)
+df5$poverty <- relevel(df5$poverty, "Not persistent poverty census tract")
+df5$age<-as.numeric(df5$age)
+
+cox_model <- coxph(surv_obj ~ age + stage + race +ylost, data = df5) 
+summary_cox <- summary(cox_model)
+tab3 <- as.data.frame(summary_cox$coefficients)
+
+#knitr::kable(tab3, caption = "Summary of Cox model")
+tab3 <- tab3[7, ]
+tab3$index<-"HR-/HER2-"
+
+
+## "HR-/HER2+"
+
+df4a<-subset(df4, df4$subtype == "HR-/HER2+")
+#df4a<-subset(df4, df4$subtype == "HR+/HER2-" | df4$subtype == "HR-/HER2-" | df4$subtype == "HR-/HER2+" | df4$subtype == "HR+/HER2+" )
+df4b<-subset(df4a, df4a$stage == "Localized" | df4a$stage == "Regional" | df4a$stage == "Distant" )
+df4c<-subset(df4b, df4b$er == "Positive" | df4b$er == "Negative" )
+df4d<-subset(df4c, df4c$poverty != "Blank(s)" )
+df4e<-subset(df4d, df4d$ylost != "Blank(s)" )
+
+
+df5 <- subset(df4e, year_follow_up >= 2003 & year_follow_up <= 2020 & df4e$time <=60 )
+surv_obj <- Surv(time = df5$time / 12, event = df5$status == 2)
+# Fit a survival curve, stratified by 'stage'
+#fit <- survfit(surv_obj ~ race, data = df5)
+
+# Fit Cox PH model
+df5$race<-as.factor(df5$race)
+df5$race <- relevel(df5$race, "NHW")
+df5$stage<-as.factor(df5$stage)
+df5$stage <- relevel(df5$stage, "Localized")
+df5$ylost<-as.factor(df5$ylost)
+df5$ylost <- relevel(df5$ylost, "Group 5 (highest SES)")
+df5$poverty<-as.factor(df5$poverty)
+df5$poverty <- relevel(df5$poverty, "Not persistent poverty census tract")
+df5$age<-as.numeric(df5$age)
+
+cox_model <- coxph(surv_obj ~ age + stage + race +ylost, data = df5) 
+summary_cox <- summary(cox_model)
+tab4 <- as.data.frame(summary_cox$coefficients)
+
+#knitr::kable(tab4, caption = "Summary of Cox model")
+tab4 <- tab4[7, ]
+tab4$index<-"HR-/HER2+"
+
+#
+
+## ER +
+df4a<-subset(df4, df4$subtype == "HR+/HER2-" | df4$subtype == "HR-/HER2-" | df4$subtype == "HR-/HER2+" | df4$subtype == "HR+/HER2+" )
+df4aa<-subset(df4a, df4a$er == "Positive")
+df4b<-subset(df4aa, df4aa$stage == "Localized" | df4aa$stage == "Regional" | df4aa$stage == "Distant" )
+#df4c<-subset(df4b, df4b$er == "Positive" | df4b$er == "Negative" )
+df4d<-subset(df4b, df4b$poverty != "Blank(s)" )
+df4e<-subset(df4d, df4d$ylost != "Blank(s)" )
+
+
+df5 <- subset(df4e, year_follow_up >= 2003 & year_follow_up <= 2020 & df4e$time <=60 )
+surv_obj <- Surv(time = df5$time / 12, event = df5$status == 2)
+# Fit a survival curve, stratified by 'stage'
+#fit <- survfit(surv_obj ~ race, data = df5)
+
+# Fit Cox PH model
+df5$race<-as.factor(df5$race)
+df5$race <- relevel(df5$race, "NHW")
+df5$stage<-as.factor(df5$stage)
+df5$stage <- relevel(df5$stage, "Localized")
+df5$ylost<-as.factor(df5$ylost)
+df5$ylost <- relevel(df5$ylost, "Group 5 (highest SES)")
+df5$poverty<-as.factor(df5$poverty)
+df5$poverty <- relevel(df5$poverty, "Not persistent poverty census tract")
+df5$age<-as.numeric(df5$age)
+
+cox_model <- coxph(surv_obj ~ age + stage + race +ylost, data = df5) 
+summary_cox <- summary(cox_model)
+tab1a <- as.data.frame(summary_cox$coefficients)
+
+#knitr::kable(tab1a, caption = "Summary of Cox model")
+tab1a <- tab1a[7, ]
+tab1a$index<-"ER+"
+
+#
+
+## ER -
+
+df4a<-subset(df4, df4$subtype == "HR+/HER2-" | df4$subtype == "HR-/HER2-" | df4$subtype == "HR-/HER2+" | df4$subtype == "HR+/HER2+" )
+df4aa<-subset(df4a, df4a$er == "Negative")
+df4b<-subset(df4aa, df4aa$stage == "Localized" | df4aa$stage == "Regional" | df4aa$stage == "Distant" )
+#df4c<-subset(df4b, df4b$er == "Positive" | df4b$er == "Negative" )
+df4d<-subset(df4b, df4b$poverty != "Blank(s)" )
+df4e<-subset(df4d, df4d$ylost != "Blank(s)" )
+
+
+df5 <- subset(df4e, year_follow_up >= 2003 & year_follow_up <= 2020 & df4e$time <=60 )
+surv_obj <- Surv(time = df5$time / 12, event = df5$status == 2)
+# Fit a survival curve, stratified by 'stage'
+#fit <- survfit(surv_obj ~ race, data = df5)
+
+# Fit Cox PH model
+df5$race<-as.factor(df5$race)
+df5$race <- relevel(df5$race, "NHW")
+df5$stage<-as.factor(df5$stage)
+df5$stage <- relevel(df5$stage, "Localized")
+df5$ylost<-as.factor(df5$ylost)
+df5$ylost <- relevel(df5$ylost, "Group 5 (highest SES)")
+df5$poverty<-as.factor(df5$poverty)
+df5$poverty <- relevel(df5$poverty, "Not persistent poverty census tract")
+df5$age<-as.numeric(df5$age)
+
+cox_model <- coxph(surv_obj ~ age + stage + race +ylost, data = df5) 
+summary_cox <- summary(cox_model)
+tab1b <- as.data.frame(summary_cox$coefficients)
+
+#knitr::kable(tab1b, caption = "Summary of Cox model")
+tab1b <- tab1b[7, ]
+tab1b$index<-"ER-"
+
+##
+
+## Localized
+
+#
+df4a<-subset(df4, df4$subtype == "HR+/HER2-" | df4$subtype == "HR-/HER2-" | df4$subtype == "HR-/HER2+" | df4$subtype == "HR+/HER2+" )
+#df4aa<-subset(df4a, df4a$er == "Negative")
+#df4b<-subset(df4aa, df4aa$stage == "Localized" | df4aa$stage == "Regional" | df4aa$stage == "Distant" )
+df4b<-subset(df4a, df4a$stage == "Localized")
+#df4c<-subset(df4b, df4b$er == "Positive" | df4b$er == "Negative" )
+df4d<-subset(df4b, df4b$poverty != "Blank(s)" )
+df4e<-subset(df4d, df4d$ylost != "Blank(s)" )
+
+
+df5 <- subset(df4e, year_follow_up >= 2003 & year_follow_up <= 2020 & df4e$time <=60 )
+surv_obj <- Surv(time = df5$time / 12, event = df5$status == 2)
+# Fit a survival curve, stratified by 'stage'
+#fit <- survfit(surv_obj ~ race, data = df5)
+
+# Fit Cox PH model
+df5$race<-as.factor(df5$race)
+df5$race <- relevel(df5$race, "NHW")
+df5$stage<-as.factor(df5$stage)
+df5$stage <- relevel(df5$stage, "Localized")
+df5$ylost<-as.factor(df5$ylost)
+df5$ylost <- relevel(df5$ylost, "Group 5 (highest SES)")
+df5$poverty<-as.factor(df5$poverty)
+df5$poverty <- relevel(df5$poverty, "Not persistent poverty census tract")
+df5$age<-as.numeric(df5$age)
+
+cox_model <- coxph(surv_obj ~ age + race +ylost, data = df5) 
+summary_cox <- summary(cox_model)
+tab1c <- as.data.frame(summary_cox$coefficients)
+
+#knitr::kable(tab1c, caption = "Summary of Cox model")
+tab1c <- tab1c[5, ]
+tab1c$index<-"Localized stage"
+
+
+## Regional
+
+#
+df4a<-subset(df4, df4$subtype == "HR+/HER2-" | df4$subtype == "HR-/HER2-" | df4$subtype == "HR-/HER2+" | df4$subtype == "HR+/HER2+" )
+#df4aa<-subset(df4a, df4a$er == "Negative")
+#df4b<-subset(df4aa, df4aa$stage == "Localized" | df4aa$stage == "Regional" | df4aa$stage == "Distant" )
+df4b<-subset(df4a, df4a$stage == "Regional")
+#df4c<-subset(df4b, df4b$er == "Positive" | df4b$er == "Negative" )
+df4d<-subset(df4b, df4b$poverty != "Blank(s)" )
+df4e<-subset(df4d, df4d$ylost != "Blank(s)" )
+
+
+df5 <- subset(df4e, year_follow_up >= 2003 & year_follow_up <= 2020 & df4e$time <=60 )
+surv_obj <- Surv(time = df5$time / 12, event = df5$status == 2)
+# Fit a survival curve, stratified by 'stage'
+#fit <- survfit(surv_obj ~ race, data = df5)
+
+# Fit Cox PH model
+df5$race<-as.factor(df5$race)
+df5$race <- relevel(df5$race, "NHW")
+#df5$stage<-as.factor(df5$stage)
+#df5$stage <- relevel(df5$stage, "Localized")
+df5$ylost<-as.factor(df5$ylost)
+df5$ylost <- relevel(df5$ylost, "Group 5 (highest SES)")
+df5$poverty<-as.factor(df5$poverty)
+df5$poverty <- relevel(df5$poverty, "Not persistent poverty census tract")
+df5$age<-as.numeric(df5$age)
+
+cox_model <- coxph(surv_obj ~ age + race +ylost, data = df5) 
+summary_cox <- summary(cox_model)
+tab1d <- as.data.frame(summary_cox$coefficients)
+
+#knitr::kable(tab1d, caption = "Summary of Cox model")
+tab1d <- tab1d[5, ]
+tab1d$index<-"Regional stage"
+
+#
+## Distant
+
+#
+df4a<-subset(df4, df4$subtype == "HR+/HER2-" | df4$subtype == "HR-/HER2-" | df4$subtype == "HR-/HER2+" | df4$subtype == "HR+/HER2+" )
+#df4aa<-subset(df4a, df4a$er == "Negative")
+#df4b<-subset(df4aa, df4aa$stage == "Localized" | df4aa$stage == "Regional" | df4aa$stage == "Distant" )
+df4b<-subset(df4a, df4a$stage == "Distant")
+#df4c<-subset(df4b, df4b$er == "Positive" | df4b$er == "Negative" )
+df4d<-subset(df4b, df4b$poverty != "Blank(s)" )
+df4e<-subset(df4d, df4d$ylost != "Blank(s)" )
+
+
+df5 <- subset(df4e, year_follow_up >= 2003 & year_follow_up <= 2020 & df4e$time <=60 )
+surv_obj <- Surv(time = df5$time / 12, event = df5$status == 2)
+# Fit a survival curve, stratified by 'stage'
+#fit <- survfit(surv_obj ~ race, data = df5)
+
+# Fit Cox PH model
+df5$race<-as.factor(df5$race)
+df5$race <- relevel(df5$race, "NHW")
+#df5$stage<-as.factor(df5$stage)
+#df5$stage <- relevel(df5$stage, "Localized")
+df5$ylost<-as.factor(df5$ylost)
+df5$ylost <- relevel(df5$ylost, "Group 5 (highest SES)")
+df5$poverty<-as.factor(df5$poverty)
+df5$poverty <- relevel(df5$poverty, "Not persistent poverty census tract")
+df5$age<-as.numeric(df5$age)
+
+cox_model <- coxph(surv_obj ~ age + race +ylost, data = df5) 
+summary_cox <- summary(cox_model)
+tab1e <- as.data.frame(summary_cox$coefficients)
+
+#knitr::kable(tab1e, caption = "Summary of Cox model")
+tab1e <- tab1e[5, ]
+tab1e$index<-"Distant stage"
+
+#
+tab5<-rbind(tab1, tab2, tab3, tab4, tab1a, tab1b, tab1c, tab1d, tab1e)
+
+tab5<-as.data.frame(tab5)
+
+# Calculate lower and upper confidence intervals
+tab5$lower_CI <- tab5[["exp(coef)"]] - 1.96 * tab5[["se(coef)"]] 
+tab5$upper_CI <- tab5[["exp(coef)"]] + 1.96 * tab5[["se(coef)"]] 
+
+# View the updated dataset with lower and upper CI values
+#print(tab5)
+
+```
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+
+
+df <- read_csv("C:/Users/miran/Desktop/Survival/Specialized/data/seer17_breast.csv")
+
+names(df)<-c("age1", "year_follow_up", "race", "stage", "subtype", "er", "tract", "registry_tract", "census2010",
+             "urban-area", "poverty", "ylost", "sex", "status", "year_rec", "end_calc", "time")
+
+df1<-subset(df, df$race == "Non-Hispanic White" | 
+              df$race == "Non-Hispanic Black"| df$race == "Non-Hispanic Asian or Pacific Islander" | 
+              df$race == "Hispanic (All Races)")
+
+df1$race_lab[df1$race == "Non-Hispanic White"]<-"NHW"
+df1$race_lab[df1$race == "Non-Hispanic Black"]<-"NHB"
+df1$race_lab[df1$race == "Non-Hispanic Asian or Pacific Islander"]<-"API"
+df1$race_lab[df1$race == "Hispanic (All Races)"]<-"HIS"
+
+df1$age[df1$age1 == "35-39 years"]<-37.5
+df1$age[df1$age1 == "40-44 years"]<-42.5
+df1$age[df1$age1 == "45-49 years"]<-47.5
+df1$age[df1$age1 == "50-54 years"]<-52.5
+df1$age[df1$age1 == "55-59 years"]<-57.5
+df1$age[df1$age1 == "60-64 years"]<-62.5
+df1$age[df1$age1 == "65-69 years"]<-67.5
+df1$age[df1$age1 == "70-74 years"]<-72.5
+df1$age[df1$age1 == "75-79 years"]<-77.5
+df1$age[df1$age1 == "80-84 years"]<-82.5
+
+df1$status_lab[df1$status == "Alive"]<-1
+df1$status_lab[df1$status == "Dead"]<-2
+
+df4<-df1[c("year_follow_up", "age","race_lab" ,"status_lab","time", "stage" ,"er", "subtype", "poverty", "ylost")]
+
+names(df4)[3:4]<-c("race", "status")
+
+
+## "HR+/HER2-"
+df4a<-subset(df4, df4$subtype == "HR+/HER2-")
+#df4a<-subset(df4, df4$subtype == "HR+/HER2-" | df4$subtype == "HR-/HER2-" | df4$subtype == "HR-/HER2+" | df4$subtype == "HR+/HER2+" )
+df4b<-subset(df4a, df4a$stage == "Localized" | df4a$stage == "Regional" | df4a$stage == "Distant" )
+df4c<-subset(df4b, df4b$er == "Positive" | df4b$er == "Negative" )
+df4d<-subset(df4c, df4c$poverty != "Blank(s)" )
+df4e<-subset(df4d, df4d$ylost != "Blank(s)" )
+
+
+df5 <- subset(df4e, year_follow_up >= 2003 & year_follow_up <= 2020 & df4e$time <=60 )
+surv_obj <- Surv(time = df5$time / 12, event = df5$status == 2)
+# Fit a survival curve, stratified by 'stage'
+fit <- survfit(surv_obj ~ race, data = df5)
+
+# Fit Cox PH model
+df5$race<-as.factor(df5$race)
+df5$race <- relevel(df5$race, "NHW")
+df5$stage<-as.factor(df5$stage)
+df5$stage <- relevel(df5$stage, "Localized")
+df5$ylost<-as.factor(df5$ylost)
+df5$ylost <- relevel(df5$ylost, "Group 1 (lowest SES)")
+df5$poverty<-as.factor(df5$poverty)
+df5$poverty <- relevel(df5$poverty, "Not persistent poverty census tract")
+df5$age<-as.numeric(df5$age)
+
+
+cox_model <- coxph(surv_obj ~ age + stage + race +ylost, data = df5) 
+summary_cox <- summary(cox_model)
+tab1 <- as.data.frame(summary_cox$coefficients)
+
+#knitr::kable(tab1, caption = "Summary of Cox model")
+tab1 <- tab1[10, ]
+tab1$index<-"HR+/HER2-"
+
+
+## "HR+/HER2+"
+
+df4a<-subset(df4, df4$subtype == "HR+/HER2+")
+#df4a<-subset(df4, df4$subtype == "HR+/HER2-" | df4$subtype == "HR-/HER2-" | df4$subtype == "HR-/HER2+" | df4$subtype == "HR+/HER2+" )
+df4b<-subset(df4a, df4a$stage == "Localized" | df4a$stage == "Regional" | df4a$stage == "Distant" )
+df4c<-subset(df4b, df4b$er == "Positive" | df4b$er == "Negative" )
+df4d<-subset(df4c, df4c$poverty != "Blank(s)" )
+df4e<-subset(df4d, df4d$ylost != "Blank(s)" )
+
+
+df5 <- subset(df4e, year_follow_up >= 2003 & year_follow_up <= 2020 & df4e$time <=60 )
+surv_obj <- Surv(time = df5$time / 12, event = df5$status == 2)
+# Fit a survival curve, stratified by 'stage'
+fit <- survfit(surv_obj ~ race, data = df5)
+
+# Fit Cox PH model
+df5$race<-as.factor(df5$race)
+df5$race <- relevel(df5$race, "NHW")
+df5$stage<-as.factor(df5$stage)
+df5$stage <- relevel(df5$stage, "Localized")
+df5$ylost<-as.factor(df5$ylost)
+df5$ylost <- relevel(df5$ylost, "Group 1 (lowest SES)")
+df5$poverty<-as.factor(df5$poverty)
+df5$poverty <- relevel(df5$poverty, "Not persistent poverty census tract")
+df5$age<-as.numeric(df5$age)
+
+
+cox_model <- coxph(surv_obj ~ age + stage + race +ylost, data = df5) 
+summary_cox <- summary(cox_model)
+tab2 <- as.data.frame(summary_cox$coefficients)
+
+#knitr::kable(tab2, caption = "Summary of Cox model")
+tab2 <- tab2[10, ]
+tab2$index<-"HR+/HER2+"
+
+## "HR-/HER2-"
+
+df4a<-subset(df4, df4$subtype == "HR-/HER2-")
+#df4a<-subset(df4, df4$subtype == "HR+/HER2-" | df4$subtype == "HR-/HER2-" | df4$subtype == "HR-/HER2+" | df4$subtype == "HR+/HER2+" )
+df4b<-subset(df4a, df4a$stage == "Localized" | df4a$stage == "Regional" | df4a$stage == "Distant" )
+df4c<-subset(df4b, df4b$er == "Positive" | df4b$er == "Negative" )
+df4d<-subset(df4c, df4c$poverty != "Blank(s)" )
+df4e<-subset(df4d, df4d$ylost != "Blank(s)" )
+
+
+df5 <- subset(df4e, year_follow_up >= 2003 & year_follow_up <= 2020 & df4e$time <=60 )
+surv_obj <- Surv(time = df5$time / 12, event = df5$status == 2)
+# Fit a survival curve, stratified by 'stage'
+fit <- survfit(surv_obj ~ race, data = df5)
+
+# Fit Cox PH model
+df5$race<-as.factor(df5$race)
+df5$race <- relevel(df5$race, "NHW")
+df5$stage<-as.factor(df5$stage)
+df5$stage <- relevel(df5$stage, "Localized")
+df5$ylost<-as.factor(df5$ylost)
+df5$ylost <- relevel(df5$ylost, "Group 1 (lowest SES)")
+df5$poverty<-as.factor(df5$poverty)
+df5$poverty <- relevel(df5$poverty, "Not persistent poverty census tract")
+df5$age<-as.numeric(df5$age)
+
+cox_model <- coxph(surv_obj ~ age + stage + race +ylost, data = df5) 
+summary_cox <- summary(cox_model)
+tab3 <- as.data.frame(summary_cox$coefficients)
+
+#knitr::kable(tab3, caption = "Summary of Cox model")
+tab3 <- tab3[10, ]
+tab3$index<-"HR-/HER2-"
+
+
+## "HR-/HER2+"
+
+df4a<-subset(df4, df4$subtype == "HR-/HER2+")
+#df4a<-subset(df4, df4$subtype == "HR+/HER2-" | df4$subtype == "HR-/HER2-" | df4$subtype == "HR-/HER2+" | df4$subtype == "HR+/HER2+" )
+df4b<-subset(df4a, df4a$stage == "Localized" | df4a$stage == "Regional" | df4a$stage == "Distant" )
+df4c<-subset(df4b, df4b$er == "Positive" | df4b$er == "Negative" )
+df4d<-subset(df4c, df4c$poverty != "Blank(s)" )
+df4e<-subset(df4d, df4d$ylost != "Blank(s)" )
+
+
+df5 <- subset(df4e, year_follow_up >= 2003 & year_follow_up <= 2020 & df4e$time <=60 )
+surv_obj <- Surv(time = df5$time / 12, event = df5$status == 2)
+# Fit a survival curve, stratified by 'stage'
+#fit <- survfit(surv_obj ~ race, data = df5)
+
+# Fit Cox PH model
+df5$race<-as.factor(df5$race)
+df5$race <- relevel(df5$race, "NHW")
+df5$stage<-as.factor(df5$stage)
+df5$stage <- relevel(df5$stage, "Localized")
+df5$ylost<-as.factor(df5$ylost)
+df5$ylost <- relevel(df5$ylost, "Group 1 (lowest SES)")
+df5$poverty<-as.factor(df5$poverty)
+df5$poverty <- relevel(df5$poverty, "Not persistent poverty census tract")
+df5$age<-as.numeric(df5$age)
+
+cox_model <- coxph(surv_obj ~ age + stage + race +ylost, data = df5) 
+summary_cox <- summary(cox_model)
+tab4 <- as.data.frame(summary_cox$coefficients)
+
+#knitr::kable(tab4, caption = "Summary of Cox model")
+tab4 <- tab4[10, ]
+tab4$index<-"HR-/HER2+"
+
+#
+
+## ER +
+df4a<-subset(df4, df4$subtype == "HR+/HER2-" | df4$subtype == "HR-/HER2-" | df4$subtype == "HR-/HER2+" | df4$subtype == "HR+/HER2+" )
+df4aa<-subset(df4a, df4a$er == "Positive")
+df4b<-subset(df4aa, df4aa$stage == "Localized" | df4aa$stage == "Regional" | df4aa$stage == "Distant" )
+#df4c<-subset(df4b, df4b$er == "Positive" | df4b$er == "Negative" )
+df4d<-subset(df4b, df4b$poverty != "Blank(s)" )
+df4e<-subset(df4d, df4d$ylost != "Blank(s)" )
+
+
+df5 <- subset(df4e, year_follow_up >= 2003 & year_follow_up <= 2020 & df4e$time <=60 )
+surv_obj <- Surv(time = df5$time / 12, event = df5$status == 2)
+# Fit a survival curve, stratified by 'stage'
+#fit <- survfit(surv_obj ~ race, data = df5)
+
+# Fit Cox PH model
+df5$race<-as.factor(df5$race)
+df5$race <- relevel(df5$race, "NHW")
+df5$stage<-as.factor(df5$stage)
+df5$stage <- relevel(df5$stage, "Localized")
+df5$ylost<-as.factor(df5$ylost)
+df5$ylost <- relevel(df5$ylost, "Group 1 (lowest SES)")
+df5$poverty<-as.factor(df5$poverty)
+df5$poverty <- relevel(df5$poverty, "Not persistent poverty census tract")
+df5$age<-as.numeric(df5$age)
+
+cox_model <- coxph(surv_obj ~ age + stage + race +ylost, data = df5) 
+summary_cox <- summary(cox_model)
+tab1a <- as.data.frame(summary_cox$coefficients)
+
+#knitr::kable(tab1a, caption = "Summary of Cox model")
+tab1a <- tab1a[10, ]
+tab1a$index<-"ER+"
+
+#
+
+## ER -
+
+df4a<-subset(df4, df4$subtype == "HR+/HER2-" | df4$subtype == "HR-/HER2-" | df4$subtype == "HR-/HER2+" | df4$subtype == "HR+/HER2+" )
+df4aa<-subset(df4a, df4a$er == "Negative")
+df4b<-subset(df4aa, df4aa$stage == "Localized" | df4aa$stage == "Regional" | df4aa$stage == "Distant" )
+#df4c<-subset(df4b, df4b$er == "Positive" | df4b$er == "Negative" )
+df4d<-subset(df4b, df4b$poverty != "Blank(s)" )
+df4e<-subset(df4d, df4d$ylost != "Blank(s)" )
+
+
+df5 <- subset(df4e, year_follow_up >= 2003 & year_follow_up <= 2020 & df4e$time <=60 )
+surv_obj <- Surv(time = df5$time / 12, event = df5$status == 2)
+# Fit a survival curve, stratified by 'stage'
+#fit <- survfit(surv_obj ~ race, data = df5)
+
+# Fit Cox PH model
+df5$race<-as.factor(df5$race)
+df5$race <- relevel(df5$race, "NHW")
+df5$stage<-as.factor(df5$stage)
+df5$stage <- relevel(df5$stage, "Localized")
+df5$ylost<-as.factor(df5$ylost)
+df5$ylost <- relevel(df5$ylost, "Group 1 (lowest SES)")
+df5$poverty<-as.factor(df5$poverty)
+df5$poverty <- relevel(df5$poverty, "Not persistent poverty census tract")
+df5$age<-as.numeric(df5$age)
+
+cox_model <- coxph(surv_obj ~ age + stage + race +ylost, data = df5) 
+summary_cox <- summary(cox_model)
+tab1b <- as.data.frame(summary_cox$coefficients)
+
+#knitr::kable(tab1b, caption = "Summary of Cox model")
+tab1b <- tab1b[10, ]
+tab1b$index<-"ER-"
+
+##
+
+## Localized
+
+#
+df4a<-subset(df4, df4$subtype == "HR+/HER2-" | df4$subtype == "HR-/HER2-" | df4$subtype == "HR-/HER2+" | df4$subtype == "HR+/HER2+" )
+#df4aa<-subset(df4a, df4a$er == "Negative")
+#df4b<-subset(df4aa, df4aa$stage == "Localized" | df4aa$stage == "Regional" | df4aa$stage == "Distant" )
+df4b<-subset(df4a, df4a$stage == "Localized")
+#df4c<-subset(df4b, df4b$er == "Positive" | df4b$er == "Negative" )
+df4d<-subset(df4b, df4b$poverty != "Blank(s)" )
+df4e<-subset(df4d, df4d$ylost != "Blank(s)" )
+
+
+df5 <- subset(df4e, year_follow_up >= 2003 & year_follow_up <= 2020 & df4e$time <=60 )
+surv_obj <- Surv(time = df5$time / 12, event = df5$status == 2)
+# Fit a survival curve, stratified by 'stage'
+#fit <- survfit(surv_obj ~ race, data = df5)
+
+# Fit Cox PH model
+df5$race<-as.factor(df5$race)
+df5$race <- relevel(df5$race, "NHW")
+df5$stage<-as.factor(df5$stage)
+df5$stage <- relevel(df5$stage, "Localized")
+df5$ylost<-as.factor(df5$ylost)
+df5$ylost <- relevel(df5$ylost, "Group 1 (lowest SES)")
+df5$poverty<-as.factor(df5$poverty)
+df5$poverty <- relevel(df5$poverty, "Not persistent poverty census tract")
+df5$age<-as.numeric(df5$age)
+
+cox_model <- coxph(surv_obj ~ age + race +ylost, data = df5) 
+summary_cox <- summary(cox_model)
+tab1c <- as.data.frame(summary_cox$coefficients)
+
+#knitr::kable(tab1c, caption = "Summary of Cox model")
+tab1c <- tab1c[8, ]
+tab1c$index<-"Localized stage"
+
+
+## Regional
+
+#
+df4a<-subset(df4, df4$subtype == "HR+/HER2-" | df4$subtype == "HR-/HER2-" | df4$subtype == "HR-/HER2+" | df4$subtype == "HR+/HER2+" )
+#df4aa<-subset(df4a, df4a$er == "Negative")
+#df4b<-subset(df4aa, df4aa$stage == "Localized" | df4aa$stage == "Regional" | df4aa$stage == "Distant" )
+df4b<-subset(df4a, df4a$stage == "Regional")
+#df4c<-subset(df4b, df4b$er == "Positive" | df4b$er == "Negative" )
+df4d<-subset(df4b, df4b$poverty != "Blank(s)" )
+df4e<-subset(df4d, df4d$ylost != "Blank(s)" )
+
+
+df5 <- subset(df4e, year_follow_up >= 2003 & year_follow_up <= 2020 & df4e$time <=60 )
+surv_obj <- Surv(time = df5$time / 12, event = df5$status == 2)
+# Fit a survival curve, stratified by 'stage'
+#fit <- survfit(surv_obj ~ race, data = df5)
+
+# Fit Cox PH model
+df5$race<-as.factor(df5$race)
+df5$race <- relevel(df5$race, "NHW")
+#df5$stage<-as.factor(df5$stage)
+#df5$stage <- relevel(df5$stage, "Localized")
+df5$ylost<-as.factor(df5$ylost)
+df5$ylost <- relevel(df5$ylost, "Group 1 (lowest SES)")
+df5$poverty<-as.factor(df5$poverty)
+df5$poverty <- relevel(df5$poverty, "Not persistent poverty census tract")
+df5$age<-as.numeric(df5$age)
+
+cox_model <- coxph(surv_obj ~ age + race +ylost, data = df5) 
+summary_cox <- summary(cox_model)
+tab1d <- as.data.frame(summary_cox$coefficients)
+
+#knitr::kable(tab1d, caption = "Summary of Cox model")
+tab1d <- tab1d[8, ]
+tab1d$index<-"Regional stage"
+
+#
+## Distant
+
+#
+df4a<-subset(df4, df4$subtype == "HR+/HER2-" | df4$subtype == "HR-/HER2-" | df4$subtype == "HR-/HER2+" | df4$subtype == "HR+/HER2+" )
+#df4aa<-subset(df4a, df4a$er == "Negative")
+#df4b<-subset(df4aa, df4aa$stage == "Localized" | df4aa$stage == "Regional" | df4aa$stage == "Distant" )
+df4b<-subset(df4a, df4a$stage == "Distant")
+#df4c<-subset(df4b, df4b$er == "Positive" | df4b$er == "Negative" )
+df4d<-subset(df4b, df4b$poverty != "Blank(s)" )
+df4e<-subset(df4d, df4d$ylost != "Blank(s)" )
+
+
+df5 <- subset(df4e, year_follow_up >= 2003 & year_follow_up <= 2020 & df4e$time <=60 )
+surv_obj <- Surv(time = df5$time / 12, event = df5$status == 2)
+# Fit a survival curve, stratified by 'stage'
+#fit <- survfit(surv_obj ~ race, data = df5)
+
+# Fit Cox PH model
+df5$race<-as.factor(df5$race)
+df5$race <- relevel(df5$race, "NHW")
+#df5$stage<-as.factor(df5$stage)
+#df5$stage <- relevel(df5$stage, "Localized")
+df5$ylost<-as.factor(df5$ylost)
+df5$ylost <- relevel(df5$ylost, "Group 1 (lowest SES)")
+df5$poverty<-as.factor(df5$poverty)
+df5$poverty <- relevel(df5$poverty, "Not persistent poverty census tract")
+df5$age<-as.numeric(df5$age)
+
+cox_model <- coxph(surv_obj ~ age + race +ylost, data = df5) 
+summary_cox <- summary(cox_model)
+tab1e <- as.data.frame(summary_cox$coefficients)
+
+#knitr::kable(tab1e, caption = "Summary of Cox model")
+tab1e <- tab1e[8, ]
+tab1e$index<-"Distant stage"
+
+#
+tab5a<-rbind(tab1, tab2, tab3, tab4, tab1a, tab1b, tab1c, tab1d, tab1e)
+
+tab5a<-as.data.frame(tab5a)
+
+# Calculate lower and upper confidence intervals
+tab5a$lower_CI <- tab5a[["exp(coef)"]] - 1.96 * tab5a[["se(coef)"]] 
+tab5a$upper_CI <- tab5a[["exp(coef)"]] + 1.96 * tab5a[["se(coef)"]] 
+
+# View the updated dataset with lower and upper CI values
+
+```
+
+
+
+
+
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+# Create a data frame for plotting with required columns for tab5
+plot_data_tab5 <- data.frame(
+  Hazard_Rate = tab5[["exp(coef)"]],
+  lower_CI = tab5[["lower_CI"]],
+  upper_CI = tab5[["upper_CI"]],
+  label = tab5[["index"]],
+  SES_quintile = "lowest SES"
+)
+
+# Create a data frame for plotting with required columns for tab5a
+plot_data_tab5a <- data.frame(
+  Hazard_Rate = tab5a[["exp(coef)"]],
+  lower_CI = tab5a[["lower_CI"]],
+  upper_CI = tab5a[["upper_CI"]],
+  label = tab5a[["index"]],
+  SES_quintile = "highest SES"
+)
+
+# Combine the two data frames
+combined_data <- rbind(plot_data_tab5, plot_data_tab5a)
+
+
+
+# Create the combined forest plot with both comparisons overlapped with specific colors for each SES level
+ggplot(combined_data, aes(y = label, x = Hazard_Rate, color = SES_quintile, label = sprintf("%.2f", Hazard_Rate))) +
+  geom_point(size = 2.5, position = position_dodge(width = 0.0), shape = 16) +  # Dot for Hazard Rate (dodged) with shape 16 (filled circle)
+  geom_errorbarh(aes(xmin = lower_CI, xmax = upper_CI), height = 0.2) +  # Horizontal error bars for CI
+  geom_vline(xintercept = 1, linetype = "dashed", color = "black") +  # Add a vertical line at HR = 1 in black
+  xlim(0, 2.5) +  # Set x-axis limits from 0 to 3
+  labs(title = "", x = "HR (95%CI)", y = "") +
+  scale_color_manual(values = c("lowest SES" = "darkred", "highest SES" = "darkblue")) +  # Set custom colors for SES quintiles
+  theme_minimal() +  # Apply a minimal theme
+  theme(legend.position = "bottom") +  # Position the legend at the bottom
+  guides(color = guide_legend(title = "SES Quintile"))  # Set legend title
+
+
+```
+
+Note: Adjusted hazard ratios and 95% confidence intervals for the relative risk of death from malignant breast cancer in the most deprived quintile (red) and least deprived quintile (blue) by molecular subtype, ER status, and stage. The models are adjusted for age, stage, and race/ethnicity. The analysis accounts for potential confounding factors and is based on comprehensive data including all-cause mortality.
+
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+
+
+
+df <- read_csv("C:/Users/miran/Desktop/Survival/Specialized/data/seer17_breast.csv")
+
+names(df)<-c("age1", "year_follow_up", "race", "stage", "subtype", "er", "tract", "registry_tract", "census2010",
+             "urban-area", "poverty", "ylost", "sex", "status", "year_rec", "end_calc", "time")
+
+df1<-subset(df, df$race == "Non-Hispanic White" | 
+              df$race == "Non-Hispanic Black"| df$race == "Non-Hispanic Asian or Pacific Islander" | 
+              df$race == "Hispanic (All Races)")
+
+df1$race_lab[df1$race == "Non-Hispanic White"]<-"NHW"
+df1$race_lab[df1$race == "Non-Hispanic Black"]<-"NHB"
+df1$race_lab[df1$race == "Non-Hispanic Asian or Pacific Islander"]<-"API"
+df1$race_lab[df1$race == "Hispanic (All Races)"]<-"HIS"
+
+df1$age[df1$age1 == "35-39 years"]<-37.5
+df1$age[df1$age1 == "40-44 years"]<-42.5
+df1$age[df1$age1 == "45-49 years"]<-47.5
+df1$age[df1$age1 == "50-54 years"]<-52.5
+df1$age[df1$age1 == "55-59 years"]<-57.5
+df1$age[df1$age1 == "60-64 years"]<-62.5
+df1$age[df1$age1 == "65-69 years"]<-67.5
+df1$age[df1$age1 == "70-74 years"]<-72.5
+df1$age[df1$age1 == "75-79 years"]<-77.5
+df1$age[df1$age1 == "80-84 years"]<-82.5
+
+df1$status_lab[df1$status == "Alive"]<-1
+df1$status_lab[df1$status == "Dead"]<-2
+
+df4<-df1[c("year_follow_up", "age","race_lab" ,"status_lab","time", "stage" ,"er", "subtype", "poverty", "ylost")]
+
+names(df4)[3:4]<-c("race", "status")
+
+## "HR+/HER2-"
+#df4a<-subset(df4, df4$subtype == "HR+/HER2-")
+df4a<-subset(df4, df4$subtype == "HR+/HER2-" | df4$subtype == "HR-/HER2-" | df4$subtype == "HR-/HER2+" | df4$subtype == "HR+/HER2+" )
+df4b<-subset(df4a, df4a$stage == "Localized" | df4a$stage == "Regional" | df4a$stage == "Distant" )
+df4c<-subset(df4b, df4b$er == "Positive" | df4b$er == "Negative" )
+df4d<-subset(df4c, df4c$poverty != "Blank(s)" )
+df4e<-subset(df4d, df4d$ylost != "Blank(s)" )
+
+
+
+df5 <- subset(df4e, year_follow_up >= 2003 & year_follow_up <= 2020 & df4e$time <=60 )
+surv_obj <- Surv(time = df5$time / 12, event = df5$status == 2)
+# Fit a survival curve, stratified by 'stage'
+fit <- survfit(surv_obj ~ race, data = df5)
+
+# Fit Cox PH model
+df5$race<-as.factor(df5$race)
+df5$race <- relevel(df5$race, "NHW")
+#df5$stage<-as.factor(df5$stage)
+#df5$stage <- relevel(df5$stage, "Localized")
+df5$ylost<-as.factor(df5$ylost)
+df5$ylost <- relevel(df5$ylost, "Group 5 (highest SES)")
+df5$poverty<-as.factor(df5$poverty)
+df5$poverty <- relevel(df5$poverty, "Not persistent poverty census tract")
+df5$age<-as.numeric(df5$age)
+
+
+cox_model <- coxph(surv_obj ~ age + stage + race +ylost+ poverty, data = df5) 
+summary_cox <- summary(cox_model)
+tab1b <- as.data.frame(summary_cox$coefficients)
+
+#knitr::kable(tab1, caption = "Summary of Cox model")
+tab1b <- tab1b[7:10, ]
+tab1b <- as.data.frame(tab1b)
+
+tab1b$index <- factor(c(levels = c("lowest SES", "Group 2", "Group 3", "Group 4")))
+
+
+# Calculate lower and upper confidence intervals
+tab1b$lower_CI <- tab1b[["exp(coef)"]] - 1.96 * tab1b[["se(coef)"]] 
+tab1b$upper_CI <- tab1b[["exp(coef)"]] + 1.96 * tab1b[["se(coef)"]] 
+
+
+# Create a new data frame with fixed column names
+new_data <- data.frame(
+  coef = 1,
+  `exp(coef)` = 1,
+  `se(coef)` = 1,
+  z = 1,
+  `Pr(>|z|)` = 1,
+  index = "Group 5",
+  lower_CI = 1,
+  upper_CI = 1
+)
+
+names(tab1b)<-c("coef",      "exp(coef)", "se(coef)",  "z",         "Pr(>|z|)",  "index",     "lower_CI","upper_CI" )
+names(new_data)<-c("coef",      "exp(coef)", "se(coef)",  "z",         "Pr(>|z|)",  "index",     "lower_CI","upper_CI" )
+
+tab1c<-rbind(tab1b, new_data)
+
+tab6<-as.data.frame(tab1c[c(2,6)])
+
+```
+
+#### Exposure-response: HR by deprivation (SES status)
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+
+# Create the tab6 data frame
+tab6 <- data.frame(
+  "exp(coef)" = c(1.699766, 1.571202, 1.414691, 1.243174, 1.000000),
+  "index" = c("Group 1 (lowest SES)", "Group 2", "Group 3", "Group 4", "Group 5")
+)
+
+
+names(tab6)<-c("hr", "index")
+
+# Reverse the order of categories in tab1b$index
+tab6$index <- fct_rev(factor(tab6$index))
+
+
+# Create the dose-response plot with the renamed x-axis labels
+ggplot(tab6, aes(x = index, y = hr)) +
+  geom_point(color = "black", size = 3) +  
+  geom_hline(yintercept = 1, linetype = "dashed", color = "red") +  
+  geom_smooth(method = "lm", se = FALSE, color = "black") +  
+  coord_cartesian(ylim = c(0, 2)) +  
+  labs(title = "Exposure-response",
+       x = "Deprivation quintiles",
+       y = "Hazard Ratio") +
+  theme_minimal() +
+  scale_x_discrete(labels = c("highest", "Group 4", "Group 3", "Group 2", "lowest"))
+
+
+```
+
+
+
+
+
+
+
+
+
+
 
 ### Relative Survival and crude probability of death
 
