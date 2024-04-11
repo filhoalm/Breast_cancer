@@ -15,7 +15,7 @@ We want to understand whether the association of deprivation (yost) differs by b
 
 *Data source*
 
-Data was obtained from the Surveillance, Epidemiology, and End Results (SEER) Program's Seventeen Database (Specialized dataset), accessed through SEER\*Stat version 8.4.0. The dataset comprises malignant breast cancer cases in females aged 35 to 84 years, spanning from 1992 to 2020 with follow-up until December 2020. Age at diagnosis was categorized into 5-year age groups (35 - 39, ..., 80-84) and one-year time spans. Census tract-level socioeconomic status (SES) is available in quintiles. Race and ethnicity definitions follow the criteria established by the SEER program, employing an algorithm to recode detailed race and origin variables into four groups: Non-Hispanic White (NHW), Non-Hispanic Black (NHB), Hispanic (HIS), and Asian and Pacific Islander (API). For more information about the definitions and methodology used to create these specialized variables, refer to [SEER Census Tract-Level Variables](https://seer.cancer.gov/data/specialized/available-databases/census-tract-request/)."
+Data was obtained from the Surveillance, Epidemiology, and End Results (SEER) Program's Seventeen Database (Specialized dataset), accessed through SEER\*Stat version 8.4.0. The dataset comprises malignant breast cancer cases in females aged 35 to 84 years, spanning from 2006 to 2020 with follow-up until December 2020. Age at diagnosis was categorized into 5-year age groups (35 - 39, ..., 80-84) and one-year time spans. Census tract-level socioeconomic status (SES) is available in quintiles. Race and ethnicity definitions follow the criteria established by the SEER program, employing an algorithm to recode detailed race and origin variables into four groups: Non-Hispanic White (NHW), Non-Hispanic Black (NHB), Hispanic (HIS), and Asian and Pacific Islander (API). For more information about the definitions and methodology used to create these specialized variables, refer to [SEER Census Tract-Level Variables](https://seer.cancer.gov/data/specialized/available-databases/census-tract-request/)."
 
 Initially, 3,073,806 cases were included in the study. However, exclusions were made as follows: 17,792 cases were excluded because they were identified through death certificates or autopsy cases, 476,723 were non-malignant cases, 5,492 were cases alive with no survival time, and 508,959 were cases classified as multiple tumors (identified by Sequence Number 0 or 1). After these exclusions, the total number of records utilized for the analysis amounted to 2,082,632.
 
@@ -30,7 +30,7 @@ Five-year age-standardized net survival was estimated using [Pohar-Perme methods
 
 ## Results
 
-#### Table 1: Characteristics of the Breast Cancer Cohort from 2003 - 2020 by Breast Cancer Subtype
+#### Table 1: Characteristics of the Breast Cancer Cohort from 2006 - 2020 by Breast Cancer Subtype
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
 
 library(dplyr)
