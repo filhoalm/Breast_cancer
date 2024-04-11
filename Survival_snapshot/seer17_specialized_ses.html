@@ -36,6 +36,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="seer17_specialized_ses_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="seer17_specialized_ses_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 
+<script src="seer17_specialized_ses_files/libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="seer17_specialized_ses_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
 
 </head>
 
@@ -49,7 +52,10 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
   <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a></li>
-  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a>
+  <ul class="collapse">
+  <li><a href="#the-interaction-of-socioeconomic-status-and-raceethnicity-on-breast-cancer-mortality" id="toc-the-interaction-of-socioeconomic-status-and-raceethnicity-on-breast-cancer-mortality" class="nav-link" data-scroll-target="#the-interaction-of-socioeconomic-status-and-raceethnicity-on-breast-cancer-mortality">The Interaction of Socioeconomic Status and Race/Ethnicity on Breast Cancer Mortality</a></li>
+  </ul></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 </nav>
@@ -82,7 +88,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">April 9, 2024</p>
+      <p class="date-modified">April 10, 2024</p>
     </div>
   </div>
     
@@ -957,6 +963,237 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
+</div>
+</div>
+</section>
+<section id="the-interaction-of-socioeconomic-status-and-raceethnicity-on-breast-cancer-mortality" class="level3">
+<h3 class="anchored" data-anchor-id="the-interaction-of-socioeconomic-status-and-raceethnicity-on-breast-cancer-mortality">The Interaction of Socioeconomic Status and Race/Ethnicity on Breast Cancer Mortality</h3>
+<p>Table 1 describe the proportion of deprivation (SES) among race and ethnicity groups.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1 2</code></pre>
+</div>
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-sm small" data-quarto-postprocess="true">
+<caption>Table 1 describe the proportion of deprivation (SES) among race and ethnicity groups.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">API</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">%</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">HIS</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">%</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">NHB</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">%</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">NHW</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">%</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">Group 1 (lowest SES)</td>
+<td style="text-align: left;">3225</td>
+<td style="text-align: center;">5.10</td>
+<td style="text-align: center;">17112</td>
+<td style="text-align: center;">20.31</td>
+<td style="text-align: center;">24436</td>
+<td style="text-align: center;">34.64</td>
+<td style="text-align: center;">42362</td>
+<td style="text-align: left;">9.57</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">Group 2</td>
+<td style="text-align: left;">5890</td>
+<td style="text-align: center;">9.31</td>
+<td style="text-align: center;">17767</td>
+<td style="text-align: center;">21.09</td>
+<td style="text-align: center;">14814</td>
+<td style="text-align: center;">21.00</td>
+<td style="text-align: center;">59812</td>
+<td style="text-align: left;">13.51</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">Group 3</td>
+<td style="text-align: left;">9226</td>
+<td style="text-align: center;">14.58</td>
+<td style="text-align: center;">16900</td>
+<td style="text-align: center;">20.06</td>
+<td style="text-align: center;">11827</td>
+<td style="text-align: center;">16.77</td>
+<td style="text-align: center;">76313</td>
+<td style="text-align: left;">17.23</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">Group 4</td>
+<td style="text-align: left;">16212</td>
+<td style="text-align: center;">25.63</td>
+<td style="text-align: center;">16876</td>
+<td style="text-align: center;">20.03</td>
+<td style="text-align: center;">11539</td>
+<td style="text-align: center;">16.36</td>
+<td style="text-align: center;">105707</td>
+<td style="text-align: left;">23.87</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">Group 5 (highest SES)</td>
+<td style="text-align: left;">28707</td>
+<td style="text-align: center;">45.38</td>
+<td style="text-align: center;">15601</td>
+<td style="text-align: center;">18.52</td>
+<td style="text-align: center;">7918</td>
+<td style="text-align: center;">11.23</td>
+<td style="text-align: center;">158658</td>
+<td style="text-align: left;">35.83</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<p><em>Measures of addictive interaction</em></p>
+<p>Details can be obtained elsewhere <a href="%22https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1475799/%22">Kalilani and Atashili, 2006</a></p>
+<p>To evaluate the interaction between deprivation (SES) and race/ethnicity, we first fit a model that includes the effects of SES and race, followed by their interaction term (multiplication between SES and race) to obtain the coefficients. The formula is represented as follows:</p>
+<p><code>λ(t,x) = exp( βses + βrace + (βses * βrace) λ0(t)</code></p>
+<p>We created a list to store all coefficients (<code>summary(mod</code>). Another list was also created to contain the covariance matrix (<code>cov.matrix</code>). In our example, we are interested in evaluating an interaction from a public health perspective. Hence, one might be interested in examining the effects of low and medium SES compared to high SES, as well as the effects of race compared to NHW. The reference categories were set as high SES and NHW. Below is the general equation, simplified to describe the effects of SES and race, along with the interaction coefficients. Now, we can estimate the Hazard Ratios (HRs).</p>
+<!-- We Fitted a Generalized Linear Model (GLM) with a Poisson distribution -->
+<!-- `mod <- glm(MyD ~ as.factor(race) * as.factor(ylost) + offset(log(risktime)),family = "poisson", data = df5)` -->
+<!-- `summary(mod)` -->
+<p>Then, we simplify the equation (Details in Supplement):</p>
+<!-- <div style="font-size:75%;"> -->
+<!-- Low SES and NHB race, -->
+<!-- $$ -->
+<!-- \text{HR(Low/NHB)} = \exp(\beta_{\text{a1}}(\text{Low}) + \beta_{\text{a3}}(\text{NHB}) + \beta_{\text{a5}}(\text{Low} \times \text{NHB})) -->
+<!-- $$ -->
+<!-- Low SES and HIS race, -->
+<!-- $$ -->
+<!-- \text{HR(Low/HIS)} = \exp(\beta_{\text{a1}}(\text{Low}) + \beta_{\text{a3}}(\text{HIS}) + \beta_{\text{a5}}(\text{Low} \times \text{HIS})) -->
+<!-- $$ -->
+<!-- Low SES and API race, -->
+<!-- $$ -->
+<!-- \text{HR(Low/API)} = \exp(\beta_{\text{a1}}(\text{Low}) + \beta_{\text{a3}}(\text{API}) + \beta_{\text{a5}}(\text{Low} \times \text{API})) -->
+<!-- $$ -->
+<!-- </div> -->
+<!-- # -->
+<p>The Table 2 presents hazard ratios (HRs) along with their 95% confidence intervals (CIs), examining the interaction effect between socioeconomic status (SES; categorized as High, Medium, Low) and race/ethnicity (NHW, API, NHB, HIS) on malignant breast cancer mortality.</p>
+<p>The effects of deprivation (SES) on race and ethnicity are challenging to interpret. However, no significant heterogeneity in the HRs was observed. One might suggest that patients diagnosed with malignant breast cancer within the racial and ethnic groups in the midle and low SES have a higher risk of dying, independent of race and ethnicity group. Same can’t be seen for the highest SES where the results are heterogeneous.</p>
+<p>Another way to interpret is that these tables suggest differences in hazard ratios, with NHB consistently exhibiting higher HRs compared to NHW (the reference group), regardless of SES. API and HIS experience lower HRs at higher SES levels but show an increased relative risk as SES decreases.</p>
+<p><strong>Note that further analysis should include non-proportional baseline hazard terms (<code>rcs</code>)</strong></p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-sm small" data-quarto-postprocess="true">
+<caption>Table 2. HRs, 95%CI, and the models with the interaction effect between deprivation (SES) and race/ethnicity.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Race</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">High.SES</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">X95.CI.High</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">Medium.SES</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">X95.CI.Medium</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">Low.SES</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">X95.CI.Low</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">NHW</td>
+<td style="text-align: center;">Ref</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">1.55</td>
+<td style="text-align: center;">(1.50-1.59)</td>
+<td style="text-align: center;">2.11</td>
+<td style="text-align: center;">(2.04-2.17)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">API</td>
+<td style="text-align: center;">0.74</td>
+<td style="text-align: center;">(0.86-0.97)</td>
+<td style="text-align: center;">1.34</td>
+<td style="text-align: center;">(1.27-1.42)</td>
+<td style="text-align: center;">1.42</td>
+<td style="text-align: center;">(1.26-1.59)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">NHB</td>
+<td style="text-align: center;">1.59</td>
+<td style="text-align: center;">(1.48-1.71)</td>
+<td style="text-align: center;">2.02</td>
+<td style="text-align: center;">(1.92-2.13)</td>
+<td style="text-align: center;">2.69</td>
+<td style="text-align: center;">(2.59-2.79)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">HIS</td>
+<td style="text-align: center;">0.91</td>
+<td style="text-align: center;">(0.86-0.97)</td>
+<td style="text-align: center;">1.18</td>
+<td style="text-align: center;">(1.09-1.27)</td>
+<td style="text-align: center;">1.69</td>
+<td style="text-align: center;">(1.61-1.78)</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<p>By rearranging the coefficients, we can observe the effect of race/ethnicity within each deprivation group (SES). It can be seen that patients across all races and ethnicities experience higher rates in the lower and medium deprivation groups compared to the highest deprivation group.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-sm small" data-quarto-postprocess="true">
+<caption>Table 3. HRs and 95% CIs for Medium and Low Deprivation (SES), referenced to High SES, across races.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Race</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">High.SES</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">X95.CI.High</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">Medium.SES</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">X95.CI.Medium</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">Low.SES</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">X95.CI.Low</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">NHW</td>
+<td style="text-align: center;">ref</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">1.55</td>
+<td style="text-align: center;">(1.50-1.59)</td>
+<td style="text-align: center;">2.11</td>
+<td style="text-align: center;">(2.04-2.17)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">API</td>
+<td style="text-align: center;">ref</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">1.59</td>
+<td style="text-align: center;">(1.45-1.73)</td>
+<td style="text-align: center;">1.91</td>
+<td style="text-align: center;">(1.69-2.16)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">NHB</td>
+<td style="text-align: center;">ref</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">1.26</td>
+<td style="text-align: center;">(1.16-1.37)</td>
+<td style="text-align: center;">1.68</td>
+<td style="text-align: center;">(1.56-1.81)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">HIS</td>
+<td style="text-align: center;">ref</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">1.46</td>
+<td style="text-align: center;">(1.35-1.59)</td>
+<td style="text-align: center;">1.85</td>
+<td style="text-align: center;">(1.71-1.99)</td>
+</tr>
+</tbody>
+</table>
+
+
 </div>
 </div>
 </section>
