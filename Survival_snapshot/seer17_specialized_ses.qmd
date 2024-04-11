@@ -1785,7 +1785,7 @@ EstHR(c("as.factor(ylost)Group 3","as.factor(race)API:as.factor(ylost)Group 3"),
 
 *Measures of addictive interaction*
 
- Details can be obtained elsewhere [Kalilani and Atashili, 2006]("https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1475799/")
+Details on the methods can be obtained elsewhere [Kalilani and Atashili 2006]("https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1475799/")
 
 To evaluate the interaction between deprivation (SES) and race/ethnicity, we first fit a model that includes the effects of SES and race, followed by their interaction term (multiplication between SES and race) to obtain the coefficients. The formula is represented as follows:
 
@@ -1983,3 +1983,9 @@ On Estimation in Relative Survival[Ref]("https://onlinelibrary.wiley.com/doi/abs
 Expected Survival Life Tables, Released March 2024[Ref]("https://seer.cancer.gov/expsurvival/"), for detaisl 
 
 Geographical, racial and socio-economic variation in life expectancy in the US and their impact on cancer relative survival[Ref]("https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0201034"). 
+
+[Ref]("https://pubmed.ncbi.nlm.nih.gov/35648299/")
+
+Rothman KJ, Greenland S, Lash TL. Modern Epidemiology. Philadephia: Wolters Kluwer/Lippincott Wolliams & Wilkins, 2008.
+
+Kalilani and Atashili 2006. Measuring additive interaction using odds ratios. [Ref]("https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1475799/")
