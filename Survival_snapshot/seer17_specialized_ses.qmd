@@ -1915,7 +1915,41 @@ df6<-df5[c(1,2,3,4,5,6,7,8, 12,14,15)]
 df7<-subset(df6, df6$subtype != "Recode not available")
 df8<-subset(df7, df7$subtype != "Unknown")
 
-knitr::kable(df8, col.names = gsub("[.]", " ", names(df8)))
+#knitr::kable(df8, col.names = gsub("[.]", " ", names(df8)))
+
+####
+
+# Your provided data frame after removing the 3rd column (year.x since it's the same for all)
+df8 <- data.frame(
+  subtype = c("HR-/HER2-", "", "", "", "", "", "HR-/HER2+", "", "", "", "", "", "HR+/HER2-", "", "", "", "", "", "HR+/HER2+", "", "", "", "", ""),
+  stage = c("Distant", "", "Localized", "", "Regional", "", "Distant", "", "Localized", "", "Regional", "", "Distant", "", "Localized", "", "Regional", "", "Distant", "", "Localized", "", "Regional", ""),
+  yost = rep(c("lowest", "highest"), 12),
+  n = c(782, 710, 4976, 8416, 3195, 4051, 413, 586, 1498, 3330, 1374, 2283, 2461, 3960,
+        26363, 81349, 12818, 29616, 763, 1106, 3530, 9264, 2627, 5253),
+  net = c(10.4, 13.0, 87.8, 94.3, 61.1, 72.1, 29.1, 49.5, 91.5, 99.2, 76.2, 88.7,
+          27.4, 39.8, 98.3, 100.0, 84.8, 94.6, 35.4, 53.7, 96.8, 100.0, 84.4, 94.0),
+  lower_CI = c(7.9, 9.9, 86.3, 93.4, 58.9, 70.3, 23.8, 44.5, 88.8, 97.6, 73.1, 86.8,
+               25.0, 37.8, 97.7, NA, 83.8, 94.2, 31.3, 50.0, 95.2, NA, 82.3, 92.9),
+  Upper_CI = c(13.3, 16.5, 89.1, 95.1, 63.3, 73.8, 34.6, 54.4, 93.5, 99.7, 79.0, 90.4,
+               29.7, 41.8, 98.8, NA, 85.7, 95.1, 39.6, 57.3, 97.8, NA, 86.3, 94.9),
+  Difference = c(2.6, "", 6.5, "", 11.0, "", 20.4, "", 7.7, "", 12.5, "", 
+                 12.4, "", 1.7, "", 9.8, "", 18.3, "", 3.2, "", 9.6, ""),
+  Lower_CI_95 = c(-1.71, "", 4.91, "", 8.21, "", 13.04, "",
+                  5.22, "", 9.07, "", 9.33, "", 1.11, "",
+                  8.74, "", 12.74, "", 1.70, "", 7.40,""),
+  Upper_CI_95 = c(6.91, "", 8.08, "", 13.78, "", 27.75, "",
+                  10.17, "", 15.92, "", 15.46, "", 2.28, "",
+                  10.85, "", 23.85, "", 4.69, "", 11.79, ""),
+  stringsAsFactors = FALSE
+)
+
+# remove the 'year.x' column as per instruction
+#df8 <- df8[-3]
+
+# Use knitr::kable to create and center-align the values to the right
+knitr::kable(df8, align = rep('r', ncol(df8)), 
+                             col.names = gsub("[.]", " ", names(df8))) # specify format="latex" for LaTeX output
+
 
 
 
