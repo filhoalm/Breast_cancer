@@ -59,8 +59,6 @@ Most patients across all breast cancer subtypes had localized disease, notably i
 
 Non-Hispanic White (NHW) individuals were most common across subtypes, especially in HR+/HER2- (68.69%), while Non-Hispanic Black (NHB) individuals had a higher proportion in the HR-/HER2- subtype (20.60%).
 
-Socioeconomic status (SES) showed a clear gradient across all subtypes, with the highest SES group (Group 5) being more pronaunced, particularly in the HR+/HER2- subtype (33.30%). Higher SES groups constituted a larger portion of most subtypes, with the HR-/HER2- subtype having a distinct distribution pattern: the lowest SES quintile encompassed 13.637% of HR+/HER2+ and 17.659% of cases.
-
 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
 df <- read_csv("C:/Users/miran/Desktop/Survival/Specialized/data/seer17_breast.csv")
