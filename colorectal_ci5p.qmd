@@ -1,0 +1,456 @@
+---
+title: "New Age-Period-Cohort model: Colorectal cancer using CI5 Plus dataset."
+author: "AMF"
+format: html
+editor: visual
+---
+
+## Overview
+
+This workflow provides a comprehensive analysis of colorectal cancer incidence rates in different populations using the CI5 series dataset.
+
+Our goal is to explore the cohort pattern and annual percent changes of colorectal cancer in selected countries, specifically focusing on the social generation effect.
+
+
+<!-- -   **HR-positive/HER2-negative (HR+/HER2-)**: HR+/HER2- -->
+
+## Methods
+
+#### Datasource
+
+Cancer Incidence in Five Continents plus. [Data is freely available here:](https://ci5.iarc.fr/ci5plus/)
+
+#### Transforming CI5 Data into a 'rate' Object
+
+The CI5 database provides data in a long format, which is not directly compatible with the WebTool for analysis. Our primary task involves transforming these datasets into a 'rate' object format. 
+
+For more detailed information on the structures and functionalities of 'rate' objects and best practices for analyzing cancer registry data, please consult the author of these workflow.
+
+You can access the repository and download the rate files using the following link: (Coming soon...)
+
+<!-- [GitHub Repository for Breast Cancer Rate Files](https://github.com/filhoalm/Breast_cancer/tree/main/RCode%208-16-22) -->
+
+```{r, message=FALSE, warning=FALSE}
+# library(data.table)
+# 
+# # overtime data
+# setwd("//inti/CIN/Xchange/Adalberto Miranda/sendcode")
+# 
+# dt_data <- fread(paste0("sendcode/_data/", "overtime_data_C18-21_SEER.csv"))
+# dt_id_dict <- fread(paste0("sendcode/_data/", "overtime_id_dict_SEER.csv"))
+# dt_cancer_dict <- fread(paste0("sendcode/_data/", "overtime_cancer_dict_C18-21.csv"))
+# dt_country_iso3 <- fread(paste0("sendcode/_data/", "UN_country_info.csv"))[, .(country_code, country_iso3)]
+# 
+# dt_data <- dt_data[cancer_code %in% c(100, 5, 6) & type == 0]
+# dt_cancer_dict <- dt_cancer_dict[cancer_code %in% c(100, 5, 6)]
+# 
+# dt_id_dict <- merge(dt_id_dict, dt_country_iso3, by = "country_code")
+# 
+# country_selection <- c("ISR", "DEU", "USA", "NZL", "AUS", "CAN", "GBR", "NOR", "SWE")
+# dt_id_dict <- dt_id_dict[country_iso3 %in% c(country_selection) & incidence == 1]
+# dt_id_dict[, c("incidence", "mortality", "mort_cov", "mort_period") := NULL]
+# 
+# dt_id_dict <- dt_id_dict[!id_code %in% c(8401, 8402)] # drop USA white black
+# dt_id_dict <- dt_id_dict[!id_code %in% c(8261, 8262, 8263)] # drop USA white black
+# 
+# unique(sort(dt_id_dict$country_iso3))
+# sort(country_selection)
+# 
+# dt_data <- merge(dt_data, dt_id_dict[, .(id_code)], by = "id_code")
+# 
+# head(dt_data)
+# unique(dt_data$cancer_code)
+# 
+# ## keep data after 1988
+# 
+# dt_data[, min_year := min(year), by = "id_code"]
+# unique(dt_data[, .(id_code, min_year)])
+# 
+# dt_data_select <- dt_data[year >= 1988]
+# dt_extract <- data.table()
+# 
+# dt_data_select <- dt_data_select[cancer_code <= 6] # keep only C18-20 and C21? # drop 100
+# 
+# head(dt_data_select)
+# unique(dt_data_select$id_code)
+# 
+# dt_data_select[dt_data_select$id_code == 36, country_label := "AUS"]
+# dt_data_select[dt_data_select$id_code == 124, country_label := "CAN"]
+# dt_data_select[dt_data_select$id_code == 276, country_label := "DEU"]
+# dt_data_select[dt_data_select$id_code == 376, country_label := "ISR"]
+# dt_data_select[dt_data_select$id_code == 554, country_label := "NZL"]
+# dt_data_select[dt_data_select$id_code == 578, country_label := "NOR"]
+# dt_data_select[dt_data_select$id_code == 752, country_label := "SWE"]
+# dt_data_select[dt_data_select$id_code == 840, country_label := "USA"]
+# dt_data_select[dt_data_select$id_code == 8260, country_label := "GBR"]
+# 
+# unique(dt_data_select$id_code)
+# unique(dt_data_select$country_label)
+# unique(dt_data_select$cancer_code)
+# 
+# # List of countries to loop through
+# countries <- c("AUS", "CAN", "DEU", "ISR", "NZL", "NOR", "SWE", "USA", "GBR")
+# 
+# # Loop through each country
+# for (country in countries) {
+#   df <- dt_data_select[country_label == country]
+#   
+#   # Create an identifier variable for reshaping
+#   cancer_data <- df[, id := paste(age, sex, id_code, sep = "_")]
+#   
+#   # Reshape 'cases' and 'py' to wide format
+#   cases_wide <- dcast(cancer_data, id ~ year, value.var = "cases", fun.aggregate = sum)
+#   py_wide <- dcast(cancer_data, id ~ year, value.var = "py", fun.aggregate = sum)
+#   
+#   # Merge the 'cases' and 'py' data tables
+#   merged_data <- merge(cases_wide, py_wide, by = "id", all = TRUE)
+# 
+#   # Split id
+#   merged_data[, c("age", "sex", "country_id") := tstrsplit(id, "_")]
+# 
+#   years <- unique(cancer_data$year) 
+#   xy_columns <- paste0(rep(years, each = 2), rep(c(".x", ".y"), length(years)))
+#   column_order <- c(xy_columns, "age", "sex", "country_id")
+#   merged_data <- merged_data[, ..column_order, with = FALSE]
+#   
+#   names(merged_data)
+#   
+#   # Select males and females
+#   merged_data_male <- merged_data[sex == 1, .SD, .SDcols = -c("sex")]
+#   merged_data_female <- merged_data[sex == 2, .SD, .SDcols = -c("sex")]
+#   
+#   # Sort age descending
+#   merged_data_male <- merged_data_male[order(as.numeric(age))]
+#   merged_data_female <- merged_data_female[order(as.numeric(age))]
+#   
+#   # Create a dataframe with a single row and the same number of columns as merged_data
+#   summary_info <- data.frame(matrix(NA, ncol = ncol(merged_data_male), nrow = 5))
+#   colnames(summary_info) <- colnames(merged_data_male)
+#   
+#   # Fill in the summary information
+#   summary_info[1, 1] <- paste("Title:", country)
+#   summary_info[2, 1] <- "Description: Male"
+#   summary_info[3, 1] <- "Start Year: 1988"   # Enter the actual Start Year if available
+#   summary_info[4, 1] <- "Start Age: 25"   # Enter the actual Start Age if available
+#   summary_info[5, 1] <- "Interval (Years): 1"   # Enter the actual interval if available
+#   
+#   # Combine the summary information with the data
+#   combined_data_male <- rbind(summary_info, merged_data_male)
+#   
+#   # Create summary info and combine with data for females
+#   summary_info_female <- data.frame(matrix(NA, ncol = ncol(merged_data_female), nrow = 5))
+#   colnames(summary_info_female) <- colnames(merged_data_female)
+#   
+#   # Fill in the summary information
+#   summary_info_female[1, 1] <- paste("Title:", country)
+#   summary_info_female[2, 1] <- "Description: Female"
+#   summary_info_female[3, 1] <- "Start Year: 1988"   # Enter the actual Start Year if available
+#   summary_info_female[4, 1] <- "Start Age: 25"   # Enter the actual Start Age if available
+#   summary_info_female[5, 1] <- "Interval (Years): 1"   # Enter the actual interval if available
+#   
+#   # Combine the summary information with the data
+#   combined_data_female <- rbind(summary_info_female, merged_data_female)
+#   
+#   # Save data
+#   #write.csv(combined_data_male, paste("//inti/CIN/Xchange/Adalberto Miranda/new_apc_model/rates/male_", country, ".csv", sep = ""))
+#   #write.csv(combined_data_female, paste("//inti/CIN/Xchange/Adalberto Miranda/new_apc_model/rates/female_", country, ".csv", sep = ""))
+#}
+
+```
+
+To access an example of a rate object, you can download it by following the link below:
+
+[Download Example Rate Object](https://github.com/example/repository/raw/main/rate_object.csv)
+
+
+:::{.callout-note}
+-   Please note that the file is available in CSV format.
+:::
+
+
+
+#
+
+
+### Colorectal cancer rate objects
+
+A dedicated GitHub folder has been created, containing all rate files segmented by population and sex (coming soon...).
+
+
+### R Webtool functions
+
+Repository that content all the functins in R language are available [here](https://github.com/filhoalm/Breast_cancer/tree/main/RCode%208-16-22/APC/"). 
+
+For more detailed insights into the capabilities and applications of the WebTool functions, you are encouraged to consult the following reference:
+
+["A Web Tool for Age-Period-Cohort Analysis of Cancer Incidence and Mortality Rates"](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4221491/)
+
+["Advances in statistical methods for cancer surveillance research: an age-period-cohort perspective"](https://www.frontiersin.org/journals/oncology/articles/10.3389/fonc.2023.1332429/full)
+
+
+
+```{r, message=FALSE, warning=FALSE}
+#my_path <- "https://github.com/filhoalm/Breast_cancer/tree/main/RCode%208-16-22/APC/"
+# setwd(my_path)  
+# functions <- list.files(pattern = "*.R")       # Get all file names
+# apc<- lapply(functions, source)  # load fucntions
+# 
+# # Note: You will need to install all packages prior to loading them.
+# packages <- c("dplyr",
+#               "ggplot2",
+#               "ggpubr",
+#               "ggthemes",
+#               "gridExtra",
+#               "hrbrthemes",
+#               "patchwork",
+#               "Matrix",
+#               "pracma",
+#               "scales",
+#               "RColorBrewer")
+# 
+# # Load
+# #lapply(packages, require, character.only = TRUE)
+# # #
+# # Make sure you have the tools package
+# library(tools)
+
+```
+
+:::{.callout-note}
+-   You need to dowload the APC folder to your local machine and change `mypath` 
+:::
+
+#### csv2rates Function
+
+The `csv2rates` function is a data transformation utility that converts data from CSV (Comma-Separated Values) files into the standardized 'rate' object format required by WebTool:
+
+- **Reading the CSV file** that contains the epidemiological data.
+- **Ensuring** that the data adheres to the required structure, including appropriate variable names and formatting.
+- **Calculating rates** such as incidences or mortality rates.
+- **Returning a 'rate' object** that can be directly utilized in subsequent WebTool analyses.
+
+This conversion is critical for ensuring that the data can be analyzed accurately and efficiently within the WebTool framework.
+
+
+#### apc2fit Function
+The `apc2fit` function implements the Age-Period-Cohort (APC) model fitting on the 'rate' objects. The APC model is widely used in epidemiology to examine how particular outcomes change over time and across different cohorts. This function allows researchers to:
+
+Estimable age-period-cohort (APC) parameters and functions calculated by the web tool are summarized below, along with their respective nomenclature and interpretations.
+
+```{r table1-apc-parameters, echo=FALSE, message=FALSE, warning=FALSE}
+library(knitr)
+library(kableExtra)
+
+# Define the table data
+apc_table_data <- data.frame(
+  Nomenclature = c(
+    "Net Drift",
+    "CAT = LAT − Net Drift",
+    "LAT = CAT + Net Drift",
+    "Age deviations, AD(a)",
+    "Period deviations, PD(p)",
+    "Cohort deviations, CD(c)",
+    "Fitted Temporal Trends, FTT(p | a0)",
+    "Cross-Sectional Age Curve, CrossAge(a | p0)",
+    "Longitudinal Age Curve, LongAge(a | c0)",
+    "Ratio of Longitudinal versus Cross-Sectional Age curves, Long2CrossRR(a | c0, p0)",
+    "Period Rate Ratios, PRR(p | p0)",
+    "Cohort Rate Ratios, CRR(c | c0)",
+    "Local Drifts, LocalDrifts(a)"
+  ),
+  Interpretation = c(
+    "APC analogue of the estimated annual percentage change (EAPC) in the age-standardized rate (ASR); log-linear component of FTT(p | a0), PRR(p | p0) and CRR(c | c0)",
+    "Cross-sectional age trend; log-linear trend in CrossAge(a | p0)",
+    "Longitudinal age trend; log-linear trend in LongAge(a | c0)",
+    "Non-linear age effects incorporated into LongAge(a | c0), CrossAge(a | p0) and Long2CrossRR(a | c0, p0); orthogonal to the linear trend in age",
+    "Non-linear period effects incorporated into FTT(p | a0) and PRR(p | p0); orthogonal to the linear trend in period",
+    "Non-linear cohort effects incorporated into CRR(c | c0) and LocalDrifts (a); orthogonal to the linear trend in cohort (over the entire rate matrix)",
+    "Fitted rates in reference age group a0 adjusted for cohort deviations; APC analogue of the ASR",
+    "Fitted cross-sectional age-specific rates in reference period p0 adjusted for cohort deviations",
+    "Fitted longitudinal age-specific rates in reference cohort c0 adjusted for period deviations",
+    "Quantifies influence of Net Drift on age-associated natural history",
+    "Ratio of age-specific rates in period p relative to reference period p0",
+    "Ratio of age-specific rates in cohort c relative to reference cohort c0",
+    "Estimated annual percentage change over time specific to age group a"
+  )
+)
+
+
+
+# Create HTML table with kable and style it with kableExtra
+kable(apc_table_data, format = "html", caption = "Table 1: Estimable APC Parameters and Functions Calculated by the Web Tool") %>%
+  kable_styling(full_width = F, position = "left", font_size = 12) %>%
+  column_spec(1, bold = TRUE) %>%
+  row_spec(0, extra_css = "transform: scale(0.5); transform-origin: top left;") # Using CSS to scale the table to half size
+
+
+```
+ Source: ["A Web Tool for Age-Period-Cohort Analysis of Cancer Incidence and Mortality Rates"](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4221491/)
+ 
+ 
+ 
+## APC Parameters and Functions
+ 
+```{r, message=FALSE, warning=FALSE}
+
+# AUS
+#df1<-csv2rates("//inti/CIN/Xchange/Adalberto Miranda/new_apc_model/rates/male_AUS.csv")
+#M2<-apc2fit(df1)
+#male<-M1$CohortRR
+#male<-as.data.frame(male)
+#male$sex <- "male"
+#
+#df1<-csv2rates("//inti/CIN/Xchange/Adalberto Miranda/new_apc_model/rates/female_AUS.csv")
+#M2<-apc2fit(df1)
+#female <- M2$CohortRR
+#female<-as.data.frame(female)
+#female$sex <- "female"
+#
+#country<-rbind(male, female)
+#country$country <- "Australia"
+
+```
+
+
+## Cohort Rate Ratios, CRR(c | c0)
+
+```{r, message=FALSE, warning=FALSE}
+
+library(readr)
+library(ggplot2)
+# # United States:
+# df1<-csv2rates("//inti/CIN/Xchange/Adalberto Miranda/new_apc_model/rates/clean/male_usa.csv")
+# M2<-apc2fit(df1)
+# male<-M2$CohortRR
+# male<-as.data.frame(male)
+# male$sex <- "male"
+# #
+# df1<-csv2rates("//inti/CIN/Xchange/Adalberto Miranda/new_apc_model/rates/clean/female_usa.csv")
+# M2<-apc2fit(df1)
+# female <- M2$CohortRR
+# female<-as.data.frame(female)
+# female$sex <- "female"
+# #
+# country<-rbind(male, female)
+# country$country <- "Australia"
+# # Define stylish colors inspired by colorectal cancer awareness
+# crc_colors <- c("#663399", "#20603D")
+# # Plot the temporal trends of Rate for both sexes using ggplot2 with stylish colors
+# names(country)[2]<-("rr")
+# #write.csv(country, "C:/Users/mirandaa/Desktop/Articles/colorectum/quarto/data/ex_cohort_usa.csv")
+country<-read.csv("C:/Users/mirandaa/Desktop/Articles/colorectum/quarto/data/ex_cohort_usa.csv")
+# Plotting the data using ggplot with vertical and horizontal lines
+ggplot(country, aes(x = Cohort, y = rr, color = sex, fill = sex)) +
+  geom_line(size = 0.1) +
+  geom_point(size = 1) +
+  geom_ribbon(aes(ymin = CILo, ymax = CIHi), alpha = 0.2, size = 0.05) +
+  geom_hline(yintercept = 1, linetype = "dashed", color = "black", size = 0.05) +   # Horizontal line at value 1
+  geom_vline(xintercept = c(1927, 1945, 1964, 1980), linetype = "dashed", color = "darkgray", size = 0.1) + 
+  #geom_text(x = 1910, y = log10(9), label = "Greatest Generation", vjust = 0, hjust = 0, size = 2, color = "black") +
+  geom_text(x = 1928, y = log10(9), label = "Silent Generation", vjust = 0, hjust = 0, size = 1.5, color = "black") +
+  geom_text(x = 1946, y = log10(9), label = "Baby Boomers", vjust = 0, hjust = 0, size = 1.5, color = "black") +
+  geom_text(x = 1965, y = log10(9), label = "Generation X", vjust = 0, hjust = 0, size = 1.5, color = "black") +
+  geom_text(x = 1981, y = log10(9), label = "Millennials", vjust = 0, hjust = 0, size = 1.5, color = "black") +
+  theme_classic() +
+  labs(y = "Cohort rate ratio", x = "Birth cohort") +
+  ggtitle("United States") +
+  scale_color_manual(values = c("female" = "#663399", "male" = "#20603D")) +
+  scale_fill_manual(values = c("female" = "#663399", "male" = "#20603D")) +
+  scale_y_continuous(trans = "log10", limits = c(0.3, 10)) +
+  theme(legend.position = "none")
+
+
+```
+
+# Local Drifts, LocalDrifts(a)
+
+It is also possible to use the online version of the [webtool](https://analysistools.cancer.gov/apc/) and save the outputs in R format and use them to plot visualizations. However, it is important to note that the online version of the webtool is limited in scalability, allowing only a single analysis at a time.
+
+```{r, message=FALSE, warning=FALSE}
+# Read the england_male.rdc file
+data <- readRDS("C:/Users/mirandaa/Desktop/Articles/colorectum/models/usa_male.rds")
+male <- data$LocalDrifts
+male<-as.data.frame(male)
+male$sex <- "male"
+
+data <- readRDS("C:/Users/mirandaa/Desktop/Articles/colorectum/models/usa_female.rds")
+female <- data$LocalDrifts
+female<-as.data.frame(female)
+female$sex <- "female"
+#
+country<-rbind(male, female)
+country$country <- "United States"
+
+# Define stylish colors inspired by colorectal cancer awareness
+crc_colors <- c("#663399", "#20603D")
+
+# Old and new age values
+old_ages <- c(20.5, 21.5, 22.5, 23.5, 24.5, 25.5, 26.5, 27.5, 28.5, 29.5, 30.5, 31.5, 32.5, 33.5)
+new_ages <- c(22.5, 27.5, 32.5, 37.5, 42.5, 47.5, 52.5, 57.5, 62.5, 67.5, 72.5, 77.5, 82.5, 87.5)
+
+# Replace old age values with matching new age values
+country$Age <- new_ages[match(country$Age, old_ages)]
+
+# Plot the temporal trends of Rate for both sexes using ggplot2 with stylish colors
+names(country)[2]<-("rr")
+
+# Plotting the data using ggplot with vertical and horizontal lines
+ggplot(country, aes(x = Age, y = rr, color = sex, fill = sex)) +
+  geom_line() +
+  geom_point(size=2) +
+  geom_ribbon(aes(ymin = CILo, ymax = CIHi), alpha = 0.2, size = 0.05) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black", size = 0.5) + 
+  geom_vline(xintercept = 50, linetype = "dashed", color = "black", size = 0.5) + # Vertical line at 1970
+  theme_classic() +
+  ylim(-3,4)+
+  labs(y = "Average annual percentage change (%)", x = "Age") +
+  ggtitle("United States") +
+  scale_color_manual(values = c("female" = "#663399", "male" = "#20603D")) +
+  scale_fill_manual(values = c("female" = "#663399", "male" = "#20603D")) +
+  scale_x_continuous(breaks = seq(20, 84, by = 5)) +  # Setting x-axis breaks from 20 to 84 by 5 increments
+  # scale_y_continuous(trans = "log10", limits = c(0.3, 10)) +
+  theme(legend.position = "none")
+
+```
+
+## Fitted Temporal Trends, FTT(p | a0)
+
+```{r, message=FALSE, warning=FALSE}
+# United States:
+
+# Read the england_male.rdc file
+data <- readRDS("C:/Users/mirandaa/Desktop/Articles/colorectum/models/usa_male.rds")
+male <- data$FittedTemporalTrends
+male<-as.data.frame(male)
+male$sex <- "male"
+
+data <- readRDS("C:/Users/mirandaa/Desktop/Articles/colorectum/models/usa_female.rds")
+female <- data$FittedTemporalTrends
+female<-as.data.frame(female)
+female$sex <- "female"
+#
+country<-rbind(male, female)
+country$country <- "United States"
+
+# Define stylish colors inspired by colorectal cancer awareness
+crc_colors <- c("#663399", "#20603D")
+
+# Plot the temporal trends of Rate for both sexes using ggplot2 with stylish colors
+ggplot(country, aes(x = Period, y = Rate, color = sex, linetype = sex)) +
+  geom_point(size = 1) +
+  ylim(0,50)+
+  #geom_point(size = 3, aes(shape = sex)) +
+  geom_smooth(size = 0.5, method = "loess", se = FALSE, span = 0.5) +
+  labs(title = "United States",
+       x = "Period",
+       y = "Rate") +
+  scale_color_manual(values = crc_colors) +
+  scale_shape_manual(values = c(17, 19)) +
+  theme_bw() +
+  theme(legend.position = "none",
+        axis.text.x = element_text(size = 7),  # Adjust the size of x-axis text
+        axis.text.y = element_text(size = 7))  # Adjust the size of y-axis text
+
+```
+
+
